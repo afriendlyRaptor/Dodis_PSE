@@ -10,4 +10,18 @@
     
 * **Master-Tracker Leonard Scheer** *Projekt-Monitoring* – Behält die Übersicht über den aktuellen Projektstatus und erstellt die regelmäßigen Statusreports.
 
+
+
+## Akutelle Fragen
+
+* Welche Sprachen muss unser NER beherrschen?
+* Gibt es Versionsanforerungen?
+    Does not run with python 3.14 or newer because of pydantic
+    https://github.com/pydantic/pydantic/issues/12618
+    -> downgraded to python 3.13
+
+
+
+
+
 ---
