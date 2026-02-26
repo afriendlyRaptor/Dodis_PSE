@@ -20,7 +20,14 @@
     https://github.com/pydantic/pydantic/issues/12618
     -> downgraded to python 3.13
 
-
+## Subtasks
+* Dodis-xml to spacy converter
+    (might exist in current version of NEL)
+* Wikidata to spacy converter 
+    (should already exist somwhere online)
+* train spacy on datasets
+    (Dodis and wikidata maybe independent components/containers)
+* generate required output from trained model & input
 
 
 

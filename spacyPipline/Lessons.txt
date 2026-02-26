@@ -1,9 +1,13 @@
 
+
 # Intall gemaess:
 https://spacy.io/usage
 
 # Does not run with python 3.14 or newer because of pydantic
 https://github.com/pydantic/pydantic/issues/12618
 -> downgraded to python 3.13
+
+
+
 
 
