@@ -30,6 +30,8 @@
     (Dodis and wikidata maybe independent components/containers)
     - [x] training on very minimal dodis dataset (2 document) ran without error
     - [ ]  scale dataset
+         - [ ] specify wikidata filter
+         - [ ] bulk dodis dataset ?!?
     - [ ] run on ubelix
     - [ ] containerize ?!?
 - [ ] generate required output from trained model & input
