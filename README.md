@@ -21,19 +21,19 @@
     -> downgraded to python 3.13
 
 ## Subtasks
-[v] Dodis-xml to spacy converter
+- [x] Dodis-xml to spacy converter
     (might exist in current version of NEL)
     * vibecoded might cause problems in the future (no idea if the tags are handled correctly or even if all required tags are handled)
-[] Wikidata to spacy converter 
+- [ ] Wikidata to spacy converter 
     (should already exist somwhere online)
-[] train spacy on datasets
+- [ ] train spacy on datasets
     (Dodis and wikidata maybe independent components/containers)
-    [v] training on very minimal dodis dataset (2 document) ran without error
-    []  scale dataset
-    [] run on ubelix
-    [] containerize ?!?
-[] generate required output from trained model & input
-[] write tutorial / readme for user (scientists)
+    - [x] training on very minimal dodis dataset (2 document) ran without error
+    - [ ]  scale dataset
+    - [ ] run on ubelix
+    - [ ] containerize ?!?
+- [ ] generate required output from trained model & input
+- [ ] write tutorial / readme for user (scientists)
 
 
 
