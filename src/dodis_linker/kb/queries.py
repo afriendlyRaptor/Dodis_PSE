@@ -71,7 +71,24 @@ SMOKE_TEST_QUERIES = {
 }
 
 PILOT_QUERIES = {
-    "person": SMOKE_TEST_QUERIES["person"],
+    "person": """
+SELECT DISTINCT ?item ?itemLabel ?itemDescription
+WHERE {
+  ?item wdt:P31 wd:Q5 .
+  VALUES ?role {
+    wd:Q193391
+    wd:Q82955
+    wd:Q83307
+    wd:Q48352
+  }
+  ?item (wdt:P106|wdt:P39) ?role .
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,fr,it,en,[AUTO_LANGUAGE]" .
+  }
+}
+LIMIT 30
+""",
     "place": """
     SELECT ?item ?itemLabel ?itemDescription
            (GROUP_CONCAT(DISTINCT ?alias; separator="||") AS ?aliases)
