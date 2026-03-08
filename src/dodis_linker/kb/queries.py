@@ -100,5 +100,32 @@ PILOT_QUERIES = {
     GROUP BY ?item ?itemLabel ?itemDescription
     LIMIT 30
     """,
-    "organization": SMOKE_TEST_QUERIES["organization"],
+    "organization": """
+SELECT ?item ?itemLabel ?itemDescription
+       (GROUP_CONCAT(DISTINCT ?alias; separator="||") AS ?aliases)
+WHERE {
+  {
+    ?item wdt:P31 wd:Q484652 .
+  }
+  UNION
+  {
+    ?item wdt:P31 wd:Q245065 .
+  }
+  UNION
+  {
+    ?item wdt:P31 wd:Q327333 .
+  }
+
+  OPTIONAL {
+    ?item skos:altLabel ?alias .
+    FILTER(LANG(?alias) IN ("de", "fr", "it", "en"))
+  }
+
+  SERVICE wikibase:label {
+    bd:serviceParam wikibase:language "de,fr,it,en,[AUTO_LANGUAGE]" .
+  }
+}
+GROUP BY ?item ?itemLabel ?itemDescription
+LIMIT 30
+""",
 }
