@@ -33,6 +33,27 @@ class SQLiteStore:
         )
         self.conn.commit()
 
+    def delete_entities_by_type(self, entity_type: str) -> None:
+        cursor = self.conn.cursor()
+
+        cursor.execute(
+            "SELECT qid FROM entities WHERE entity_type = ?",
+            (entity_type,),
+        )
+        qids = [row[0] for row in cursor.fetchall()]
+
+        if qids:
+            cursor.executemany(
+                "DELETE FROM aliases WHERE qid = ?",
+                [(qid,) for qid in qids],
+            )
+
+        cursor.execute(
+            "DELETE FROM entities WHERE entity_type = ?",
+            (entity_type,),
+        )
+        self.conn.commit()
+
     def upsert_entity(self, entity: KBEntity) -> None:
         self.conn.execute(
             """

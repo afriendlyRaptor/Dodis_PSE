@@ -12,6 +12,7 @@ def main() -> None:
 
     for entity_type in ENTITY_TYPES:
         try:
+            store.delete_entities_by_type(entity_type)
             entities = adapter.fetch_entities(entity_type)
             count = 0
 
