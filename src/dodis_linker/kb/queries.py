@@ -1,3 +1,6 @@
+SPARQL_PREFIXES = """
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+"""
 SMOKE_TEST_QUERIES = {
     "person": """
     SELECT ?item ?itemLabel ?itemDescription
@@ -71,16 +74,22 @@ SMOKE_TEST_QUERIES = {
 }
 
 PILOT_QUERIES = {
-    "person": """
+    "person": SPARQL_PREFIXES
+    + """
 SELECT DISTINCT ?item ?itemLabel ?itemDescription
 WHERE {
   ?item wdt:P31 wd:Q5 .
+  ?item wdt:P569 ?birthDate .
+
+  FILTER(?birthDate >= "1700-01-01T00:00:00Z"^^xsd:dateTime)
+
   VALUES ?role {
     wd:Q193391
     wd:Q82955
     wd:Q83307
     wd:Q48352
   }
+
   ?item (wdt:P106|wdt:P39) ?role .
 
   SERVICE wikibase:label {
