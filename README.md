@@ -12,90 +12,61 @@
 
 ---
 
-## Technischer Stand: KB-Builder
+## Technischer Stand: Wissensbasis aus Wikidata
 
-Dieser Teil des Projekts baut eine kleine lokale Wissensbasis aus Wikidata auf.
+Im Moment arbeiten wir an einem ersten Baustein für das spätere Entity Linking.
 
-Das Ziel ist, relevante Entitäten für Dodis zu sammeln und lokal in einer SQLite-Datenbank zu speichern. Diese Daten sollen später für das Entity Linking in TEI-XML-Dokumenten verwendet werden.
+Die Idee ist, nicht direkt mit ganz Wikidata zu arbeiten, sondern zuerst eine kleinere und für Dodis relevantere Teilmenge aufzubauen. Diese wird lokal in einer SQLite-Datenbank gespeichert und soll später beim Verlinken von Entitäten in TEI-XML-Dokumenten helfen.
 
-Im Moment konzentriert sich dieser Teil auf drei Entitätstypen:
+Aktuell konzentrieren wir uns auf drei Entitätstypen:
 
 - Personen
 - Orte
 - Organisationen
 
-## Was der aktuelle Code macht
+### Was bisher umgesetzt wurde
 
-Die Pipeline macht im Moment Folgendes:
+Der aktuelle Code kann:
 
-1. Sie schickt Abfragen an Wikidata.
-2. Sie lädt passende Entitäten.
-3. Sie wandelt sie in ein einfaches internes Format um.
-4. Sie speichert sie in einer lokalen SQLite-Datenbank.
+- Daten aus Wikidata laden
+- die Resultate in ein internes Format umwandeln
+- sie lokal in SQLite speichern
+- gespeicherte Einträge wieder anzeigen
 
-Das ist die Grundlage für den späteren Linking-Schritt.
+Dafür gibt es momentan zwei Modi:
 
-## Aktuelle Modi
+- **Smoke-Modus**  
+  Ein technischer Testmodus mit einer kleinen festen Menge an Wikidata-Einträgen. Damit prüfen wir, ob die Pipeline grundsätzlich funktioniert.
 
-Im Moment gibt es zwei Modi für die Abfragen:
+- **Pilot-Modus**  
+  Der erste fachlich sinnvollere Modus. Hier wird eine kleine, relevantere Teilmenge von Wikidata geladen.
 
-### Smoke-Modus
+### Aktueller Stand im Pilot-Modus
 
-Der Smoke-Modus dient nur dazu zu prüfen, ob die Pipeline technisch funktioniert.
-
-Dabei wird nur eine sehr kleine feste Menge bekannter Wikidata-Einträge geladen.
-
-Das hilft beim Testen von:
-
-- Wikidata-Zugriff
-- Parsing
-- Speicherung in SQLite
-- allgemeiner Pipeline-Struktur
-
-### Pilot-Modus
-
-Der Pilot-Modus ist der erste fachlich sinnvolle Modus.
-
-Er lädt eine kleine, aber relevantere Teilmenge von Wikidata für Dodis.
-
-Aktuelle Pilot-Strategie:
-
-- **Personen:** politisch oder diplomatisch relevante Personen mit Zeitfilter, damit sehr alte Herrscher herausfallen
+- **Personen:** politisch oder diplomatisch relevante Personen mit zusätzlichem Zeitfilter
 - **Orte:** erste relevante Ortsklassen wie Staaten und Städte
 - **Organisationen:** erste international oder politisch relevante Organisationen
 
-## Wichtige Dateien
+### Wichtige Dateien
 
 - `src/dodis_linker/kb/build_kb.py`  
-  Startet den Aufbau der Wissensbasis.
+  Baut die lokale Wissensbasis auf
 
 - `src/dodis_linker/kb/inspect_kb.py`  
-  Zeigt gespeicherte Einträge aus der SQLite-Datenbank an.
-
-- `src/dodis_linker/kb/base_adapter.py`  
-  Definiert die allgemeine Schnittstelle für ein Wissensbasis-Backend.
-
-- `src/dodis_linker/kb/wikidata_adapter.py`  
-  Erste Implementierung für Wikidata.
-
-- `src/dodis_linker/kb/wikidata_client.py`  
-  Kümmert sich um die Verbindung zum Wikidata-SPARQL-Endpoint.
+  Zeigt gespeicherte Einträge aus der Datenbank an
 
 - `src/dodis_linker/kb/queries.py`  
-  Enthält die SPARQL-Abfragen für Smoke- und Pilot-Modus.
+  Enthält die Wikidata-Abfragen
+
+- `src/dodis_linker/kb/wikidata_adapter.py`  
+  Erster Adapter für Wikidata
 
 - `src/dodis_linker/kb/sqlite_store.py`  
-  Speichert die geladenen Entitäten in SQLite.
+  Speichert die Daten in SQLite
 
-- `src/dodis_linker/kb/models.py`  
-  Definiert die interne Entitätsstruktur.
+### Ausführen
 
-- `src/dodis_linker/kb/config.py`  
-  Enthält Grundeinstellungen wie Query-Modus und Datenbankpfad.
-
-## Ausführen
-
-KB aufbauen:
+Wissensbasis aufbauen:
 
 ```bash
 python -m src.dodis_linker.kb.build_kb
