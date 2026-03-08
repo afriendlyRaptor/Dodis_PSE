@@ -1,6 +1,7 @@
 from .base_adapter import KnowledgeBaseAdapter
+from .config import QUERY_MODE
 from .models import KBEntity
-from .queries import QUERIES
+from .queries import PILOT_QUERIES, SMOKE_TEST_QUERIES
 from .wikidata_client import WikidataClient
 
 
@@ -34,12 +35,19 @@ def binding_to_entity(binding: dict, entity_type: str) -> KBEntity | None:
     )
 
 
+def get_query_map() -> dict[str, str]:
+    if QUERY_MODE == "pilot":
+        return PILOT_QUERIES
+    return SMOKE_TEST_QUERIES
+
+
 class WikidataAdapter(KnowledgeBaseAdapter):
     def __init__(self, client: WikidataClient | None = None) -> None:
         self.client = client or WikidataClient()
 
     def fetch_entities(self, entity_type: str) -> list[KBEntity]:
-        query = QUERIES.get(entity_type)
+        query_map = get_query_map()
+        query = query_map.get(entity_type)
         if query is None:
             raise ValueError(f"Unbekannter entity_type: {entity_type}")
 
