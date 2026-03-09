@@ -19,6 +19,9 @@
     Does not run with python 3.14 or newer because of pydantic
     https://github.com/pydantic/pydantic/issues/12618
     -> downgraded to python 3.13
+* Auftrag klarifikation
+  ** Machen wir NEL mid Dodis Datenbank und Entities auf TEI-XML docs und/oder NEL mit Wikidata Entities auf TEI-XML docs?
+  ** Gibt es eine Dodis KnowledegeBase?
 
 ## Subtasks
 - [x] Dodis-xml to spacy converter
@@ -28,9 +31,9 @@
     (should already exist somwhere online)
 - [ ] train spacy on datasets
     (Dodis and wikidata maybe independent components/containers)
-    - [x] training on very minimal dodis dataset (2 document) ran without error
+    - [x] training NER on very minimal dodis dataset (2 document) ran without error
     - [ ]  scale dataset
-         - [ ] specify wikidata filter
+         - [ ] specify wikidata filter https://query.wikidata.org/querybuilder/?uselang=en
          - [ ] bulk dodis dataset ?!?
     - [ ] run on ubelix
     - [ ] containerize ?!?
