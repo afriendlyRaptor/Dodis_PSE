@@ -22,6 +22,21 @@
 * Auftrag klarifikation  
   * Machen wir NEL mid Dodis Datenbank und Entities auf TEI-XML docs und/oder NEL mit Wikidata Entities auf TEI-XML docs?
   * Gibt es eine Dodis KnowledegeBase?
+ 
+## Vorschlag für Aufteilung
+* **KnowledgeBase**  
+  Erstellt und unterhällt NEL Database (KnowledgeBase) aus Wikidata und Dodis
+* **Training Data**
+  Erstellt und unterhällt Daten für NER Training (conversion from Dodis) als .spacy doc
+  Erstellt und unterhällt Daten für NER Validation (conversion from Dodis) als .spacy doc
+  (train/dev split)
+* **Training NEL**
+  Erstellt Config und Trainiert NEL auf KB
+* **Training NER**
+  Erstellt config und Trainiert NER auf Training Data
+* **Doku**
+  Erstellt Dokumente und anleitung zum benützen der einzelnen Teile
+  
 
 ## Subtasks
 - [x] Dodis-xml to spacy converter
