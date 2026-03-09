@@ -20,8 +20,8 @@
     https://github.com/pydantic/pydantic/issues/12618
     -> downgraded to python 3.13
 * Auftrag klarifikation  
-  Machen wir NEL mid Dodis Datenbank und Entities auf TEI-XML docs und/oder NEL mit Wikidata Entities auf TEI-XML docs?
-  Gibt es eine Dodis KnowledegeBase?
+  * Machen wir NEL mid Dodis Datenbank und Entities auf TEI-XML docs und/oder NEL mit Wikidata Entities auf TEI-XML docs?
+  * Gibt es eine Dodis KnowledegeBase?
 
 ## Subtasks
 - [x] Dodis-xml to spacy converter
