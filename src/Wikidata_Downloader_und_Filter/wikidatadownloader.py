@@ -148,7 +148,7 @@ def filter_local_dump(
 if __name__ == "__main__":
 
     # ── 1. Wie viel herunterladen? ─────────────────────────────────────────────
-    MAX_GB = 0.2       # ← hier anpassen: z.B. 0.5, 2.0, 10.0 ...
+    MAX_GB = 10.0       # ← hier anpassen: z.B. 0.5, 2.0, 10.0 ...
 
     dump_file = download_partial_dump(
         max_gb    = MAX_GB,
