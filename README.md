@@ -26,14 +26,10 @@
 ## Vorschlag für Aufteilung
 * **KnowledgeBase**  
   Erstellt und unterhällt NEL Database (KnowledgeBase) aus Wikidata und Dodis
-* **Training Data**
-  Erstellt und unterhällt Daten für NER Training (conversion from Dodis) als .spacy doc
-  Erstellt und unterhällt Daten für NER Validation (conversion from Dodis) als .spacy doc
-  (train/dev split)
 * **Training NEL**
   Erstellt Config und Trainiert NEL auf KB
-* **Training NER**
-  Erstellt config und Trainiert NER auf Training Data
+* **Testing**
+  UnitTest DB erstellen
 * **Doku**
   Erstellt Dokumente und anleitung zum benützen der einzelnen Teile
   
@@ -52,8 +48,13 @@
          - [ ] bulk dodis dataset ?!?
     - [ ] run on ubelix
     - [ ] containerize ?!?
+- [ ] Testing
+    - [ ] UnitTests für code    
+    - [ ] Baselines für Modell gegen andere testen
+    - [ ] Loss plotten für Testing
+    - [ ] asssertions, check for none
 - [ ] generate required output from trained model & input
-- [ ] write tutorial / readme for user (scientists)
+- [ ] write tutorial / readme for user (scientists) own hardware own dataset
 
 
 
