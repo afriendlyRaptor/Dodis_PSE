@@ -17,7 +17,8 @@ TAG_LABEL_MAP = {
     "persName": "PERSON",
     "placeName": "GPE",
     "orgName": "ORG",
-    "date": "DATE"
+    "date": "DATE",
+    "term": "NOUN"
 }
 
 # Tags to completely ignore (but keep their text)
