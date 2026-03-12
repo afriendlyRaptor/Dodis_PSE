@@ -22,6 +22,6 @@ for row in rows:
     print(f"\nEintrag: {q_id}")
     # Wir drucken nur die ersten 300 Zeichen des JSONs, damit  Terminal nicht überflutet
     json_string = json.dumps(json_data, indent=2)
-    print(json_string[:300] + "\n... [Rest des JSONs gekürzt])
+    print(json_string[:300] + "\n... [Rest des JSONs gekürzt]")
 
 conn.close()
