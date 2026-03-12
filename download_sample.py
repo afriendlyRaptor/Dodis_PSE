@@ -4,13 +4,12 @@ import requests
 URL = "https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz"
 OUTPUT_FILE = "wikidata_sample.json.gz"
 
-# Wie viel wollen wir herunterladen? (200 MB)
-# Das reicht für Tausende von Personen/Orten, da diese oft am Anfang stehen.
+# Grösse des Downoalds bestimmen
 DOWNLOAD_SIZE_MB = 200
 
 def download_chunk():
-    print(f"Starte Download von {URL}...")
-    print(f"Lade nur die ersten {DOWNLOAD_SIZE_MB} MB herunter...")
+    print(f"Starte Download von {URL}")
+    print(f"Lade nur die ersten {DOWNLOAD_SIZE_MB} MB herunter")
 
     try:
         with requests.get(URL, stream=True) as r:
@@ -29,8 +28,6 @@ def download_chunk():
                         print(f"\nDownload gestoppt nach {DOWNLOAD_SIZE_MB} MB.")
                         break
         print(f"Datei '{OUTPUT_FILE}' erfolgreich erstellt.")
-        print("WICHTIG: Da wir den Download abgebrochen haben, ist das Ende der Datei evtl. defekt.")
-        print("Das Filter-Skript sollte aber robust genug sein, um das zu ignorieren.")
 
     except Exception as e:
         print(f"Fehler beim Download: {e}")
