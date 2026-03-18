@@ -50,14 +50,19 @@ def fetch_hierarchy_tree():
     }
 
     response = requests.get(url, params={'query': query}, headers=headers)
+    assert response is not None, "SPARQL-Response ist None!" #NEU: Assert hinzugefügt
     response.raise_for_status()
 
     data = response.json()
+    assert data is not None, "SPARQL-Antwort (JSON) ist None!" #NEU: Assert hinzugefügt
     valid_classes = set()
 
     for item in data['results']['bindings']:
+        assert item is not None, "SPARQL-Ergebnis-Item ist None!" #NEU: Assert hinzugefügt
+
         # Extrahiert die Q-ID aus der URL (z.B. http://www.wikidata.org/entity/Q123 -> Q123)
         q_id = item['class']['value'].split('/')[-1]
+        assert q_id is not None, "q_id ist None!" #NEU: Assert hinzugefügt
         valid_classes.add(q_id)
 
     print(f"-> Erfolgreich {len(valid_classes)} relevante Unterklassen gefunden.")
@@ -66,6 +71,9 @@ def fetch_hierarchy_tree():
 #NEU: Funktion zum Extrahieren nur der relevanten Felder für NER
 def extract_relevant_fields(item):
     """Nur das Nötigste für NER"""
+    assert item is not None, "item ist None!" #NEU: Assert hinzugefügt
+    assert item.get("id") is not None, "item hat keine ID!" #NEU: Assert hinzugefügt
+
     return {
         "id": item.get("id"),
         "labels": {
@@ -89,7 +97,11 @@ def extract_relevant_fields(item):
 
 def process_chunk(args):
     """Wird von jedem Worker-Prozess aufgerufen. Verarbeitet ein Paket Zeilen."""
+    assert args is not None, "args ist None!" #NEU: Assert hinzugefügt
     chunk, valid_classes = args
+    assert chunk is not None, "chunk ist None!" #NEU: Assert hinzugefügt
+    assert valid_classes is not None, "valid_classes ist None!" #NEU: Assert hinzugefügt
+
     results = []
     for line in chunk:
         line = line.strip()
@@ -117,7 +129,10 @@ def process_chunk(args):
 def setup_database():
     #Erstellt die SQLite-Datenbank und die Tabelle.
     conn = sqlite3.connect(DB_NAME)
+    assert conn is not None, "Datenbankverbindung ist None!" #NEU: Assert hinzugefügt
+
     cursor = conn.cursor()
+    assert cursor is not None, "Cursor ist None!" #NEU: Assert hinzugefügt
 
     # NEU: Performance-Optimierungen für grosse Datenmengen
     cursor.execute("PRAGMA journal_mode = WAL")       # Schnelleres Schreiben
@@ -164,25 +179,28 @@ def process_dump_parallel(valid_classes):
                 if chunk:
                     yield (chunk, valid_classes)
 
-            # Pakete parallel verarbeiten
-            for batch_results in pool.imap_unordered(process_chunk, generate_chunks(), chunksize=4):
-                count_processed += CHUNK_SIZE
+            try:
+                # Pakete parallel verarbeiten
+                for batch_results in pool.imap_unordered(process_chunk, generate_chunks(), chunksize=4):
+                    count_processed += CHUNK_SIZE
 
-                if batch_results:
-                    cursor.executemany(
-                        'INSERT OR IGNORE INTO entities (id, data) VALUES (?, ?)',
-                        batch_results
-                    )
-                    count_found += len(batch_results)
+                    if batch_results:
+                        cursor.executemany(
+                            'INSERT OR IGNORE INTO entities (id, data) VALUES (?, ?)',
+                            batch_results
+                        )
+                        count_found += len(batch_results)
 
-                # Fortschritt
-                if count_processed % 1_000_000 == 0:
-                    conn.commit()
-                    print(f"Verarbeitet: {count_processed:,} | Gefunden: {count_found:,}")
+                    # Fortschritt
+                    if count_processed % 1_000_000 == 0:
+                        conn.commit()
+                        print(f"Verarbeitet: {count_processed:,} | Gefunden: {count_found:,}")
 
-                if LIMIT is not None and count_found >= LIMIT:
-                    print(f"Limit erreicht. Stoppe.")
-                    break
+                    if LIMIT is not None and count_found >= LIMIT:
+                        print(f"Limit erreicht. Stoppe.")
+                        break
+            except EOFError:
+                print("Ende der (unvollständigen) Testdatei erreicht – das ist beim Testen normal.")
 
     conn.commit()
     conn.close()
@@ -194,5 +212,6 @@ if __name__ == "__main__":
     else:
         # 1. Hierarchie-Baum holen
         valid_q_ids = fetch_hierarchy_tree()
+        assert valid_q_ids is not None, "valid_q_ids ist None!" #NEU: Assert hinzugefügt
         # 2. Dump filtern und in DB speichern
         process_dump_parallel(valid_q_ids)

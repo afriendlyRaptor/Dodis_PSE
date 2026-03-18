@@ -33,6 +33,8 @@ def download_with_resume():
 
         try:
             with requests.get(URL, stream=True, headers=headers, timeout=60) as r:
+                assert r is not None, "HTTP-Response ist None!" #NEU: Assert hinzugefügt
+
                 r.raise_for_status()
 
                 # 206 = Partial Content (Resume ok), 200 = Neustart
