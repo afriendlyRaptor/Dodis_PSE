@@ -1,0 +1,14 @@
+# Datenbanken
+*.db
+
+# Komprimierte Dateien
+*.gz
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Environment
+venv/
+.env
