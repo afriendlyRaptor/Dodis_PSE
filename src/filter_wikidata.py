@@ -20,7 +20,7 @@ BASE_CLASSES = [
 
 DB_NAME = "dodis_wikidata.db"
 INPUT_FILE = "wikidata_sample.json.gz" # Dein Download-Sample
-LIMIT = None # Kann beliebeig angepasst werden (NEU: Angepasst für höheres Limit)
+LIMIT = None # Kann beliebeig angepasst werden (NEU: Angepasst für kein Limit)
 
 #NEU: Multiprocessing-Konfiguration für bessere Performance
 NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer

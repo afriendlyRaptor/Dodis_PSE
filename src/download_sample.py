@@ -9,6 +9,7 @@ OUTPUT_FILE = "wikidata_sample.json.gz"
 # Wie viele MB maximal laden (144000 = alles)
 DOWNLOAD_SIZE_MB = 144000
 
+#NEU: Konfiguration für robustes Downloaden mit Resume-Funktion
 MAX_RETRIES = 10        # Wie oft bei Fehler neu versuchen
 RETRY_WAIT  = 30        # Sekunden warten zwischen Versuchen
 
