@@ -6,9 +6,11 @@ import spacy
 from spacy.kb import InMemoryLookupKB
 from pathlib import Path
 
-# 1. Warnungen unterdrücken, damit die Konsole sauber bleibt
+# 1. Warnungen unterdrücken
 os.environ["CUDA_PATH"] = ""
 warnings.filterwarnings("ignore", category=FutureWarning, module="thinc")
+# NEU: Unterdrückt die spaCy Alias-Warnungen (W017)
+warnings.filterwarnings("ignore", message=r".*\[W017\].*", category=UserWarning)
 
 # Pfade relativ zum Projekt-Root definieren
 BASE_PATH = Path(__file__).parent.parent
@@ -41,7 +43,7 @@ def build_kb():
     print("Starte Daten-Extraktion und Alias-Mapping...")
 
     # HINWEIS: Für den finalen Durchlauf das 'LIMIT 1000' entfernen!
-    cur.execute("SELECT id, data FROM entities LIMIT 1000")
+    cur.execute("SELECT id, data FROM entities LIMIT 1000") #LIMIT 1000
 
     processed_count = 0
 
