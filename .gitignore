@@ -15,3 +15,7 @@ __pycache__/
 
 # database
 *.db
+
+# knowledge base (Folder and all contents)
+data/dodis_entities.kb/
+data/dodis_entities.kb/**

@@ -4,10 +4,6 @@ import spacy
 from spacy.kb import InMemoryLookupKB
 from pathlib import Path
 
-# 1. Stille am Anfang (wie im Hauptskript)
-os.environ["CUDA_PATH"] = ""
-warnings.filterwarnings("ignore", category=FutureWarning, module="thinc")
-
 # Pfade
 BASE_PATH = Path(__file__).parent.parent
 KB_FILE = BASE_PATH / "data" / "dodis_entities.kb"
@@ -35,7 +31,6 @@ def validate_my_kb():
         else:
             print(f"  -> {len(candidates)} Kandidaten gefunden:")
             for c in candidates:
-                # FIX: c.entity_ (mit Unterstrich) statt c.entity_id
                 print(f"     ID: {c.entity_} | Wahrscheinlichkeit: {c.prior_prob:.2f}")
         print("-" * 30)
 
