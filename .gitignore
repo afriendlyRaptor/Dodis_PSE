@@ -19,3 +19,7 @@ __pycache__/
 # knowledge base (Folder and all contents)
 data/dodis_entities.kb/
 data/dodis_entities.kb/**
+data/mini_entities.kb/
+data/mini_entities.kb/**
+
+output/
