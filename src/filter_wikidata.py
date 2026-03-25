@@ -19,10 +19,10 @@ BASE_CLASSES = [
 ]
 
 DB_NAME = "dodis_wikidata.db"
-INPUT_FILE = "wikidata_sample.json.gz" # Dein Download-Sample
-LIMIT = None # Kann beliebeig angepasst werden (NEU: Angepasst für kein Limit)
+INPUT_FILE = "wikidata_sample.json.gz" # Download-Sample
+LIMIT = None # Optional: Limit setzen für Anzahl gefundener Einträge (z.B. 10000 zum Testen)
 
-#NEU: Multiprocessing-Konfiguration für bessere Performance
+# Multiprocessing-Konfiguration für bessere Performance
 NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
 CHUNK_SIZE = 5000  # Zeilen pro Paket
 
@@ -50,29 +50,29 @@ def fetch_hierarchy_tree():
     }
 
     response = requests.get(url, params={'query': query}, headers=headers)
-    assert response is not None, "SPARQL-Response ist None!" #NEU: Assert hinzugefügt
+    assert response is not None, "SPARQL-Response ist None!" 
     response.raise_for_status()
 
     data = response.json()
-    assert data is not None, "SPARQL-Antwort (JSON) ist None!" #NEU: Assert hinzugefügt
+    assert data is not None, "SPARQL-Antwort (JSON) ist None!" 
     valid_classes = set()
 
     for item in data['results']['bindings']:
-        assert item is not None, "SPARQL-Ergebnis-Item ist None!" #NEU: Assert hinzugefügt
+        assert item is not None, "SPARQL-Ergebnis-Item ist None!" 
 
         # Extrahiert die Q-ID aus der URL (z.B. http://www.wikidata.org/entity/Q123 -> Q123)
         q_id = item['class']['value'].split('/')[-1]
-        assert q_id is not None, "q_id ist None!" #NEU: Assert hinzugefügt
+        assert q_id is not None, "q_id ist None!" 
         valid_classes.add(q_id)
 
     print(f"-> Erfolgreich {len(valid_classes)} relevante Unterklassen gefunden.")
     return valid_classes
 
-#NEU: Funktion zum Extrahieren nur der relevanten Felder für NER
+# Funktion zum Extrahieren nur der relevanten Felder für NER
 def extract_relevant_fields(item):
     """Nur das Nötigste für NER"""
-    assert item is not None, "item ist None!" #NEU: Assert hinzugefügt
-    assert item.get("id") is not None, "item hat keine ID!" #NEU: Assert hinzugefügt
+    assert item is not None, "item ist None!" 
+    assert item.get("id") is not None, "item hat keine ID!"
 
     return {
         "id": item.get("id"),
@@ -97,10 +97,10 @@ def extract_relevant_fields(item):
 
 def process_chunk(args):
     """Wird von jedem Worker-Prozess aufgerufen. Verarbeitet ein Paket Zeilen."""
-    assert args is not None, "args ist None!" #NEU: Assert hinzugefügt
+    assert args is not None, "args ist None!" 
     chunk, valid_classes = args
-    assert chunk is not None, "chunk ist None!" #NEU: Assert hinzugefügt
-    assert valid_classes is not None, "valid_classes ist None!" #NEU: Assert hinzugefügt
+    assert chunk is not None, "chunk ist None!"
+    assert valid_classes is not None, "valid_classes ist None!"
 
     results = []
     for line in chunk:
@@ -117,7 +117,7 @@ def process_chunk(args):
                     try:
                         target_id = claim["mainsnak"]["datavalue"]["value"]["id"]
                         if target_id in valid_classes:
-                            small_item = extract_relevant_fields(item) #NEU: Nur relevante Felder extrahieren
+                            small_item = extract_relevant_fields(item) # Nur relevante Felder extrahieren
                             results.append((item['id'], json.dumps(small_item)))
                             break
                     except KeyError:
@@ -129,12 +129,12 @@ def process_chunk(args):
 def setup_database():
     #Erstellt die SQLite-Datenbank und die Tabelle.
     conn = sqlite3.connect(DB_NAME)
-    assert conn is not None, "Datenbankverbindung ist None!" #NEU: Assert hinzugefügt
+    assert conn is not None, "Datenbankverbindung ist None!" 
 
     cursor = conn.cursor()
-    assert cursor is not None, "Cursor ist None!" #NEU: Assert hinzugefügt
+    assert cursor is not None, "Cursor ist None!"
 
-    # NEU: Performance-Optimierungen für grosse Datenmengen
+    # Performance-Optimierungen für grosse Datenmengen
     cursor.execute("PRAGMA journal_mode = WAL")       # Schnelleres Schreiben
     cursor.execute("PRAGMA synchronous = NORMAL")     # Weniger Disk-Flushes
     cursor.execute("PRAGMA cache_size = -64000")      # 64 MB Cache
@@ -212,6 +212,6 @@ if __name__ == "__main__":
     else:
         # 1. Hierarchie-Baum holen
         valid_q_ids = fetch_hierarchy_tree()
-        assert valid_q_ids is not None, "valid_q_ids ist None!" #NEU: Assert hinzugefügt
+        assert valid_q_ids is not None, "valid_q_ids ist None!"
         # 2. Dump filtern und in DB speichern
         process_dump_parallel(valid_q_ids)
