@@ -1,3 +1,28 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Virtual environment
+venv/
+
+# IDE
+.idea/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# database
+*.db
+
+# knowledge base (Folder and all contents)
+data/dodis_entities.kb/
+data/dodis_entities.kb/**
+data/mini_entities.kb/
+data/mini_entities.kb/**
+
+output/
 # Datenbanken
 *.db
 
