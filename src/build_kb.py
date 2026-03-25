@@ -4,12 +4,19 @@ import spacy
 from spacy.kb import InMemoryLookupKB
 from pathlib import Path
 import gc
+import argparse
 
 
-def build_kb():
-    BASE_PATH = Path(__file__).parent.parent
-    DB_PATH = BASE_PATH / "data" / "dodis_wikidata.db"
-    KB_OUTPUT_PATH = BASE_PATH / "data" / "dodis_entities.kb"
+
+
+def build_kb(database,outputPath):
+
+    DB_PATH = database
+    KB_OUTPUT_PATH = outputPath
+
+    #BASE_PATH = Path(__file__).parent.parent
+    #DB_PATH = BASE_PATH / "data" / "dodis_wikidata.db"
+    #KB_OUTPUT_PATH = BASE_PATH / "data" / "dodis_entities.kb"
 
     nlp = spacy.load("de_dep_news_trf")
     kb = InMemoryLookupKB(vocab=nlp.vocab, entity_vector_length=768)
@@ -54,8 +61,13 @@ def build_kb():
 
     conn.close()
     kb.to_disk(KB_OUTPUT_PATH)
-    print(f"✅ FERTIG! {len(registered_ids)} Entitäten in KB.")
+    print(f"FERTIG! {len(registered_ids)} Entitäten in KB.")
 
 
 if __name__ == "__main__":
-    build_kb()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--database", type=str)
+    parser.add_argument("-o", "--outputPath", type=str)
+    
+    args = parser.parse_args()
+    build_kb(args.database,args.outputPath)
