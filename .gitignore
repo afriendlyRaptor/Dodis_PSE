@@ -23,3 +23,17 @@ data/mini_entities.kb/
 data/mini_entities.kb/**
 
 output/
+# Datenbanken
+*.db
+
+# Komprimierte Dateien
+*.gz
+
+# Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual Environment
+venv/
+.env
