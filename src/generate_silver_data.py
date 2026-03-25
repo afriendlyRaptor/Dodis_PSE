@@ -6,7 +6,6 @@ from pathlib import Path
 
 
 def get_value(entry):
-    """Hilfsfunktion, um Werte aus Wikidata-JSON-Strukturen sicher zu extrahieren."""
     if isinstance(entry, dict):
         return entry.get('value')
     return entry
@@ -18,7 +17,7 @@ def generate():
     DB_PATH = DATA_PATH / "dodis_wikidata.db"
 
     if not DB_PATH.exists():
-        print(f"❌ Datenbank nicht gefunden unter: {DB_PATH}")
+        print(f"Datenbank nicht gefunden unter: {DB_PATH}")
         return
 
     conn = sqlite3.connect(str(DB_PATH))
@@ -60,7 +59,7 @@ def generate():
     db.to_disk(DATA_PATH / "dev.spacy")
 
     conn.close()
-    print(f"✅ {count} Sätze in 'train.spacy' und 'dev.spacy' gespeichert.")
+    print(f"{count} Sätze in 'train.spacy' und 'dev.spacy' gespeichert.")
 
 
 if __name__ == "__main__":

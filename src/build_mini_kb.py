@@ -13,7 +13,7 @@ def create_mini_kb():
     doc_bin = DocBin(store_user_data=True).from_disk(train_data)
     docs = list(doc_bin.get_docs(nlp.vocab))
 
-    # Vektorlänge 768 passend für BERT/Transformer
+    # vektorlänge 768 passend für BERT/Transformer
     kb = InMemoryLookupKB(vocab=nlp.vocab, entity_vector_length=768)
 
     entities = {}  # qid -> text
@@ -22,16 +22,16 @@ def create_mini_kb():
         for ent in doc.ents:
             entities[ent.kb_id_] = ent.text
 
-    print(f"Registriere {len(entities)} Entitäten in der KB...")
+    print(f"registriere {len(entities)} entitäten in der kb")
 
     for qid, text in entities.items():
-        # Entity hinzufügen
+        # entity hinzufügen
         kb.add_entity(entity=qid, freq=100, entity_vector=[0.0] * 768)
-        # Alias hinzufügen
+        # alias hinzufügen
         kb.add_alias(alias=text, entities=[qid], probabilities=[1.0])
 
     kb.to_disk(output_kb)
-    print(f"✅ KB erfolgreich unter {output_kb} gespeichert.")
+    print(f"kb erfolgreich unter {output_kb} gespeichert.")
 
 
 if __name__ == "__main__":
