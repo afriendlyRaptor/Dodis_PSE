@@ -6,10 +6,9 @@ import time
 URL = "https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz"
 OUTPUT_FILE = "wikidata_sample.json.gz"
 
-# Wie viele MB maximal laden (144000 = alles)
+# Wie viele MB laden (144000 = alles)
 DOWNLOAD_SIZE_MB = 144000
 
-#NEU: Konfiguration für robustes Downloaden mit Resume-Funktion
 MAX_RETRIES = 10        # Wie oft bei Fehler neu versuchen
 RETRY_WAIT  = 30        # Sekunden warten zwischen Versuchen
 
@@ -33,7 +32,7 @@ def download_with_resume():
 
         try:
             with requests.get(URL, stream=True, headers=headers, timeout=60) as r:
-                assert r is not None, "HTTP-Response ist None!" #NEU: Assert hinzugefügt
+                assert r is not None, "HTTP-Response ist None!"
 
                 r.raise_for_status()
 
