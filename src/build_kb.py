@@ -4,6 +4,7 @@ import spacy
 from spacy.kb import InMemoryLookupKB
 from pathlib import Path
 import gc
+import os
 import argparse
 
 
@@ -13,7 +14,9 @@ def build_kb(database,outputPath):
 
     DB_PATH = database
     KB_OUTPUT_PATH = outputPath
-
+    
+    print(DB_PATH)
+    print(KB_OUTPUT_PATH)
     #BASE_PATH = Path(__file__).parent.parent
     #DB_PATH = BASE_PATH / "data" / "dodis_wikidata.db"
     #KB_OUTPUT_PATH = BASE_PATH / "data" / "dodis_entities.kb"
@@ -66,8 +69,11 @@ def build_kb(database,outputPath):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--database", type=str)
-    parser.add_argument("-o", "--outputPath", type=str)
-    
+    parser.add_argument("-d", "--database")
+    parser.add_argument("-o", "--outputPath")
     args = parser.parse_args()
-    build_kb(args.database,args.outputPath)
+    
+    if os.path.isfile(args.database): 
+        build_kb(args.database,args.outputPath)
+    else:
+        print("Database path not found")
