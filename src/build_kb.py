@@ -23,7 +23,7 @@ def build_kb(database,outputPath):
 
     nlp = spacy.load("de_dep_news_trf")
     kb = InMemoryLookupKB(vocab=nlp.vocab, entity_vector_length=768)
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
     print("schritt 1: registriere ids und sammle namen")
@@ -40,14 +40,33 @@ def build_kb(database,outputPath):
         data = json.loads(raw_json)
         names = set()
 
-        # labels holen
         for lang in ['de', 'en']:
-            label = data.get('labels', {}).get(lang, {}).get('value')
-            if label: names.add(label)
+            label_data = data.get('labels', {}).get(lang)
+    
+            if isinstance(label_data, dict):
+                label = label_data.get('value')
+            elif isinstance(label_data, str):
+                label = label_data
+            else:
+                label = None
+    
+            if label:
+                names.add(label)
+    
+    # aliases
+    alias_list = data.get('aliases', {}).get(lang, [])
 
-            # Aliase holen
-            for entry in data.get('aliases', {}).get(lang, []):
-                names.add(entry.get('value'))
+    for entry in alias_list:
+        if isinstance(entry, dict):
+            val = entry.get('value')
+        elif isinstance(entry, str):
+            val = entry
+        else:
+            val = None
+
+        if val:
+            names.add(val)
+
 
         # aliase mappen
         for n in names:
