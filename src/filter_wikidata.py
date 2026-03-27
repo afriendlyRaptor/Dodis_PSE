@@ -5,6 +5,7 @@ import requests
 from pathlib import Path
 from multiprocessing import Pool, Queue, Process, cpu_count
 import multiprocessing as mp
+import argparse
 
 #KONFIGURATION FÜR DODIS
 BASE_CLASSES = [
@@ -206,7 +207,26 @@ def process_dump_parallel(valid_classes):
     conn.close()
     print(f"\nFertig! {count_found} Einträge in '{DB_NAME}' gespeichert.")
 
+
 if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-i", "--inputfile")
+    parser.add_argument("-o", "--outputPath")
+    parser.add_argument("-l", "--limitEntries", nargs='?', const=1,type=int, default=None)
+    args = parser.parse_args()
+
+    global DB_NAME = args.outputPath 
+    global INPUT_FILE = args.inputfile
+    global LIMIT = args.limitEntries 
+    
+    # Multiprocessing-Konfiguration für bessere Performance
+    global NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
+    global CHUNK_SIZE = 5000  # Zeilen pro Paket
+
+
+    
+    
     if not Path(INPUT_FILE).exists():
         print(f"FEHLER: Eingabedatei '{INPUT_FILE}' nicht gefunden.")
     else:
