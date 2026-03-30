@@ -1,4 +1,5 @@
 spacy
+requests
 huggingface_hub
 pathlib 
 argparse

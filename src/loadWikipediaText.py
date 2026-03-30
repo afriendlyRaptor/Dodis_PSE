@@ -1,5 +1,4 @@
 import requests
-import wikipediaapi
 import time
 import json
 import re
