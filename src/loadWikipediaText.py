@@ -104,7 +104,7 @@ def main(target_title, output_file):
         time.sleep(0.1)  # polite delay
 
     # Save JSON
-    print("Writing to "+output)
+    print("Writing to " + output_file)  # FIX: war "output", korrekter Parametername ist "output_file"
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(annotated_dataset, f, ensure_ascii=False, indent=2)
 
