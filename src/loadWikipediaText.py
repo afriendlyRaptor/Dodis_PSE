@@ -111,6 +111,7 @@ def main(target_title, output_file):
     print(f"Saved annotated dataset with {len(annotated_dataset)} pages to '{output_file}'.")
 
 if __name__ == "__main__":
+    #example: python loadWikipediaText.py -t Max_Petitpierre -o ../data/
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--title")
     parser.add_argument("-o", "--outputfolder")
