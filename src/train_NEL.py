@@ -2,7 +2,7 @@ import spacy
 from spacy.training.example import Example
 import json
 import argparse
-from spacy.kb import KnowledgeBase
+from spacy.kb import KnowledgeBase, InMemoryLookupKB
 
 def load_training_data(json_path):
     """Load JSON dataset and convert to spaCy format for NEL."""
@@ -27,7 +27,7 @@ def train_nel(model_name, kb_path, train_json, n_iter=10):
     nlp = spacy.load(model_name)
 
     # Load KB
-    kb = KnowledgeBase(vocab=nlp.vocab, entity_vector_length=nlp.vocab.vectors_length)
+    kb = InMemoryLookupKB(vocab=nlp.vocab, vector_length=nlp.vocab.vectors_length)
     kb.from_disk(kb_path)
     if "entity_linker" not in nlp.pipe_names:
         linker = nlp.add_pipe("entity_linker", last=True)

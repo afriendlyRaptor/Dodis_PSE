@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=300GB
+#SBATCH --cpus-per-task=16
+#SBATCH --mem-per-cpu=64GB
 #SBATCH --account=gratis
 #SBATCH --qos=job_gratis
 
