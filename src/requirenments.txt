@@ -1,4 +1,5 @@
 spacy
+huggingface_hub
 pathlib 
 argparse
-
+Wikipedia-API

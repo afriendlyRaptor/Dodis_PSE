@@ -214,11 +214,14 @@ if __name__ == "__main__":
     parser.add_argument("-i", "--inputfile")
     parser.add_argument("-o", "--outputPath")
     parser.add_argument("-l", "--limitEntries", nargs='?', const=1,type=int, default=None)
-    args = parser.parse_args()
+    args, leftovers = parser.parse_known_args()
 
-    global DB_NAME = args.outputPath 
-    global INPUT_FILE = args.inputfile
-    global LIMIT = args.limitEntries 
+    if args.outputPath is not None:
+        global DB_NAME = args.outputPath 
+    if args.inputfile is not None:
+        global INPUT_FILE = args.inputfile
+    if args.limitEntries is not None:
+        global LIMIT = args.limitEntries 
     
     # Multiprocessing-Konfiguration für bessere Performance
     global NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
