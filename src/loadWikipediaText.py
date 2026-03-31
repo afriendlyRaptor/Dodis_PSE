@@ -5,7 +5,40 @@ import re
 import argparse
 
 WIKI_API = "https://de.wikipedia.org/w/api.php"
+WIKIDATA_API = "https://www.wikidata.org/w/api.php"
 HEADERS = {"User-Agent": "Dodis"}
+
+def get_qids_for_titles(titles):
+    """Batch-lookup von Wikidata Q-IDs für deutsche Wikipedia-Seitentitel.
+    Gibt ein Dict {titel: qid} zurück, nur für Titel mit einem Wikidata-Eintrag."""
+    qid_map = {}
+    title_list = list(titles)
+    batch_size = 50  # Wikidata API-Limit pro Request
+
+    for i in range(0, len(title_list), batch_size):
+        batch = title_list[i:i + batch_size]
+        params = {
+            "action": "wbgetentities",
+            "sites": "dewiki",
+            "titles": "|".join(batch),
+            "props": "sitelinks",
+            "format": "json"
+        }
+        try:
+            response = requests.get(WIKIDATA_API, params=params, headers=HEADERS, timeout=10)
+            data = response.json()
+            for entity_id, entity_data in data.get("entities", {}).items():
+                if entity_id.startswith("Q"):
+                    dewiki = entity_data.get("sitelinks", {}).get("dewiki", {})
+                    title = dewiki.get("title")
+                    if title:
+                        qid_map[title] = entity_id
+        except Exception as e:
+            print(f"Fehler beim Abrufen der Q-IDs: {e}")
+        time.sleep(0.1)
+
+    return qid_map
+
 
 def get_linking_pages(title):
     headers = {
@@ -61,10 +94,12 @@ def get_page_text(title):
             text = re.sub(r'<[^>]+>', '', html_text)
             # Links für Annotationen
             links = data["parse"].get("links", [])
-            entity_map = {}
-            for l in links:
-                if "exists" in l:  # nur existierende Seiten
-                    entity_map[l["*"]] = l["*"].replace(' ', '_')  # Entity = Wikipedia Title
+            # Alle Titel verlinkter Seiten sammeln
+            titles = {l["*"] for l in links if "exists" in l}
+            # Batch-Lookup: Wikipedia-Titel → Wikidata Q-ID
+            qid_map = get_qids_for_titles(titles)
+            # Nur Entitäten mit Q-ID behalten
+            entity_map = {t: qid_map[t] for t in titles if t in qid_map}
             return text, entity_map
         except Exception as e:
             print(f"Error fetching page {title}: {e}")
