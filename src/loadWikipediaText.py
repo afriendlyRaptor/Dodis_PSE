@@ -61,17 +61,55 @@ def get_page_text(title):
             text = re.sub(r'<[^>]+>', '', html_text)
             # Links für Annotationen
             links = data["parse"].get("links", [])
+            
+            # collect valid link titles
+            link_titles = [l["*"] for l in links if "exists" in l]
+            
+            # resolve to Wikidata IDs
+            wikidata_map = get_wikidata_ids(link_titles)
+            
             entity_map = {}
-            for l in links:
-                if "exists" in l:  # nur existierende Seiten
-                    entity_map[l["*"]] = l["*"].replace(' ', '_')  # Entity = Wikipedia Title
+            for title in link_titles:
+                if title in wikidata_map:
+                    entity_map[title] = wikidata_map[title]
             return text, entity_map
         except Exception as e:
             print(f"Error fetching page {title}: {e}")
             retries += 1
             time.sleep(2)
     return "", {}
-    
+
+def get_wikidata_ids(titles):
+    def chunk_list(lst, size=50):
+        for i in range(0, len(lst), size):
+            yield lst[i:i+size]
+
+    mapping = {}
+
+    for chunk in chunk_list(titles, 50):
+        params = {
+            "action": "query",
+            "prop": "pageprops",
+            "titles": "|".join(chunk),
+            "format": "json"
+        }
+
+        try:
+            response = requests.get(WIKI_API, params=params, headers=HEADERS, timeout=10)
+            data = response.json()
+            pages = data["query"]["pages"]
+
+            for page_id, page in pages.items():
+                title = page.get("title")
+                qid = page.get("pageprops", {}).get("wikibase_item")
+                if title and qid:
+                    mapping[title] = qid
+
+        except Exception as e:
+            print(f"Error fetching Wikidata IDs: {e}")
+
+    return mapping
+
 def annotate_text(text, entity_map):
     """
     Find all occurrences of entity_name in text and return annotations.
@@ -104,7 +142,7 @@ def main(target_title, output_file):
         time.sleep(0.1)  # polite delay
 
     # Save JSON
-    print("Writing to "+output)
+    print("Writing to " + output_file)
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(annotated_dataset, f, ensure_ascii=False, indent=2)
 
