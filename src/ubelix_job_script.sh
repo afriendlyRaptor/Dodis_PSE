@@ -1,7 +1,9 @@
 #!/bin/bash
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem-per-cpu=64GB
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=4GB
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:rtx3090:1
 #SBATCH --account=gratis
 #SBATCH --qos=job_gratis
 
