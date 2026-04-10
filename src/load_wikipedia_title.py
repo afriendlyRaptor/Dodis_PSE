@@ -144,7 +144,7 @@ def write_page_result(data, output_file):
 # Usage
 # ---------------------------
 if __name__ == "__main__":
-    #example: python loadWikipediaText.py -t Max_Petitpierre -o ../data/
+    #example: python load_wikipedia_title.py -t Max_Petitpierre -o ../data/
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-t", "--title")
