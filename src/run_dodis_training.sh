@@ -29,6 +29,7 @@ pip install --upgrade pip setuptools wheel --quiet
 pip install spacy spacy-transformers huggingface_hub --quiet
 python -m spacy download de_dep_news_trf --quiet
 python -m spacy download de_core_news_sm --quiet
+python -m spacy download de_core_news_lg --quiet
 
 echo "Lade TEI-XML Dateien von HuggingFace und erstelle Datenbank..."
 python src/tei_to_db.py
