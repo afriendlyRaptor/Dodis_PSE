@@ -18,8 +18,11 @@ def qid_to_title(qid, lang="de"):
         "format": "json"
     }
 
-    r = requests.get(WIKIDATA_API, params=params, headers=HEADERS, timeout=10)
-    data = r.json()
+    try:
+        response = requests.get(WIKIDATA_API, params=params, headers=HEADERS, timeout=10)
+    except Exception as e:
+        print(e)
+    data = response.json()
 
     sitelinks = data["entities"][qid].get("sitelinks", {})
     wiki_key = f"{lang}wiki"

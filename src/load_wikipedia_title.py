@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import time
 import argparse
 import json
+import re
 
 WIKI_API = "https://de.wikipedia.org/w/api.php"
 
@@ -65,42 +66,67 @@ def get_wikidata_ids(titles):
 # ---------------------------
 # 3. Extract text + annotations
 # ---------------------------
+
 def extract_annotations(html):
     soup = BeautifulSoup(html, "html.parser")
 
-    text_parts = []
+    text = clean_wikipedia_html(html)
+
     annotations = []
     link_titles = []
 
     current_pos = 0
 
-    for element in soup.descendants:
-        if element.name == "a" and element.get("href", "").startswith("/wiki/"):
-            mention = element.get_text()
-            title = element.get("title")
+    for a in soup.find_all("a"):
+        if not a.get("href", "").startswith("/wiki/"):
+            continue
 
-            if mention and title:
-                start = current_pos
-                text_parts.append(mention)
-                end = start + len(mention)
+        mention = a.get_text(strip=True)
+        title = a.get("title")
 
-                annotations.append({
-                    "start": start,
-                    "end": end,
-                    "title": title  # temporary, will map to QID later
-                })
+        if not mention or not title:
+            continue
 
-                link_titles.append(title)
-                current_pos = end
+        start = text.find(mention, current_pos)
+        if start == -1:
+            continue
 
-        elif element.name is None:  # plain text
-            text = str(element)
-            text_parts.append(text)
-            current_pos += len(text)
+        end = start + len(mention)
 
-    full_text = "".join(text_parts)
-    return full_text, annotations, list(set(link_titles))
+        annotations.append({
+            "start": start,
+            "end": end,
+            "title": title
+        })
 
+        link_titles.append(title)
+        current_pos = end
+
+    return text, annotations, list(set(link_titles))
+
+def clean_wikipedia_text(html):
+    soup = BeautifulSoup(html, "html.parser")
+
+    # ONLY main article content (language-independent)
+    content = soup.select_one("div.mw-parser-output")
+
+    if not content:
+        return ""
+
+    # remove non-content elements (safe for all languages)
+    for tag in content([
+        "table", "sup", "style", "script", "figure",
+        "nav", "footer", "header"
+    ]):
+        tag.decompose()
+
+    # extract text
+    text = content.get_text(" ")
+
+    # normalize whitespace
+    text = " ".join(text.split())
+
+    return text
 
 # ---------------------------
 # 4. Main pipeline
