@@ -67,10 +67,10 @@ def get_wikidata_ids(titles):
 # 3. Extract text + annotations
 # ---------------------------
 
-def extract_annotations(html):
+def extract_annotations(html,page_name):
     soup = BeautifulSoup(html, "html.parser")
 
-    text = clean_wikipedia_html(html)
+    text = clean_wiki_text(get_plaintext(page_name))
 
     annotations = []
     link_titles = []
@@ -104,29 +104,60 @@ def extract_annotations(html):
 
     return text, annotations, list(set(link_titles))
 
-def clean_wikipedia_html(html):
-    soup = BeautifulSoup(html, "html.parser")
 
-    # ONLY main article content (language-independent)
-    content = soup.select_one("div.mw-parser-output")
+def get_plaintext(title, lang="de"):
+    url = f"https://{lang}.wikipedia.org/w/api.php"
 
-    if not content:
-        return ""
+    params = {
+        "action": "query",
+        "prop": "extracts",
+        "explaintext": 1,
+        "titles": title,
+        "format": "json",
+        "redirects": 1
+    }
 
-    # remove non-content elements (safe for all languages)
-    for tag in content([
-        "table", "sup", "style", "script", "figure",
-        "nav", "footer", "header"
-    ]):
-        tag.decompose()
+    try:
+        r = requests.get(WIKI_API, params=params, headers=HEADERS, timeout=10)
+    except Exception as e:
+        print(e)
 
-    # extract text
-    text = content.get_text(" ")
+    if r.status_code != 200:
+        print("HTTP error:", r.status_code)
+        return None
 
-    # normalize whitespace
-    text = " ".join(text.split())
+    data = r.json()
+
+    pages = data.get("query", {}).get("pages", {})
+
+    for page_id, page in pages.items():
+        return page.get("extract", "")
+
+    return None
+
+
+def clean_wiki_text(text):
+
+    # remove citation markers like [1], [2]
+    text = re.sub(r"\[\d+\]", "", text)
+
+    # remove reference arrows
+    text = re.sub(r"↑.*?(?=\n|$)", "", text)
+
+    # remove "In: ..." sources
+    text = re.sub(r"In:.*?(?=\n|$)", "", text)
+
+    # remove long pipe-separated lists
+    text = re.sub(r"(\w+\s\|){3,}", "", text)
+
+    # remove normdata / metadata sections
+    text = re.sub(r"Normdaten.*", "", text)
+
+    # collapse whitespace
+    text = re.sub(r"\s+", " ", text).strip()
 
     return text
+
 
 # ---------------------------
 # 4. Main pipeline
@@ -134,7 +165,7 @@ def clean_wikipedia_html(html):
 def process_page(title):
     html = get_page_html(title)
 
-    text, annotations, link_titles = extract_annotations(html)
+    text, annotations, link_titles = extract_annotations(html,title)
 
     qid_map = get_wikidata_ids(link_titles)
 
