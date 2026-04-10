@@ -138,26 +138,52 @@ def get_plaintext(title, lang="de"):
 
 def clean_wiki_text(text):
 
-    # remove citation markers like [1], [2]
+    # --- remove section headings (== anything == / === anything ===)
+    text = re.sub(r"={2,}.*?={2,}", "", text)
+
+    # --- remove citation markers [1], [2], etc.
     text = re.sub(r"\[\d+\]", "", text)
 
-    # remove reference arrows
+    # --- remove footnote arrows (common in all languages)
     text = re.sub(r"↑.*?(?=\n|$)", "", text)
 
-    # remove "In: ..." sources
+    # --- remove "In: ..." references (works across languages)
     text = re.sub(r"In:.*?(?=\n|$)", "", text)
 
-    # remove long pipe-separated lists
-    text = re.sub(r"(\w+\s\|){3,}", "", text)
+    # --- remove reference-style lines like "Retrieved ...", "Accessed ..."
+    text = re.sub(
+        r"\b(Retrieved|Accessed|Abgerufen|Consulté|Consultato|Recuperado).*?(?=\n|$)",
+        "",
+        text,
+        flags=re.IGNORECASE
+    )
 
-    # remove normdata / metadata sections
-    text = re.sub(r"Normdaten.*", "", text)
+    # --- remove Wikipedia section-like metadata words (multi-language safe)
+    text = re.sub(
+        r"\b(Weblinks|Literatur|Literature|References|Références|Bibliography|Bibliographie|Privates|Ehrungen|Ehren|Career|Biography)\b.*?(?=\n|$)",
+        "",
+        text,
+        flags=re.IGNORECASE
+    )
 
-    # collapse whitespace
+    # --- remove pipe-separated name/list blocks
+    text = re.sub(r"(\w+\s\|){2,}", "", text)
+
+    # --- remove Normdaten / authority control blocks (multi-language)
+    text = re.sub(
+        r"(Normdaten|Authority control|Controllo di autorità|Control de autoridades).*",
+        "",
+        text,
+        flags=re.IGNORECASE
+    )
+
+    # --- remove leftover broken fragments (optional safety cleanup)
+    text = re.sub(r"\b[A-ZÄÖÜ]{2,}-[A-Z]\b", "", text)
+
+    # --- collapse whitespace
     text = re.sub(r"\s+", " ", text).strip()
 
     return text
-
 
 # ---------------------------
 # 4. Main pipeline
