@@ -8,7 +8,7 @@ import re
 WIKI_API = "https://de.wikipedia.org/w/api.php"
 
 HEADERS = {
-    "User-Agent": "Dodis"
+    "User-Agent": "WikipediaDodisProject/1.0 (contact: dodis_warden@bluewin.com)"
 }
 
 # ---------------------------
@@ -104,7 +104,7 @@ def extract_annotations(html):
 
     return text, annotations, list(set(link_titles))
 
-def clean_wikipedia_text(html):
+def clean_wikipedia_html(html):
     soup = BeautifulSoup(html, "html.parser")
 
     # ONLY main article content (language-independent)
