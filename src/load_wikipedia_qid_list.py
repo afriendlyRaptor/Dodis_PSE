@@ -1,6 +1,7 @@
 import requests
 import load_wikipedia_title as load_wiki
 import argparse
+import time
 
 WIKIDATA_API = "https://www.wikidata.org/w/api.php"
 
@@ -19,10 +20,13 @@ def qid_to_title(qid, lang="de"):
     }
 
     try:
+        time.sleep(1)
         response = requests.get(WIKIDATA_API, params=params, headers=HEADERS, timeout=10)
+        data = response.json()
     except Exception as e:
         print(e)
-    data = response.json()
+        print(response)
+        return None
 
     sitelinks = data["entities"][qid].get("sitelinks", {})
     wiki_key = f"{lang}wiki"
@@ -31,6 +35,7 @@ def qid_to_title(qid, lang="de"):
         return sitelinks[wiki_key]["title"]
 
     return None
+
 
 
 def run_all(qids,output_folder, lang="de"):
