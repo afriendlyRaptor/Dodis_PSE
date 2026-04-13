@@ -2,6 +2,7 @@ import requests
 import load_wikipedia_title as load_wiki
 import argparse
 import time
+from sampleKB import sample_qid_list
 
 WIKIDATA_API = "https://www.wikidata.org/w/api.php"
 
@@ -63,4 +64,20 @@ def run_all(qids,output_folder, lang="de"):
         load_wiki.write_page_result(result, output_folder + f"{title}_{qid}.json")
 
 
+if __name__ == "__main__":
+    # example: 
+    # python load_wikipedia_qid_list.py -i ../data/kb_folder/qid_list.txt -s 10
+    # -o ../data/qid_pages
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument("-i", "--qidlist")
+    parser.add_argument("-s", "--samplesize")
+    parser.add_argument("-o", "--outputfolder")
+    parser.add_argument("-l", "--language")
+    args = parser.parse_args()
+   
+    print("sampel List")
+    qid_sample = sample_qid_list(args.qidlist,args.samplesize)
+    print("loading Pages")
+    run_all(qid_sample,args.outputfolder,args.language)
 
