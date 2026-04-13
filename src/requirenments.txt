@@ -1,7 +1,6 @@
 spacy
+spacy-transformers
 requests
 huggingface_hub
-pathlib 
-argparse
 Wikipedia-API
 bs4

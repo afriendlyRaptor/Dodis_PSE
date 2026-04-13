@@ -6,7 +6,7 @@ import numpy as np
 
 def create_mini_kb():
     BASE_PATH = Path(__file__).parent.parent.parent.absolute()
-    train_data = BASE_PATH / "data" / "train.spacy"
+    train_data = BASE_PATH / "data" / "wiki_train_s.spacy"
     output_kb = BASE_PATH / "data" / "mini_entities.kb"
 
     nlp = spacy.load("de_core_news_sm")
