@@ -23,6 +23,11 @@ data/mini_entities.kb/
 data/mini_entities.kb/**
 
 output/
+
+#dodis_transcription_xml
+data/dodis_transcription_xml/
+data/dodis_transcription_xml/**
+
 # Datenbanken
 *.db
 

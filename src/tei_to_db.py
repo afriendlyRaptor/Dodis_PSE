@@ -29,68 +29,79 @@ if __name__ == "__main__":
     DB_PATH = DATA_PATH / "dodis_entities.db"
 
     print("Lade Dodis TEI-XML Dataset von HuggingFace...")
+    LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
+
+if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
+    print("Nutze lokalen Cache...")
+    dataset_path = LOCAL_DATASET
+else:
+    print("Lade Dodis TEI-XML Dataset von HuggingFace...")
     dataset_path = Path(
-        snapshot_download(repo_id="prg-unibe/dodis_transcription_xml", repo_type="dataset")
+        snapshot_download(
+            repo_id="prg-unibe/dodis_transcription_xml",
+            repo_type="dataset",
+            local_dir=LOCAL_DATASET,
+        )
     )
     assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
 
-    conn = sqlite3.connect(DB_PATH)
-    cur = conn.cursor()
+conn = sqlite3.connect(DB_PATH)
+cur = conn.cursor()
 
-    cur.execute("CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, type TEXT)")
-    cur.execute(
-        """
-        CREATE TABLE IF NOT EXISTS aliases (
-            alias TEXT,
-            entity_id TEXT,
-            freq INTEGER DEFAULT 0,
-            PRIMARY KEY (alias, entity_id)
-        )
-        """
+cur.execute("CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, type TEXT)")
+cur.execute(
+    """
+    CREATE TABLE IF NOT EXISTS aliases (
+        alias TEXT,
+        entity_id TEXT,
+        freq INTEGER DEFAULT 0,
+        PRIMARY KEY (alias, entity_id)
     )
-    conn.commit()
+    """
+)
+conn.commit()
 
-    # Alle XML-Dateien aus allen Splits verarbeiten
-    xml_files = sorted(dataset_path.glob("**/*.xml"))
-    assert len(xml_files) > 0, "Keine XML-Dateien gefunden"
-    print(f"{len(xml_files)} XML-Dateien gefunden...")
+# Alle XML-Dateien aus allen Splits verarbeiten
+xml_files = sorted(dataset_path.glob("**/*.xml"))
+assert len(xml_files) > 0, "Keine XML-Dateien gefunden"
+print(f"{len(xml_files)} XML-Dateien gefunden...")
 
-    for xml_file in xml_files:
-        try:
-            tree = ET.parse(xml_file)
-        except ET.ParseError:
-            print(f"  Überspringe fehlerhafte XML-Datei: {xml_file.name}")
-            continue
+for xml_file in xml_files:
+    try:
+        tree = ET.parse(xml_file)
+    except ET.ParseError:
+        print(f"  Überspringe fehlerhafte XML-Datei: {xml_file.name}")
+        continue
 
-        root = tree.getroot()
+    root = tree.getroot()
 
-        for tag, label in ENTITY_TAGS.items():
-            for elem in root.findall(f".//{{{TEI_NS}}}{tag}"):
-                ref = elem.get("ref", "")
-                mention = "".join(elem.itertext()).strip()
+    for tag, label in ENTITY_TAGS.items():
+        for elem in root.findall(f".//{{{TEI_NS}}}{tag}"):
+            ref = elem.get("ref", "")
+            mention = "".join(elem.itertext()).strip()
 
-                if not ref or not mention:
-                    continue
+            if not ref or not mention:
+                continue
 
-                cur.execute(
-                    "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
-                    (ref, label),
-                )
-                # Alias-Häufigkeit erhöhen oder neu eintragen
-                cur.execute(
-                    """
-                    INSERT INTO aliases (alias, entity_id, freq) VALUES (?, ?, 1)
-                    ON CONFLICT (alias, entity_id) DO UPDATE SET freq = freq + 1
-                    """,
-                    (mention, ref),
-                )
+            cur.execute(
+                "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
+                (ref, label),
+            )
+            # Alias-Häufigkeit erhöhen oder neu eintragen
+            cur.execute(
+                """
+                INSERT INTO aliases (alias, entity_id, freq) VALUES (?, ?, 1)
+                ON CONFLICT (alias, entity_id) DO UPDATE SET freq = freq + 1
+                """,
+                (mention, ref),
+            )
 
-    conn.commit()
+conn.commit()
 
-    entity_count = cur.execute("SELECT COUNT(*) FROM entities").fetchone()[0]
-    alias_count = cur.execute("SELECT COUNT(*) FROM aliases").fetchone()[0]
-    assert entity_count > 0, "Keine Entities in der Datenbank"
-    assert alias_count > 0, "Keine Aliases in der Datenbank"
+entity_count = cur.execute("SELECT COUNT(*) FROM entities").fetchone()[0]
+alias_count = cur.execute("SELECT COUNT(*) FROM aliases").fetchone()[0]
+assert entity_count > 0, "Keine Entities in der Datenbank"
+assert alias_count > 0, "Keine Aliases in der Datenbank"
 
-    conn.close()
-    print(f"{entity_count} Entities und {alias_count} Aliases gespeichert unter {DB_PATH}")
+conn.close()
+print(f"{entity_count} Entities und {alias_count} Aliases gespeichert unter {DB_PATH}")
