@@ -23,6 +23,13 @@ DB_NAME = "dodis_wikidata.db"
 INPUT_FILE = "wikidata_sample.json.gz" # Download-Sample
 LIMIT = None # Optional: Limit setzen für Anzahl gefundener Einträge (z.B. 10000 zum Testen)
 
+# Zeitraum-Filter für Dodis
+YEAR_MIN = 1848  # Anfang des relevanten Zeitraums
+YEAR_MAX = 2000  # Ende des relevanten Zeitraums
+ 
+# Q-IDs der Personen-Klasse – für diese wird P569 (Geburtsdatum) geprüft
+PERSON_CLASSES = {"Q5"}
+
 # Multiprocessing-Konfiguration für bessere Performance
 NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
 CHUNK_SIZE = 5000  # Zeilen pro Paket
@@ -96,6 +103,49 @@ def extract_relevant_fields(item):
         }
     }
 
+def extract_year(claims, prop):
+    """
+    Extrahiert das Jahr aus einem Wikidata-Datumsclaim (z.B. P569, P571).
+    Wikidata speichert Daten als ISO-8601-Strings im Format '+YYYY-MM-DDT00:00:00Z'.
+    Gibt None zurück falls kein gültiges Jahr gefunden wird.
+    """
+    for claim in claims.get(prop, []):
+        try:
+            datavalue = claim["mainsnak"]["datavalue"]["value"]
+            # Zeitwert ist ein Dict mit "time"-Key, z.B. "+1901-03-15T00:00:00Z"
+            time_str = datavalue.get("time", "")
+            # Erstes Zeichen ist '+' oder '-' (v. Chr.), danach folgt das Jahr
+            year = int(time_str[1:5])
+            return year
+        except (KeyError, ValueError, TypeError):
+            continue
+    return None
+ 
+
+def is_in_time_range(item, matched_class_ids):
+    """
+    Prüft ob eine Entität zeitlich in den Dodis-Zeitraum (YEAR_MIN–YEAR_MAX) fällt.
+ 
+    Logik:
+    - Personen (P31 enthält Q5):     Geburtsjahr (P569) muss in [YEAR_MIN, YEAR_MAX] liegen.
+    - Alle anderen Entitäten:        Gründungsjahr (P571) muss in [YEAR_MIN, YEAR_MAX] liegen,
+                                     ODER kein Datum vorhanden (da viele hist. Orte undatiert sind).
+    """
+    claims = item.get("claims", {})
+    is_person = bool(PERSON_CLASSES & matched_class_ids)
+ 
+    if is_person:
+        year = extract_year(claims, "P569")  # Geburtsdatum
+        if year is None:
+            return False  # Personen ohne Geburtsdatum ausschliessen
+        return YEAR_MIN <= year <= YEAR_MAX
+    else:
+        year = extract_year(claims, "P571")  # Gründungsdatum (inception)
+        if year is None:
+            return True   # Orte/Orgs ohne Datum behalten (z.B. antike Städte, Staaten)
+        return YEAR_MIN <= year <= YEAR_MAX
+ 
+
 def process_chunk(args):
     """Wird von jedem Worker-Prozess aufgerufen. Verarbeitet ein Paket Zeilen."""
     assert args is not None, "args ist None!" 
@@ -114,15 +164,17 @@ def process_chunk(args):
             item = json.loads(line)
             claims = item.get("claims", {})
             if "P31" in claims:
+                matched_class_ids = set()
                 for claim in claims["P31"]:
                     try:
                         target_id = claim["mainsnak"]["datavalue"]["value"]["id"]
                         if target_id in valid_classes:
-                            small_item = extract_relevant_fields(item) # Nur relevante Felder extrahieren
-                            results.append((item['id'], json.dumps(small_item)))
-                            break
+                            matched_class_ids.add(target_id)
                     except KeyError:
                         continue
+                if matched_class_ids and is_in_time_range(item, matched_class_ids):
+                    small_item = extract_relevant_fields(item)
+                    results.append((item['id'], json.dumps(small_item)))
         except json.JSONDecodeError:
             continue
     return results
