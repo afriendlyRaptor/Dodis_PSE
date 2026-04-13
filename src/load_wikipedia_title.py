@@ -206,10 +206,16 @@ def process_page(title):
 
     text, annotations, link_titles = extract_annotations(html,title)
 
+
+    # ensure title is also annotated if it appears in text
+    title_lower = title.replace("_", " ")
+    
     qid_map = get_wikidata_ids(link_titles)
 
-    # attach QIDs
+
     clean_annotations = []
+   
+    # attach QIDs
     for ann in annotations:
         qid = qid_map.get(ann["title"])
         if qid:
