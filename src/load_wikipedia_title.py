@@ -22,8 +22,19 @@ def get_page_html(title):
         "format": "json"
     }
 
+    time.sleep(1)
+
     r = requests.get(WIKI_API, params=params, headers=HEADERS, timeout=10)
     data = r.json()
+
+
+    # Handle errors explicitly
+    if "error" in data:
+        raise Exception(f"API Error: {data['error']}")
+
+    if "parse" not in data:
+        raise Exception(f"Unexpected response: {data}")
+
     return data["parse"]["text"]["*"]
 
 

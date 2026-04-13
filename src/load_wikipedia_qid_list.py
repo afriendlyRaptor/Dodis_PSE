@@ -66,8 +66,8 @@ def run_all(qids,output_folder, lang="de"):
 
 if __name__ == "__main__":
     # example: 
-    # python load_wikipedia_qid_list.py -i ../data/kb_folder/qid_list.txt -s 10
-    # -o ../data/qid_pages
+    #  python load_wikipedia_qid_list.py -i ../data/kb_folder/qid_list.txt \ 
+    # -s 1000 -o ../data/qid_pages/ -l en
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-i", "--qidlist")
