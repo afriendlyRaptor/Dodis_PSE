@@ -30,10 +30,10 @@ def get_page_html(title):
 
     # Handle errors explicitly
     if "error" in data:
-        raise Exception(f"API Error: {data['error']}")
+        print(f"API Error: {data['error']}")
 
     if "parse" not in data:
-        raise Exception(f"Unexpected response: {data}")
+        print(f"Unexpected response: {data}")
 
     return data["parse"]["text"]["*"]
 
@@ -201,6 +201,8 @@ def clean_wiki_text(text):
 # ---------------------------
 def process_page(title):
     html = get_page_html(title)
+    if html is None:
+        return None
 
     text, annotations, link_titles = extract_annotations(html,title)
 
@@ -247,6 +249,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
    
     page = process_page(args.title)
-
-    write_page_result(page,args.outputfolder + args.title + "_wikipedia_dataset.json")
+    if page is not None:
+        write_page_result(page,args.outputfolder + args.title + "_wikipedia_dataset.json")
 
