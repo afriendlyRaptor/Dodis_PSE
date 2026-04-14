@@ -38,7 +38,7 @@ def json_to_spacy(json_path, nlp, doc_bin):
 
 
 if __name__ == "__main__":
-    # example: python testsAndHelpers/jsonToSpacy.py ../data/Max_Petitpierre_wikipedia_dataset.json ../data/wiki_train.spacy
+    # example: 
     parser = argparse.ArgumentParser(
         description="Convert multiple JSON files into one spaCy .spacy file"
     )
@@ -48,7 +48,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    nlp = spacy.blank("en")
+    nlp = spacy.blank("de")
     doc_bin = DocBin(store_user_data=True)
 
     if not Doc.has_extension("kb_links"):
