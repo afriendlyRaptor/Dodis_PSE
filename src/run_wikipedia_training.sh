@@ -1,0 +1,16 @@
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=4GB
+#SBATCH --time=24:00:00
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:rtx3090:1
+#SBATCH --account=gratis
+#SBATCH --qos=job_gratis
+
+module load Workspace_Home
+module load Python/3.12.3-GCCcore-13.3.0
+module load CUDA/12.1.1
+
+source src/setup.sh
+source src/start.sh

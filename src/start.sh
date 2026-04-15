@@ -1,14 +1,14 @@
 #!/bin/bash
 
-database="../../dodis_wikidata.db"
-output="../data/dodis_entitiers.kb"
-
-if [ ! -d "venv" ]; then
-    echo "Execute the Setup.sh file first."
-fi
 echo "Activating venv..."
 source venv/bin/activate
-echo "building KB..."
-#python build_kb.py -d $database -o $output
-python train_NEL.py --model de_dep_news_trf --kb ../data/dodis_wikidata.db \
-    --train ../data/Max_Petitpierre_wikipedia_dataset.json --output ../ 
+
+echo "Generiere Wikidata KB aus Datenbank..."
+python src/build_kb.py -d data/dodis_wikidata.db -o data/wikidata_entities.kb
+
+echo "Starte Training..."
+python -m spacy train train_el.cfg \
+    --output output/wikipedia \
+    --gpu-id 0
+
+echo "Training abgeschlossen. Modell gespeichert unter output/wikipedia/model-best"
