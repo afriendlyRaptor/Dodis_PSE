@@ -13,9 +13,6 @@ venv/
 __pycache__/
 *.pyc
 
-# database
-*.db
-
 # knowledge base (Folder and all contents)
 data/dodis_entities.kb/
 data/dodis_entities.kb/**
@@ -31,6 +28,8 @@ data/dodis_transcription_xml/**
 # Datenbanken
 *.db
 
+# Knowledge Base
+*.kb
 # Komprimierte Dateien
 *.gz
 
