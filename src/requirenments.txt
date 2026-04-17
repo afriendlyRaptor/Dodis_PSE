@@ -9,9 +9,13 @@ bs4
 
 setuptools<82
 
-torch==2.0.1
-torchvision==0.15.2
-torchaudio==2.0.2
+torch==2.7.0
+#torchvision==0.21.0+cu118
+#torchaudio==2.7.0+cu118
+
+tensorflow
+flax
+
 
 cupy-cuda11x
 
