@@ -1,11 +1,25 @@
 #!/bin/bash
+
+#SBATCH --mail-user=Paul.Meier@students.unibe.ch
+#SBATCH --mail-type=end,fail
+
+#SBATCH --account=gratis
+#SBATCH --partition=gpu
+##SBATCH --qos=job_gratis
+#SBATCH --qos=job_debug
+
+#SBATCH --gres=gpu:rtx3090:1
+#SBATCH --job-name=DodisWiki
+
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=4GB
-#SBATCH --partition=gpu
-#SBATCH --gres=gpu:rtx3090:1
-#SBATCH --account=gratis
-#SBATCH --qos=job_gratis
+#SBATCH --time=0-23:55:00
+##SBATCH --time=0-00:10:00
+
+#SBATCH --output=job_logs/output_%j.out
+#SBATCH --error=job_logs/output_%j.err
+
 
 # Put your code below this line
 module load Workspace_Home
