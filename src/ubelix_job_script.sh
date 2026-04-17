@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#SBATCH --mail-user=Paul.Meier@students.unibe.ch
-#SBATCH --mail-type=end,fail
+##SBATCH --mail-user=Paul.Meier@students.unibe.ch
+##SBATCH --mail-type=end,fail
 
 #SBATCH --account=gratis
 #SBATCH --partition=gpu
@@ -24,14 +24,11 @@
 # Put your code below this line
 module load Workspace_Home
 module load Python/3.12.3-GCCcore-13.3.0
-module load CUDA/12.1.1
+module load CUDA/12.6.0
 source setup.sh
-source start.sh
 
 echo "Starte Training..."
-python -m spacy train ../train_el.cfg \
-    --output output/wiki_nel \
-    --gpu-id 0
+python -m spacy train --output output/wiki_nel --gpu-id 0 ../train_el.cfg
 
 echo "Training abgeschlossen. Modell gespeichert unter output/dodis/model-best"
 
