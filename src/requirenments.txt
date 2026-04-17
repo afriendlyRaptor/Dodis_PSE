@@ -4,8 +4,16 @@ requests
 huggingface_hub
 Wikipedia-API
 bs4
-cupy-cuda12x
---index-url https://download.pytorch.org/whl/cu121
-torch==2.5.1
-torchvision==0.20.1
-torchaudio==2.5.1
+
+--extra-index-url https://download.pytorch.org/whl/cu118
+
+setuptools<82
+
+torch==2.0.1
+torchvision==0.15.2
+torchaudio==2.0.2
+
+cupy-cuda11x
+
+spacy>=3.7.0
+spacy-transformers>=1.3.0
