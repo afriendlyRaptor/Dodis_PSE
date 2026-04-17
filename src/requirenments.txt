@@ -4,3 +4,4 @@ requests
 huggingface_hub
 Wikipedia-API
 bs4
+cupy-cuda12x
