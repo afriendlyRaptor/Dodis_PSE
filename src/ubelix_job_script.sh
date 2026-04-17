@@ -28,7 +28,7 @@ module load CUDA/12.6.0
 source setup.sh
 
 echo "Starte Training..."
-python -m spacy train --output output/wiki_nel --gpu-id 0 ../train_el.cfg
+python -m spacy train --output output/wiki_nel --gpu-id 0 train_el.cfg
 
 echo "Training abgeschlossen. Modell gespeichert unter output/dodis/model-best"
 

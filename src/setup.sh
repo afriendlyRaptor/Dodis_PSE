@@ -15,5 +15,6 @@ python -m pip install --upgrade pip
 pip install -U pip setuptools wheel
 pip install -U spacy
 python -m spacy download de_dep_news_trf
+python -m spacy download de_core_news_sm
 pip install -r requirenments.txt
 
