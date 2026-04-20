@@ -14,14 +14,14 @@ echo "Activating venv..."
 source venv/bin/activate
 
 
-# i guess this is too much, but for safety
+# installing dependencies
 pip install --upgrade pip setuptools wheel
 pip install -r requirenments.txt
 python -m spacy download de_dep_news_trf
 python -m spacy download de_core_news_sm
 python -m spacy download de_core_news_lg
 
-
+# check cuda and gpu availability
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
 

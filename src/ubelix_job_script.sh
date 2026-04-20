@@ -23,14 +23,9 @@
 echo "Setup env..."
 source setup.sh
 
-# load venv
-python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
-nvidia-smi
-
-
 
 echo "Starte Training..."
 python -m spacy train --output output/wiki_nel --gpu-id 0 train_el.cfg
 
-echo "Training abgeschlossen. Modell gespeichert unter output/dodis/model-best"
+echo "Training abgeschlossen."
 
