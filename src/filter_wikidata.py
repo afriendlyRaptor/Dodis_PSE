@@ -269,15 +269,15 @@ if __name__ == "__main__":
     args, leftovers = parser.parse_known_args()
 
     if args.outputPath is not None:
-        global DB_NAME = args.outputPath 
+        DB_NAME = args.outputPath
     if args.inputfile is not None:
-        global INPUT_FILE = args.inputfile
+        INPUT_FILE = args.inputfile
     if args.limitEntries is not None:
-        global LIMIT = args.limitEntries 
-    
+        LIMIT = args.limitEntries
+
     # Multiprocessing-Konfiguration für bessere Performance
-    global NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
-    global CHUNK_SIZE = 5000  # Zeilen pro Paket
+    NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
+    CHUNK_SIZE = 5000  # Zeilen pro Paket
 
 
     
