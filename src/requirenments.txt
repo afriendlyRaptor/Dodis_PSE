@@ -8,7 +8,9 @@ bs4
 
 --extra-index-url https://download.pytorch.org/whl/cu118
 
-cupy-cuda11x
+#cupy-cuda11x
+cupy-cuda12x
+
 
 torch==2.6.0
 #torchvision==0.21.0+cu118
