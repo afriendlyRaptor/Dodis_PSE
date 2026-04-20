@@ -2,7 +2,8 @@
 
 
 module load Workspace_Home
-module load  Python/3.11.3-GCCcore-12.3.0
+# Python-Modul wird bereits im aufrufenden Job-Script geladen (Python/3.12.3-GCCcore-13.3.0)
+# module load  Python/3.11.3-GCCcore-12.3.0
 
 if [ ! -d "venv" ]; then
     echo "This is a Python project, but no venv was found. Creating one..."
