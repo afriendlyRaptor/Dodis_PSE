@@ -4,7 +4,7 @@ echo "Activating venv..."
 source venv/bin/activate
 
 echo "Generiere Wikidata KB aus Datenbank..."
-python src/build_kb.py -d data/dodis_wikidata.db -o data/wikidata_entities.kb
+python src/build_kb.py -d data/dodis_wikidata.db -o data/dodis_wikidata.kb
 
 echo "Starte Training..."
 python -m spacy train train_el.cfg \
