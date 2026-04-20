@@ -22,22 +22,10 @@
 #SBATCH --output=job_logs/output_%j.out
 #SBATCH --error=job_logs/output_%j.err
 
-
-# Put your code below this line
-module purge
-module load Workspace_Home
-module load Python/3.12.3-GCCcore-13.3.0
-module load CUDA/12.1.1
-
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
-source src/setup.sh
-
-# load venv
-source venv/bin/activate
-python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
-nvidia-smi
-
+echo "Setup env..."
+source setup.sh
 
 
 echo "Starte Training..."
