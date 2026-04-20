@@ -8,7 +8,7 @@ import os
 import argparse
 
 
-def build_kb(database, outputPath):
+def build_kb(database, outputPath, allowed_ids=None):
 
     DB_PATH = database
     KB_OUTPUT_PATH = outputPath
@@ -50,7 +50,10 @@ def build_kb(database, outputPath):
     full_alias_map = {}
     registered_ids = set()
 
-    for qid, raw_json in cur.execute("SELECT id, data FROM entities"):
+    query = "SELECT id, data FROM entities"
+    for qid, raw_json in cur.execute(query):
+        if allowed_ids is not None and qid not in allowed_ids:
+            continue
 
         assert qid is not None, "qid ist None!"
         assert isinstance(qid, str), f"qid muss ein String sein, ist aber: {type(qid)}"
@@ -176,16 +179,52 @@ def build_kb(database, outputPath):
     print(f"Fertig! {len(registered_ids):,} Entitäten in KB gespeichert unter: {KB_OUTPUT_PATH}")
 
 
+PERSON_CLASSES = {"Q5"}
+LOC_CLASSES    = {"Q6256", "Q515", "Q82794", "Q486972"}
+ORG_CLASSES    = {"Q43229", "Q7278", "Q4830453"}
+
+
+def sample_ids(database, limit):
+    """Gibt bis zu limit/3 QIDs pro Typ (PER, LOC, ORG) zurück."""
+    per_type = limit // 3
+    sampled = []
+    conn = sqlite3.connect(database)
+    cur = conn.cursor()
+    for type_classes in [PERSON_CLASSES, LOC_CLASSES, ORG_CLASSES]:
+        count = 0
+        for (qid, raw_json) in cur.execute("SELECT id, data FROM entities"):
+            if count >= per_type:
+                break
+            try:
+                p31 = set(json.loads(raw_json).get("claims", {}).get("P31", []))
+                if p31 & type_classes:
+                    sampled.append(qid)
+                    count += 1
+            except Exception:
+                continue
+        print(f"  {count} Einträge für {type_classes}")
+    conn.close()
+    return sampled
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--database")
     parser.add_argument("-o", "--outputPath")
+    parser.add_argument("-l", "--limit", type=int, default=None,
+                        help="Optionales Limit: sampelt limit/3 Entitäten pro Typ (PER/LOC/ORG)")
     args = parser.parse_args()
 
     assert args.database is not None, "Kein Datenbankpfad angegeben! Bitte -d verwenden."
     assert args.outputPath is not None, "Kein Ausgabepfad angegeben! Bitte -o verwenden."
 
     if os.path.isfile(args.database):
-        build_kb(args.database, args.outputPath)
+        if args.limit is not None:
+            print(f"Sampling-Modus: ~{args.limit // 3} Entitäten pro Typ...")
+            allowed_ids = set(sample_ids(args.database, args.limit))
+            print(f"Gesamt gesampelt: {len(allowed_ids)} Entitäten")
+            build_kb(args.database, args.outputPath, allowed_ids=allowed_ids)
+        else:
+            build_kb(args.database, args.outputPath)
     else:
         print(f"Datenbankpfad nicht gefunden: {args.database}")
