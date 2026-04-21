@@ -6,7 +6,7 @@
 #SBATCH --account=gratis
 #SBATCH --partition=gpu
 ##SBATCH --qos=job_gratis
-#SBATCH --qos=job_debug
+#SBATCH --qos=job_gpu_preemptable
 
 #SBATCH --gres=gpu:rtx4090:1
 #SBATCH --job-name=DodisWiki
@@ -15,7 +15,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=4GB
 ##SBATCH --time=0-23:55:00
-#SBATCH --time=0-00:10:00
+#SBATCH --time=0-03:00:00
 
 #SBATCH --output=job_logs/output_%j.out
 #SBATCH --error=job_logs/output_%j.err

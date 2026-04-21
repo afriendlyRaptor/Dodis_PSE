@@ -19,9 +19,9 @@ pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu12
 pip install cupy-cuda12x
 pip install spacy spacy-transformers
 
-python -m spacy download de_dep_news_trf
-python -m spacy download de_core_news_sm
-python -m spacy download de_core_news_lg
+python -c "import de_dep_news_trf" 2>/dev/null || python -m spacy download de_dep_news_trf
+python -c "import de_core_news_sm" 2>/dev/null || python -m spacy download de_core_news_sm
+python -c "import de_core_news_lg" 2>/dev/null || python -m spacy download de_core_news_lg
 
 pip install -r src/requirements.txt
 
