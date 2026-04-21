@@ -10,7 +10,6 @@
 ##SBATCH --qos=job_debug
 
 #SBATCH --gres=gpu:rtx4090:1
-##SBATCH --gres=gpu:rtx3090:1
 #SBATCH --job-name=DodisWiki
 
 #SBATCH --ntasks=1
