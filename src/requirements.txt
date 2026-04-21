@@ -7,7 +7,7 @@ bs4
 cupy-cuda12x
 
 --extra-index-url https://download.pytorch.org/whl/cu121
-torch==2.6.0+cu121
+torch==2.5.1+cu121
 
 
 

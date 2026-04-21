@@ -25,7 +25,7 @@
 module purge
 module load Workspace_Home
 module load Python/3.12.3-GCCcore-13.3.0
-module load CUDA/12.6.0
+module load CUDA/12.1.1
 
 source src/setup.sh
 
