@@ -18,5 +18,5 @@ pip install --upgrade spacy
 python -m spacy download de_dep_news_trf
 python -m spacy download de_core_news_sm
 python -m spacy download de_core_news_lg
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 

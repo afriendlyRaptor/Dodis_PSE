@@ -8,7 +8,7 @@
 ##SBATCH --qos=job_gratis
 #SBATCH --qos=job_debug
 
-#SBATCH --gres=gpu:rtx3090:1
+#SBATCH --gres=gpu:rtx4090:1
 #SBATCH --job-name=DodisWiki
 
 #SBATCH --ntasks=1
@@ -30,7 +30,7 @@ module load CUDA/12.6.0
 source src/setup.sh
 
 # load venv
-source src/venv/bin/activate
+source venv/bin/activate
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
 
