@@ -13,10 +13,15 @@ fi
 
 source venv/bin/activate
 python -m pip install --upgrade pip
-pip install --upgrade pip setuptools wheel
-pip install --upgrade spacy
+pip install setuptools wheel
+
+pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+pip install cupy-cuda12x
+pip install spacy spacy-transformers
+
 python -m spacy download de_dep_news_trf
 python -m spacy download de_core_news_sm
 python -m spacy download de_core_news_lg
+
 pip install -r src/requirements.txt
 
