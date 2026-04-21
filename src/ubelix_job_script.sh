@@ -7,7 +7,6 @@
 #SBATCH --partition=gpu
 ##SBATCH --qos=job_gratis
 #SBATCH --qos=job_gpu_preemptable
-##SBATCH --qos=job_debug
 
 #SBATCH --gres=gpu:rtx4090:1
 #SBATCH --job-name=DodisWiki
