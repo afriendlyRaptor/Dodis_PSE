@@ -28,43 +28,31 @@ if __name__ == "__main__":
     DATA_PATH.mkdir(exist_ok=True)
     DB_PATH = DATA_PATH / "dodis_entities.db"
 
-    LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
-
-    if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
-        print("Nutze lokalen Cache...")
-        dataset_path = LOCAL_DATASET
-    else:
-        print("Lade Dodis TEI-XML Dataset von HuggingFace...")
-        dataset_path = Path(
-            snapshot_download(
-                repo_id="prg-unibe/dodis_transcription_xml",
-                repo_type="dataset",
-                local_dir=LOCAL_DATASET,
-            )
-        )
-        assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
+    print("Lade Dodis TEI-XML Dataset von HuggingFace...")
+    dataset_path = Path(
+        snapshot_download(repo_id="prg-unibe/dodis_transcription_xml", repo_type="dataset")
+    )
+    assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
-    cur.execute("DROP TABLE IF EXISTS aliases")
-    cur.execute("DROP TABLE IF EXISTS entities")
-    cur.execute("CREATE TABLE entities (id TEXT PRIMARY KEY, type TEXT)")
+    cur.execute("CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, type TEXT)")
     cur.execute(
         """
-        CREATE TABLE aliases (
-            alias     TEXT,
-            entity_id TEXT,
-            freq      INTEGER DEFAULT 0,
-            PRIMARY KEY (alias, entity_id)
-        )
+        CREATE TABLE IF NOT EXISTS aliases (
+                                               alias TEXT,
+                                               entity_id TEXT,
+                                               freq INTEGER DEFAULT 0,
+                                               PRIMARY KEY (alias, entity_id)
+            )
         """
     )
     conn.commit()
 
     xml_files = sorted(dataset_path.glob("**/*.xml"))
     assert len(xml_files) > 0, "Keine XML-Dateien gefunden"
-    print(f"{len(xml_files)} XML-Dateien gefunden. Extrahiere Entities...")
+    print(f"{len(xml_files)} XML-Dateien gefunden...")
 
     for xml_file in xml_files:
         try:
