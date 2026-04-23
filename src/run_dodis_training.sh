@@ -30,9 +30,6 @@ module load CUDA/12.1.1
 
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
-PROJECT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-cd "$PROJECT_DIR"
-
 if [ ! -d "venv" ]; then
     echo "Erstelle venv..."
     python3 -m venv venv
