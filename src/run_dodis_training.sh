@@ -34,14 +34,26 @@ source venv/bin/activate
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
 
-echo "Lade TEI-XML Dateien von HuggingFace und erstelle Datenbank..."
-python src/tei_to_db.py
+if [ ! -f data/dodis_entities.db ]; then
+    echo "Erstelle Datenbank..."
+    python src/tei_to_db.py
+else
+    echo "Datenbank existiert bereits, überspringe tei_to_db.py"
+fi
 
-echo "Konvertiere TEI-XML zu .spacy Trainingsdaten..."
-python src/tei_to_spacy.py
+if [ ! -f data/dodis_train.spacy ] || [ ! -f data/dodis_dev.spacy ]; then
+    echo "Konvertiere TEI-XML zu .spacy Trainingsdaten..."
+    python src/tei_to_spacy.py
+else
+    echo "Trainingsdaten existieren bereits, überspringe tei_to_spacy.py"
+fi
 
-echo "Generiere Dodis KB aus Datenbank..."
-python src/build_dodis_kb.py
+if [ ! -f data/dodis_entities.kb ]; then
+    echo "Generiere Dodis KB..."
+    python src/build_dodis_kb.py
+else
+    echo "KB existiert bereits, überspringe build_dodis_kb.py"
+fi
 
 echo "Starte Training..."
 python -m spacy train train_el_dodis.cfg \
