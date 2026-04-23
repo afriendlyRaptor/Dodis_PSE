@@ -13,7 +13,7 @@ if [ ! -d "venv" ]; then
     python -m pip install --upgrade pip setuptools wheel
 
     echo "Installiere PyTorch und GPU-Abhängigkeiten..."
-    pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
+    pip install torch==2.2.2+cu121 --index-url https://download.pytorch.org/whl/cu121
     pip install cupy-cuda12x
 
     echo "Installiere spaCy und Requirements..."
