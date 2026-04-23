@@ -21,8 +21,6 @@
 #SBATCH --output=job_logs/output_%j.out
 #SBATCH --error=job_logs/output_%j.err
 
-set -e
-
 module purge
 module load Workspace_Home
 module load Python/3.12.3-GCCcore-13.3.0
@@ -30,22 +28,11 @@ module load CUDA/12.1.1
 
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
-if [ ! -d "venv" ]; then
-    echo "Erstelle venv..."
-    python3 -m venv venv
-fi
+source src/setup.sh
 
-echo "Aktiviere venv..."
 source venv/bin/activate
-
-echo "Installiere Abhängigkeiten..."
-pip install --upgrade pip setuptools wheel --quiet
-pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121 --quiet
-pip install cupy-cuda12x --quiet
-pip install spacy spacy-transformers huggingface_hub --quiet
-python -m spacy download de_dep_news_trf --quiet
-python -m spacy download de_core_news_sm --quiet
-python -m spacy download de_core_news_lg --quiet
+python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
+nvidia-smi
 
 echo "Lade TEI-XML Dateien von HuggingFace und erstelle Datenbank..."
 python src/tei_to_db.py
