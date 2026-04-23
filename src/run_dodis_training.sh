@@ -48,9 +48,9 @@ else
     echo "Trainingsdaten existieren bereits, überspringe tei_to_spacy.py"
 fi
 
-if [ ! -f data/dodis_entities.kb ]; then
+if [ ! -d data/dodis_entities.kb ]; then
     echo "Generiere Dodis KB..."
-    python src/build_dodis_kb.py
+    python src/build_dodis_kb.py --model de_dep_news_trf
 else
     echo "KB existiert bereits, überspringe build_dodis_kb.py"
 fi
