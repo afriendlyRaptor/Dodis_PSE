@@ -1,8 +1,15 @@
 """
 Baut eine spaCy Knowledge Base aus der Dodis SQLite-Datenbank.
 
+Erwartet folgendes Datenbankschema (erstellt von tei_to_db.py):
+
+    entities(id TEXT PRIMARY KEY, type TEXT)
+    aliases(alias TEXT, entity_id TEXT, freq INTEGER, PRIMARY KEY (alias, entity_id))
+
 Alias-Wahrscheinlichkeiten werden proportional zur Häufigkeit berechnet:
-P(entity | alias) = freq(entity, alias) / sum(freq für diesen alias)
+    P(entity | alias) = freq(entity, alias) / sum(freq für diesen alias über alle entities)
+
+Entity-Frequenz = Summe aller Alias-Häufigkeiten dieser Entity im Corpus.
 
 Unterstützt sowohl statische Modelle (de_core_news_lg, Vektoren 300-dim)
 als auch Transformer-Modelle (de_dep_news_trf, Vektoren 768-dim).
