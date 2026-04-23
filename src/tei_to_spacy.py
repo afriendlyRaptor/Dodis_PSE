@@ -75,13 +75,21 @@ if __name__ == "__main__":
     DATA_PATH = BASE_PATH / "data"
     DATA_PATH.mkdir(exist_ok=True)
 
-    print("Lade Dodis TEI-XML Dataset von HuggingFace...")
-    dataset_path = Path(
-        snapshot_download(
-            repo_id="prg-unibe/dodis_transcription_xml", repo_type="dataset"
+    LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
+
+    if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
+        print("Nutze lokalen Cache...")
+        dataset_path = LOCAL_DATASET
+    else:
+        print("Lade Dodis TEI-XML Dataset von HuggingFace...")
+        dataset_path = Path(
+            snapshot_download(
+                repo_id="prg-unibe/dodis_transcription_xml",
+                repo_type="dataset",
+                local_dir=LOCAL_DATASET,
+            )
         )
-    )
-    assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
+        assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
 
     nlp = spacy.blank("de")
 
