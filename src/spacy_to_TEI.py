@@ -61,6 +61,15 @@ def create_tei_from_nel(doc):
     return xml_string
 
 
+def write_to_file(xml_data, filename):
+    """
+    Writes the generated TEI-XML data to a file.
+    """
+    with open(filename, 'w', encoding='utf-8') as f:
+        f.write(xml_data)
+    print(f"TEI-XML has been written to {filename}")
+
+
 # Example usage:
 # Load a SpaCy model with NEL (for German in this example)
 nlp = spacy.load("de_core_news_md")
