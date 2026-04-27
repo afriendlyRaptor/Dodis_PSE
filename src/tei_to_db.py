@@ -75,6 +75,7 @@ if __name__ == "__main__":
                     "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
                     (ref, label),
                 )
+                # Alias-Häufigkeit erhöhen oder neu eintragen
                 cur.execute(
                     """
                     INSERT INTO aliases (alias, entity_id, freq) VALUES (?, ?, 1)

@@ -5,8 +5,6 @@ module purge
 module load Python/3.12.3-GCCcore-13.3.0
 module load CUDA/12.6.0
 
-set -e
-
 if [ ! -d "venv" ]; then
     echo "Kein venv gefunden. Erstelle neues venv..."
     python3 -m venv venv
@@ -38,7 +36,6 @@ fi
 
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
-
 
 
 
