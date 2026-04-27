@@ -23,7 +23,7 @@
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 
 echo "Setup env..."
-source setup.sh
+source src/setup.sh
 
 echo "Starte Training..."
 python -m spacy train --output output/wiki_nel --gpu-id 0 src/train_nel.cfg
