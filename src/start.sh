@@ -7,7 +7,7 @@ echo "Generiere Wikidata KB aus Datenbank..."
 python src/build_kb.py -d data/dodis_wikidata.db -o data/dodis_wikidata.kb
 
 echo "Starte Training..."
-python -m spacy train train_el.cfg \
+python -m spacy train train_nel.cfg \
     --output output/wikipedia \
     --gpu-id 0
 

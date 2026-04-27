@@ -26,7 +26,7 @@ echo "Setup env..."
 source setup.sh
 
 echo "Starte Training..."
-python -m spacy train --output output/wiki_nel --gpu-id 0 src/train_el.cfg
+python -m spacy train --output output/wiki_nel --gpu-id 0 src/train_nel.cfg
 
 echo "Training abgeschlossen."
 
