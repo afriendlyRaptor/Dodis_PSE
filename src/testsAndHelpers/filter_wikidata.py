@@ -3,11 +3,10 @@ import json
 import sqlite3
 import requests
 from pathlib import Path
-from multiprocessing import Pool, Queue, Process, cpu_count
-import multiprocessing as mp
+from multiprocessing import Pool, cpu_count
 import argparse
 
-#KONFIGURATION FÜR DODIS
+# KONFIGURATION FÜR DODIS
 BASE_CLASSES = [
     "Q5",        # Human (PER)
     "Q6256",     # Country (LOC)
@@ -19,38 +18,41 @@ BASE_CLASSES = [
     "Q486972"    # Human Settlement (LOC)
 ]
 
-DB_NAME = "dodis_wikidata.db"
-INPUT_FILE = "wikidata_sample.json.gz" # Download-Sample
-LIMIT = None # Optional: Limit setzen für Anzahl gefundener Einträge (z.B. 10000 zum Testen)
+DODIS_TYPES = {
+    "Q5": "PER",
+    "Q6256": "LOC",
+    "Q515": "LOC",
+    "Q43229": "ORG",
+    "Q7278": "ORG",
+    "Q4830453": "ORG",
+    "Q82794": "LOC",
+    "Q486972": "LOC"
+}
 
-# Zeitraum-Filter für Dodis
-YEAR_MIN = 1848  # Anfang des relevanten Zeitraums
-YEAR_MAX = 2000  # Ende des relevanten Zeitraums
- 
-# Q-IDs der Personen-Klasse – für diese wird P569 (Geburtsdatum) geprüft
+DB_NAME = "dodis_wikidata.db"
+INPUT_FILE = "wikidata_sample.json.gz"
+LIMIT = None
+
+YEAR_MIN = 1848
+YEAR_MAX = 2000
 PERSON_CLASSES = {"Q5"}
 
-# Multiprocessing-Konfiguration für bessere Performance
-NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
-CHUNK_SIZE = 5000  # Zeilen pro Paket
+NUM_WORKERS = max(1, cpu_count() - 2)
+CHUNK_SIZE = 5000
 
 def fetch_hierarchy_tree():
-    """
-    Fragt Wikidata (via SPARQL) nach allen Unterklassen (P279) unserer Basisklassen.
-    Dadurch erfassen wir den gesamten Baum (z.B. alle Arten von Städten/Organisationen).
-    """
-    print("Lade Hierarchie-Baum von Wikidata herunter")
+    """Fragt Wikidata nach allen Unterklassen ab und ordnet sie PER, LOC oder ORG zu."""
+    print("Lade Hierarchie-Baum von Wikidata herunter...")
 
-    # Baut den SPARQL Query auf (wdt:P279* bedeutet "Unterklasse von", 0 bis unendlich mal)
     values_str = " ".join([f"wd:{q}" for q in BASE_CLASSES])
+    # NEU: ?base ebenfalls selektieren, um das Mapping zu erhalten
     query = f"""
-    SELECT DISTINCT ?class WHERE {{
+    SELECT DISTINCT ?class ?base WHERE {{
       VALUES ?base {{ {values_str} }}
       ?class wdt:P279* ?base .
     }}
     """
 
-    # Metadaten für die API-Abfrage
     url = "https://query.wikidata.org/sparql"
     headers = {
         'User-Agent': 'Dodis_PSE_Bot/1.0 (UniBern)',
@@ -58,102 +60,49 @@ def fetch_hierarchy_tree():
     }
 
     response = requests.get(url, params={'query': query}, headers=headers)
-    assert response is not None, "SPARQL-Response ist None!" 
     response.raise_for_status()
-
     data = response.json()
-    assert data is not None, "SPARQL-Antwort (JSON) ist None!" 
-    valid_classes = set()
+
+    valid_classes = {}
 
     for item in data['results']['bindings']:
-        assert item is not None, "SPARQL-Ergebnis-Item ist None!" 
-
-        # Extrahiert die Q-ID aus der URL (z.B. http://www.wikidata.org/entity/Q123 -> Q123)
         q_id = item['class']['value'].split('/')[-1]
-        assert q_id is not None, "q_id ist None!" 
-        valid_classes.add(q_id)
+        base_id = item['base']['value'].split('/')[-1]
+        valid_classes[q_id] = DODIS_TYPES[base_id]
 
     print(f"-> Erfolgreich {len(valid_classes)} relevante Unterklassen gefunden.")
     return valid_classes
 
-# Funktion zum Extrahieren nur der relevanten Felder für NER
-def extract_relevant_fields(item):
-    """Nur das Nötigste für NER"""
-    assert item is not None, "item ist None!" 
-    assert item.get("id") is not None, "item hat keine ID!"
-
-    return {
-        "id": item.get("id"),
-        "labels": {
-            lang: item["labels"][lang]["value"]
-            for lang in ["de", "en"]
-            if lang in item.get("labels", {})
-        },
-        "aliases": {
-            lang: [a["value"] for a in item["aliases"][lang]]
-            for lang in ["de", "en"]
-            if lang in item.get("aliases", {})
-        },
-        "claims": {
-            "P31": [
-                claim["mainsnak"]["datavalue"]["value"]["id"]
-                for claim in item.get("claims", {}).get("P31", [])
-                if "datavalue" in claim.get("mainsnak", {})
-            ]
-        }
-    }
-
 def extract_year(claims, prop):
-    """
-    Extrahiert das Jahr aus einem Wikidata-Datumsclaim (z.B. P569, P571).
-    Wikidata speichert Daten als ISO-8601-Strings im Format '+YYYY-MM-DDT00:00:00Z'.
-    Gibt None zurück falls kein gültiges Jahr gefunden wird.
-    """
     for claim in claims.get(prop, []):
         try:
             datavalue = claim["mainsnak"]["datavalue"]["value"]
-            # Zeitwert ist ein Dict mit "time"-Key, z.B. "+1901-03-15T00:00:00Z"
             time_str = datavalue.get("time", "")
-            # Erstes Zeichen ist '+' oder '-' (v. Chr.), danach folgt das Jahr
-            year = int(time_str[1:5])
-            return year
+            return int(time_str[1:5])
         except (KeyError, ValueError, TypeError):
             continue
     return None
- 
 
 def is_in_time_range(item, matched_class_ids):
-    """
-    Prüft ob eine Entität zeitlich in den Dodis-Zeitraum (YEAR_MIN–YEAR_MAX) fällt.
- 
-    Logik:
-    - Personen (P31 enthält Q5):     Geburtsjahr (P569) muss in [YEAR_MIN, YEAR_MAX] liegen.
-    - Alle anderen Entitäten:        Gründungsjahr (P571) muss in [YEAR_MIN, YEAR_MAX] liegen,
-                                     ODER kein Datum vorhanden (da viele hist. Orte undatiert sind).
-    """
     claims = item.get("claims", {})
     is_person = bool(PERSON_CLASSES & matched_class_ids)
- 
+
     if is_person:
-        year = extract_year(claims, "P569")  # Geburtsdatum
+        year = extract_year(claims, "P569")
         if year is None:
-            return False  # Personen ohne Geburtsdatum ausschliessen
+            return False
         return YEAR_MIN <= year <= YEAR_MAX
     else:
-        year = extract_year(claims, "P571")  # Gründungsdatum (inception)
+        year = extract_year(claims, "P571")
         if year is None:
-            return True   # Orte/Orgs ohne Datum behalten (z.B. antike Städte, Staaten)
+            return True
         return YEAR_MIN <= year <= YEAR_MAX
- 
 
 def process_chunk(args):
-    """Wird von jedem Worker-Prozess aufgerufen. Verarbeitet ein Paket Zeilen."""
-    assert args is not None, "args ist None!" 
     chunk, valid_classes = args
-    assert chunk is not None, "chunk ist None!"
-    assert valid_classes is not None, "valid_classes ist None!"
+    entities_list = []
+    aliases_list = []
 
-    results = []
     for line in chunk:
         line = line.strip()
         if line in ["[", "]"] or not line:
@@ -172,34 +121,51 @@ def process_chunk(args):
                             matched_class_ids.add(target_id)
                     except KeyError:
                         continue
+
                 if matched_class_ids and is_in_time_range(item, matched_class_ids):
-                    small_item = extract_relevant_fields(item)
-                    results.append((item['id'], json.dumps(small_item)))
+                    entity_id = item['id']
+                    # Bestimme den Typ (PER, LOC, ORG)
+                    base_q_id = list(matched_class_ids)[0]
+                    dodis_type = valid_classes[base_q_id]
+
+                    entities_list.append((entity_id, dodis_type))
+
+                    # Aliase und Labels sammeln
+                    names = set()
+                    for lang in ["de", "en"]:
+                        if lang in item.get("labels", {}):
+                            names.add(item["labels"][lang]["value"])
+                        if lang in item.get("aliases", {}):
+                            for a in item["aliases"][lang]:
+                                names.add(a["value"])
+
+                    # Alle gefundenen Namen mit Frequenz 1 einfügen
+                    for name in names:
+                        aliases_list.append((name, entity_id, 1))
+
         except json.JSONDecodeError:
             continue
-    return results
+
+    return entities_list, aliases_list
 
 def setup_database():
-    #Erstellt die SQLite-Datenbank und die Tabelle.
     conn = sqlite3.connect(DB_NAME)
-    assert conn is not None, "Datenbankverbindung ist None!" 
-
     cursor = conn.cursor()
-    assert cursor is not None, "Cursor ist None!"
 
-    # Performance-Optimierungen für grosse Datenmengen
-    cursor.execute("PRAGMA journal_mode = WAL")       # Schnelleres Schreiben
-    cursor.execute("PRAGMA synchronous = NORMAL")     # Weniger Disk-Flushes
-    cursor.execute("PRAGMA cache_size = -64000")      # 64 MB Cache
-    cursor.execute("PRAGMA temp_store = MEMORY")      # Temp-Daten im RAM
-    
-    # Wir speichern die ID (z.B. Q123) als Primary Key und die rohen JSON-Daten
+    cursor.execute("PRAGMA journal_mode = WAL")
+    cursor.execute("PRAGMA synchronous = NORMAL")
+    cursor.execute("PRAGMA cache_size = -64000")
+    cursor.execute("PRAGMA temp_store = MEMORY")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, type TEXT)")
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS entities (
-            id TEXT PRIMARY KEY,
-            data JSON
-        )
-    ''')
+                   CREATE TABLE IF NOT EXISTS aliases (
+                                                          alias TEXT,
+                                                          entity_id TEXT,
+                                                          freq INTEGER DEFAULT 0,
+                                                          PRIMARY KEY (alias, entity_id)
+                       )
+                   ''')
     conn.commit()
     return conn
 
@@ -211,7 +177,6 @@ def process_dump_parallel(valid_classes):
     count_found = 0
     count_processed = 0
 
-    # Wieviele Einträge bereits in der DB?
     cursor.execute("SELECT COUNT(*) FROM entities")
     already_saved = cursor.fetchone()[0]
     print(f"Bereits in DB: {already_saved:,} Einträge")
@@ -220,8 +185,7 @@ def process_dump_parallel(valid_classes):
 
     with opener(INPUT_FILE, "rt", encoding="utf-8") as f_in:
         with Pool(processes=NUM_WORKERS) as pool:
-            
-            # Zeilen in Pakete aufteilen
+
             def generate_chunks():
                 chunk = []
                 for line in f_in:
@@ -233,18 +197,22 @@ def process_dump_parallel(valid_classes):
                     yield (chunk, valid_classes)
 
             try:
-                # Pakete parallel verarbeiten
-                for batch_results in pool.imap_unordered(process_chunk, generate_chunks(), chunksize=4):
+                for entities_batch, aliases_batch in pool.imap_unordered(process_chunk, generate_chunks(), chunksize=4):
                     count_processed += CHUNK_SIZE
 
-                    if batch_results:
+                    if entities_batch:
                         cursor.executemany(
-                            'INSERT OR IGNORE INTO entities (id, data) VALUES (?, ?)',
-                            batch_results
+                            'INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)',
+                            entities_batch
                         )
-                        count_found += len(batch_results)
+                        count_found += len(entities_batch)
 
-                    # Fortschritt
+                    if aliases_batch:
+                        cursor.executemany(
+                            'INSERT OR IGNORE INTO aliases (alias, entity_id, freq) VALUES (?, ?, ?)',
+                            aliases_batch
+                        )
+
                     if count_processed % 1_000_000 == 0:
                         conn.commit()
                         print(f"Verarbeitet: {count_processed:,} | Gefunden: {count_found:,}")
@@ -259,15 +227,14 @@ def process_dump_parallel(valid_classes):
     conn.close()
     print(f"\nFertig! {count_found} Einträge in '{DB_NAME}' gespeichert.")
 
-
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--inputfile")
     parser.add_argument("-o", "--outputPath")
-    parser.add_argument("-l", "--limitEntries", nargs='?', const=1,type=int, default=None)
+    parser.add_argument("-l", "--limitEntries", nargs='?', const=1, type=int, default=None)
     args, leftovers = parser.parse_known_args()
 
+    # Syntax Error (global) behoben
     if args.outputPath is not None:
         DB_NAME = args.outputPath
     if args.inputfile is not None:
@@ -275,18 +242,8 @@ if __name__ == "__main__":
     if args.limitEntries is not None:
         LIMIT = args.limitEntries
 
-    # Multiprocessing-Konfiguration für bessere Performance
-    NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
-    CHUNK_SIZE = 5000  # Zeilen pro Paket
-
-
-    
-    
     if not Path(INPUT_FILE).exists():
         print(f"FEHLER: Eingabedatei '{INPUT_FILE}' nicht gefunden.")
     else:
-        # 1. Hierarchie-Baum holen
         valid_q_ids = fetch_hierarchy_tree()
-        assert valid_q_ids is not None, "valid_q_ids ist None!"
-        # 2. Dump filtern und in DB speichern
         process_dump_parallel(valid_q_ids)
