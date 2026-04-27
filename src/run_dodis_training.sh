@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --mail-user=robin.vandenhoek@students.unibe.ch
+#SBATCH --mail-user=test.dodis@students.unibe.ch
 #SBATCH --mail-type=end,fail
 
 #SBATCH --account=gratis
