@@ -17,9 +17,9 @@ als auch Transformer-Modelle (de_dep_news_trf, Vektoren 768-dim).
 Output: data/dodis_entities.kb
 
 Usage:
-    python src/build_dodis_kb.py
-    python src/build_dodis_kb.py --model de_dep_news_trf
-    python src/build_dodis_kb.py --model de_core_news_lg
+    python src/dodis/build_dodis_kb.py
+    python src/dodis/build_dodis_kb.py --model de_dep_news_trf
+    python src/dodis/build_dodis_kb.py --model de_core_news_lg
 """
 
 import argparse
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    BASE_PATH = Path(__file__).parent.parent
+    BASE_PATH = Path(__file__).parent.parent.parent
     DATA_PATH = BASE_PATH / "data"
     DB_PATH = DATA_PATH / "dodis_entities.db"
     KB_OUTPUT = DATA_PATH / "dodis_entities.kb"

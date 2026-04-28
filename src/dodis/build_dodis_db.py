@@ -5,7 +5,7 @@ mit allen Entities (Personen, Orte, Organisationen) und ihren Alias-Häufigkeite
 Output: data/dodis_entities.db
 
 Usage:
-    python src/tei_to_db.py
+    python src/dodis/build_dodis_db.py
 """
 
 import sqlite3
@@ -23,36 +23,48 @@ ENTITY_TAGS = {
 }
 
 if __name__ == "__main__":
-    BASE_PATH = Path(__file__).parent.parent
+    BASE_PATH = Path(__file__).parent.parent.parent
     DATA_PATH = BASE_PATH / "data"
     DATA_PATH.mkdir(exist_ok=True)
     DB_PATH = DATA_PATH / "dodis_entities.db"
 
-    print("Lade Dodis TEI-XML Dataset von HuggingFace...")
-    dataset_path = Path(
-        snapshot_download(repo_id="prg-unibe/dodis_transcription_xml", repo_type="dataset")
-    )
-    assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
+    LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
+
+    if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
+        print("Nutze lokalen Cache...")
+        dataset_path = LOCAL_DATASET
+    else:
+        print("Lade Dodis TEI-XML Dataset von HuggingFace...")
+        dataset_path = Path(
+            snapshot_download(
+                repo_id="prg-unibe/dodis_transcription_xml",
+                repo_type="dataset",
+                local_dir=LOCAL_DATASET,
+            )
+        )
+        assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
 
-    cur.execute("CREATE TABLE IF NOT EXISTS entities (id TEXT PRIMARY KEY, type TEXT)")
+    cur.execute("DROP TABLE IF EXISTS aliases")
+    cur.execute("DROP TABLE IF EXISTS entities")
+    cur.execute("CREATE TABLE entities (id TEXT PRIMARY KEY, type TEXT)")
     cur.execute(
         """
-        CREATE TABLE IF NOT EXISTS aliases (
-                                               alias TEXT,
-                                               entity_id TEXT,
-                                               freq INTEGER DEFAULT 0,
-                                               PRIMARY KEY (alias, entity_id)
-            )
+        CREATE TABLE aliases (
+            alias     TEXT,
+            entity_id TEXT,
+            freq      INTEGER DEFAULT 0,
+            PRIMARY KEY (alias, entity_id)
+        )
         """
     )
     conn.commit()
 
     xml_files = sorted(dataset_path.glob("**/*.xml"))
     assert len(xml_files) > 0, "Keine XML-Dateien gefunden"
-    print(f"{len(xml_files)} XML-Dateien gefunden...")
+    print(f"{len(xml_files)} XML-Dateien gefunden. Extrahiere Entities...")
 
     for xml_file in xml_files:
         try:
@@ -75,7 +87,6 @@ if __name__ == "__main__":
                     "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
                     (ref, label),
                 )
-                # Alias-Häufigkeit erhöhen oder neu eintragen
                 cur.execute(
                     """
                     INSERT INTO aliases (alias, entity_id, freq) VALUES (?, ?, 1)

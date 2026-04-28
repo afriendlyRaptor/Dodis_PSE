@@ -8,7 +8,7 @@ werden zu Entity Spans mit dem Dodis-ref als kb_id.
 Output: data/dodis_train.spacy, data/dodis_dev.spacy, data/dodis_test.spacy
 
 Usage:
-    python src/tei_to_spacy.py
+    python src/dodis/build_dodis_train_data.py
 """
 
 import xml.etree.ElementTree as ET
@@ -71,7 +71,7 @@ def extract_text_and_spans(elem):
 
 
 if __name__ == "__main__":
-    BASE_PATH = Path(__file__).parent.parent
+    BASE_PATH = Path(__file__).parent.parent.parent
     DATA_PATH = BASE_PATH / "data"
     DATA_PATH.mkdir(exist_ok=True)
 
