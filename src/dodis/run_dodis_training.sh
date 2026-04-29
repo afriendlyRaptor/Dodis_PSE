@@ -54,11 +54,17 @@ fi
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
 
-if [ ! -f data/dodis_entities.db ]; then
-    echo "Erstelle Datenbank..."
-    python src/dodis/build_dodis_db.py
+if [ ! -d data/dodis_entities.kb ]; then
+    if [ ! -f data/dodis_entities.db ]; then
+        echo "Erstelle Datenbank..."
+        python src/dodis/build_dodis_db.py
+    else
+        echo "Datenbank existiert bereits, überspringe build_dodis_db.py"
+    fi
+    echo "Generiere Dodis KB..."
+    python src/dodis/build_dodis_kb.py --model de_dep_news_trf
 else
-    echo "Datenbank existiert bereits, überspringe build_dodis_db.py"
+    echo "KB existiert bereits, überspringe build_dodis_kb.py und build_dodis_db.py"
 fi
 
 if [ ! -f data/dodis_train.spacy ] || [ ! -f data/dodis_dev.spacy ]; then
@@ -66,13 +72,6 @@ if [ ! -f data/dodis_train.spacy ] || [ ! -f data/dodis_dev.spacy ]; then
     python src/dodis/build_dodis_train_data.py
 else
     echo "Trainingsdaten existieren bereits, überspringe build_dodis_train_data.py"
-fi
-
-if [ ! -d data/dodis_entities.kb ]; then
-    echo "Generiere Dodis KB..."
-    python src/dodis/build_dodis_kb.py --model de_dep_news_trf
-else
-    echo "KB existiert bereits, überspringe build_dodis_kb.py"
 fi
 
 echo "Starte Training..."
