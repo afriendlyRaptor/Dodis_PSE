@@ -1,9 +1,12 @@
 """
-Lädt das Dodis TEI-XML Dataset von HuggingFace und konvertiert es
-in spaCy .spacy Dateien für das Entity Linking Training.
+Konvertiert die lokal vorhandenen Dodis TEI-XML Dateien in spaCy .spacy Dateien
+für das Entity Linking Training.
 
 <persName ref="https://dodis.ch/P82">, <placeName ref="...">, <orgName ref="...">
 werden zu Entity Spans mit dem Dodis-ref als kb_id.
+
+Erwartet die XML-Dateien unter data/dodis_transcription_xml/.
+Falls diese nicht vorhanden sind: src/testsAndHelpers/download_dodis_xml.py ausführen.
 
 Output: data/dodis_train.spacy, data/dodis_dev.spacy, data/dodis_test.spacy
 
@@ -15,7 +18,6 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import spacy
-from huggingface_hub import snapshot_download
 from spacy.tokens import DocBin
 from spacy.util import filter_spans
 
@@ -77,19 +79,11 @@ if __name__ == "__main__":
 
     LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
 
-    if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
-        print("Nutze lokalen Cache...")
-        dataset_path = LOCAL_DATASET
-    else:
-        print("Lade Dodis TEI-XML Dataset von HuggingFace...")
-        dataset_path = Path(
-            snapshot_download(
-                repo_id="prg-unibe/dodis_transcription_xml",
-                repo_type="dataset",
-                local_dir=LOCAL_DATASET,
-            )
-        )
-        assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
+    assert LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")), (
+        f"Keine XML-Dateien gefunden unter {LOCAL_DATASET}. "
+        "Zuerst src/testsAndHelpers/download_dodis_xml.py ausführen."
+    )
+    dataset_path = LOCAL_DATASET
 
     nlp = spacy.blank("de")
 
