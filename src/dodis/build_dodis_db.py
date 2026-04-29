@@ -1,6 +1,9 @@
 """
-Lädt alle Dodis TEI-XML Dateien von HuggingFace und erstellt eine SQLite-Datenbank
-mit allen Entities (Personen, Orte, Organisationen) und ihren Alias-Häufigkeiten.
+Erstellt eine SQLite-Datenbank mit allen Entities (Personen, Orte, Organisationen)
+und ihren Alias-Häufigkeiten aus den lokal vorhandenen Dodis TEI-XML Dateien.
+
+Erwartet die XML-Dateien unter data/dodis_transcription_xml/.
+Falls diese nicht vorhanden sind: src/testsAndHelpers/download_dodis_xml.py ausführen.
 
 Output: data/dodis_entities.db
 
@@ -11,8 +14,6 @@ Usage:
 import sqlite3
 import xml.etree.ElementTree as ET
 from pathlib import Path
-
-from huggingface_hub import snapshot_download
 
 TEI_NS = "http://www.tei-c.org/ns/1.0"
 
@@ -30,19 +31,11 @@ if __name__ == "__main__":
 
     LOCAL_DATASET = DATA_PATH / "dodis_transcription_xml"
 
-    if LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")):
-        print("Nutze lokalen Cache...")
-        dataset_path = LOCAL_DATASET
-    else:
-        print("Lade Dodis TEI-XML Dataset von HuggingFace...")
-        dataset_path = Path(
-            snapshot_download(
-                repo_id="prg-unibe/dodis_transcription_xml",
-                repo_type="dataset",
-                local_dir=LOCAL_DATASET,
-            )
-        )
-        assert dataset_path.exists(), f"Download fehlgeschlagen: {dataset_path}"
+    assert LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")), (
+        f"Keine XML-Dateien gefunden unter {LOCAL_DATASET}. "
+        "Zuerst src/testsAndHelpers/download_dodis_xml.py ausführen."
+    )
+    dataset_path = LOCAL_DATASET
 
     conn = sqlite3.connect(DB_PATH)
     cur = conn.cursor()
