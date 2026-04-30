@@ -49,7 +49,7 @@ def extract_text_and_spans(elem):
         tag = child.tag.replace(f"{{{TEI_NS}}}", "")
 
         if tag in ENTITY_TAGS:
-            ref = child.get("ref", "")
+            ref = child.get("ref", "").replace("http://dodis.ch/", "https://dodis.ch/")
             mention = "".join(child.itertext())
             if ref and mention:
                 start = len(text)

@@ -81,14 +81,19 @@ if __name__ == "__main__":
                     Span(pred_doc, e.start, e.end, label=e.label) for e in gold_doc.ents
                 ]
 
-        gold_by_pos = {(e.start, e.end): e.kb_id_ for e in gold_doc.ents if e.kb_id_}
+        gold_by_pos = {
+            (e.start, e.end): e.kb_id_.replace("http://dodis.ch/", "https://dodis.ch/")
+            for e in gold_doc.ents
+            if e.kb_id_
+        }
 
         for pred_ent in pred_doc.ents:
             gold_id = gold_by_pos.get((pred_ent.start, pred_ent.end))
             if not gold_id:
                 continue
             total += 1
-            if pred_ent.kb_id_ == gold_id:
+            pred_id = pred_ent.kb_id_.replace("http://dodis.ch/", "https://dodis.ch/")
+            if pred_id == gold_id:
                 correct += 1
             else:
                 errors_by_type[pred_ent.label_] += 1
@@ -102,7 +107,7 @@ if __name__ == "__main__":
                             "text": pred_ent.text,
                             "type": pred_ent.label_,
                             "gold": gold_id,
-                            "pred": pred_ent.kb_id_ or "NIL",
+                            "pred": pred_id or "NIL",
                             "context": gold_doc.text[ctx_start:ctx_end].replace(
                                 "\n", " "
                             ),

@@ -68,7 +68,11 @@ if __name__ == "__main__":
 
         for tag, label in ENTITY_TAGS.items():
             for elem in root.findall(f".//{{{TEI_NS}}}{tag}"):
-                ref = elem.get("ref", "").strip()
+                ref = (
+                    elem.get("ref", "")
+                    .strip()
+                    .replace("http://dodis.ch/", "https://dodis.ch/")
+                )
                 mention = "".join(elem.itertext()).strip()
 
                 if not ref or not mention:
