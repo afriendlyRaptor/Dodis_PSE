@@ -1,0 +1,18 @@
+Zuerst muss black, isort und pylint installiert werden. Dazu folgenen Befehl ausführen:
+
+"pip install -r requirements-dev.txt"
+
+Danach pre-commit installieren:
+
+"pip install pre-commit
+pre-commit install"
+
+Wenn alles installiert ist mit folgenen Befehl black, isort und pylint checken lassen:
+
+pre-commit run --all-files
+
+Im Terminal kommt dann was fehlgeschlagen ist und wieso. 
+
+Am besten vor jedem Commit einmal pre-commit ausführen.
+
+Beim Commit wird von Github black und isort einmal geprüft und schlagen fehl wenn was falsch ist (Allerdings wird nichts geändert. Das muss Lokal gemacht werden mit den commands oben).
