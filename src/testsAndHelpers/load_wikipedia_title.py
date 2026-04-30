@@ -1,9 +1,10 @@
-import requests
-from bs4 import BeautifulSoup
-import time
 import argparse
 import json
 import re
+import time
+
+import requests
+from bs4 import BeautifulSoup
 
 WIKI_API = "https://de.wikipedia.org/w/api.php"
 
@@ -11,22 +12,17 @@ HEADERS = {
     "User-Agent": "WikipediaDodisProject/1.0 (contact: dodis_warden@bluewin.com)"
 }
 
+
 # ---------------------------
 # 1. Get page HTML
 # ---------------------------
 def get_page_html(title):
-    params = {
-        "action": "parse",
-        "page": title,
-        "prop": "text",
-        "format": "json"
-    }
+    params = {"action": "parse", "page": title, "prop": "text", "format": "json"}
 
     time.sleep(1)
 
     r = requests.get(WIKI_API, params=params, headers=HEADERS, timeout=10)
     data = r.json()
-
 
     # Handle errors explicitly
     if "error" in data:
@@ -50,17 +46,19 @@ def get_wikidata_ids(titles):
 
     mapping = {}
     for i in range(0, len(titles), 50):
-        chunk = titles[i:i+50]
-    
+        chunk = titles[i : i + 50]
+
         params = {
             "action": "query",
             "prop": "pageprops",
             "titles": "|".join(chunk),
             "format": "json",
-            "formatversion": "2"
+            "formatversion": "2",
         }
         try:
-            response = requests.get(WIKI_API, params=params, headers=HEADERS, timeout=10)
+            response = requests.get(
+                WIKI_API, params=params, headers=HEADERS, timeout=10
+            )
         except Exception as e:
             print(e)
         data = response.json()
@@ -74,11 +72,13 @@ def get_wikidata_ids(titles):
 
     return mapping
 
+
 # ---------------------------
 # 3. Extract text + annotations
 # ---------------------------
 
-def extract_annotations(html,page_name):
+
+def extract_annotations(html, page_name):
     soup = BeautifulSoup(html, "html.parser")
 
     text = clean_wiki_text(get_plaintext(page_name))
@@ -89,7 +89,7 @@ def extract_annotations(html,page_name):
     current_pos = 0
 
     for a in soup.find_all("a"):
-        if not a.get("href", "").startswith("/wiki/"):
+        if not a.get("href", "").startswith("/wiki/"):  # type: ignore
             continue
 
         mention = a.get_text(strip=True)
@@ -104,11 +104,7 @@ def extract_annotations(html,page_name):
 
         end = start + len(mention)
 
-        annotations.append({
-            "start": start,
-            "end": end,
-            "title": title
-        })
+        annotations.append({"start": start, "end": end, "title": title})
 
         link_titles.append(title)
         current_pos = end
@@ -116,16 +112,14 @@ def extract_annotations(html,page_name):
     return text, annotations, list(set(link_titles))
 
 
-def get_plaintext(title, lang="de"):
-    url = f"https://{lang}.wikipedia.org/w/api.php"
-
+def get_plaintext(title):
     params = {
         "action": "query",
         "prop": "extracts",
         "explaintext": 1,
         "titles": title,
         "format": "json",
-        "redirects": 1
+        "redirects": 1,
     }
 
     try:
@@ -141,7 +135,7 @@ def get_plaintext(title, lang="de"):
 
     pages = data.get("query", {}).get("pages", {})
 
-    for page_id, page in pages.items():
+    for page in pages.values():
         return page.get("extract", "")
 
     return None
@@ -166,15 +160,16 @@ def clean_wiki_text(text):
         r"\b(Retrieved|Accessed|Abgerufen|Consulté|Consultato|Recuperado).*?(?=\n|$)",
         "",
         text,
-        flags=re.IGNORECASE
+        flags=re.IGNORECASE,
     )
 
     # --- remove Wikipedia section-like metadata words (multi-language safe)
     text = re.sub(
-        r"\b(Weblinks|Literatur|Literature|References|Références|Bibliography|Bibliographie|Privates|Ehrungen|Ehren|Career|Biography)\b.*?(?=\n|$)",
+        r"\b(Weblinks|Literatur|Literature|References|Références|Bibliography"
+        r"|Bibliographie|Privates|Ehrungen|Ehren|Career|Biography)\b.*?(?=\n|$)",
         "",
         text,
-        flags=re.IGNORECASE
+        flags=re.IGNORECASE,
     )
 
     # --- remove pipe-separated name/list blocks
@@ -185,7 +180,7 @@ def clean_wiki_text(text):
         r"(Normdaten|Authority control|Controllo di autorità|Control de autoridades).*",
         "",
         text,
-        flags=re.IGNORECASE
+        flags=re.IGNORECASE,
     )
 
     # --- remove leftover broken fragments (optional safety cleanup)
@@ -196,6 +191,7 @@ def clean_wiki_text(text):
 
     return text
 
+
 # ---------------------------
 # 4. Main pipeline
 # ---------------------------
@@ -204,33 +200,26 @@ def process_page(title):
     if html is None:
         return None
 
-    text, annotations, link_titles = extract_annotations(html,title)
+    text, annotations, link_titles = extract_annotations(html, title)
 
-
-    # ensure title is also annotated if it appears in text
-    title_lower = title.replace("_", " ")
-    
     qid_map = get_wikidata_ids(link_titles)
 
-
     clean_annotations = []
-   
+
     # attach QIDs
     for ann in annotations:
         qid = qid_map.get(ann["title"])
         if qid:
-            clean_annotations.append({
-                "start": ann["start"],
-                "end": ann["end"],
-                "mention": text[ann["start"]:ann["end"]],
-                "qid": qid
-            })
+            clean_annotations.append(
+                {
+                    "start": ann["start"],
+                    "end": ann["end"],
+                    "mention": text[ann["start"] : ann["end"]],
+                    "qid": qid,
+                }
+            )
 
-    return {
-        "title": title,
-        "text": text,
-        "annotations": clean_annotations
-    }
+    return {"title": title, "text": text, "annotations": clean_annotations}
 
 
 # ---------------------------
@@ -242,19 +231,21 @@ def write_page_result(data, output_file):
 
     print(f"Saved page '{data.get('title')}' to {output_file}")
 
+
 # ---------------------------
 # Usage
 # ---------------------------
 if __name__ == "__main__":
-    #example: python load_wikipedia_title.py -t Max_Petitpierre -o ../data/
+    # example: python load_wikipedia_title.py -t Max_Petitpierre -o ../data/
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-t", "--title")
     parser.add_argument("-o", "--outputfolder")
     parser.add_argument("-l", "--language")
     args = parser.parse_args()
-   
+
     page = process_page(args.title)
     if page is not None:
-        write_page_result(page,args.outputfolder + args.title + "_wikipedia_dataset.json")
-
+        write_page_result(
+            page, args.outputfolder + args.title + "_wikipedia_dataset.json"
+        )

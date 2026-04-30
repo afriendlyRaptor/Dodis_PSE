@@ -1,8 +1,10 @@
-import spacy
-from spacy.training.example import Example
-import json
 import argparse
-from spacy.kb import KnowledgeBase, InMemoryLookupKB
+import json
+
+import spacy
+from spacy.kb import InMemoryLookupKB
+from spacy.training import Example
+
 
 def load_training_data(json_path):
     """Load JSON dataset and convert to spaCy format for NEL."""
@@ -22,6 +24,7 @@ def load_training_data(json_path):
         examples.append((text, {"links": links}))
     return examples
 
+
 def train_nel(model_name, kb_path, train_json, n_iter=10):
     # Load spaCy model
     nlp = spacy.load(model_name)
@@ -36,9 +39,8 @@ def train_nel(model_name, kb_path, train_json, n_iter=10):
     linker.kb = kb
 
     # Prepare training examples
-    raw_examples = load_training_data(train_json)
     spacy_examples = []
-    for text, ann in raw_examples:
+    for text, ann in load_training_data(train_json):
         doc = nlp.make_doc(text)
         example = Example.from_dict(doc, ann)
         spacy_examples.append(example)
@@ -52,13 +54,20 @@ def train_nel(model_name, kb_path, train_json, n_iter=10):
 
     return nlp
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", required=True, help="Base spaCy model (e.g., de_core_news_lg)")
+    parser.add_argument(
+        "--model", required=True, help="Base spaCy model (e.g., de_core_news_lg)"
+    )
     parser.add_argument("--kb", required=True, help="Path to existing KB folder")
     parser.add_argument("--train", required=True, help="Path to annotated JSON dataset")
-    parser.add_argument("--output", required=True, help="Path to save trained spaCy pipeline")
-    parser.add_argument("--n_iter", type=int, default=10, help="Number of training iterations")
+    parser.add_argument(
+        "--output", required=True, help="Path to save trained spaCy pipeline"
+    )
+    parser.add_argument(
+        "--n_iter", type=int, default=10, help="Number of training iterations"
+    )
     args = parser.parse_args()
 
     nlp_trained = train_nel(args.model, args.kb, args.train, n_iter=args.n_iter)

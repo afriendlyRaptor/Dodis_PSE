@@ -1,5 +1,7 @@
-import spacy
 import xml.etree.ElementTree as ET
+
+import spacy
+
 
 def create_tei_from_nel(doc):
     """
@@ -34,7 +36,7 @@ def create_tei_from_nel(doc):
         # Skip entities with no KB link (non-linked entities)
         if not kb_id:
             continue
-        
+
         # Create corresponding XML tags based on entity type
         if ent_label == "PERSON":
             pers_name = ET.SubElement(div, "persName", ref=f"https://dodis.ch/{kb_id}")
@@ -47,7 +49,9 @@ def create_tei_from_nel(doc):
             gpe_name.text = ent_text
         else:
             # For other entities, you can create a general entity tag if needed
-            general_ent = ET.SubElement(div, "term", type=ent_label, ref=f"https://dodis.ch/{kb_id}")
+            general_ent = ET.SubElement(
+                div, "term", type=ent_label, ref=f"https://dodis.ch/{kb_id}"
+            )
             general_ent.text = ent_text
 
     # Convert the tree to a string and add XML declaration
@@ -55,7 +59,11 @@ def create_tei_from_nel(doc):
 
     # Add XML declaration to the top of the string
     xml_header = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml_model_header = """<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>\n"""
+    xml_model_header = (
+        '<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/'
+        'relaxng/tei_all.rng" type="application/xml" '
+        'schematypens="http://relaxng.org/ns/structure/1.0"?>\n'
+    )
     xml_string = xml_header + xml_model_header + xml_string
 
     return xml_string
@@ -65,7 +73,7 @@ def write_to_file(xml_data, filename):
     """
     Writes the generated TEI-XML data to a file.
     """
-    with open(filename, 'w', encoding='utf-8') as f:
+    with open(filename, "w", encoding="utf-8") as f:
         f.write(xml_data)
     print(f"TEI-XML has been written to {filename}")
 

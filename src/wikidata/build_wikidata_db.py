@@ -1,38 +1,39 @@
+import argparse
 import gzip
 import json
 import sqlite3
-import requests
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
-from multiprocessing import Pool, Queue, Process, cpu_count
-import multiprocessing as mp
-import argparse
 
-#KONFIGURATION FÜR DODIS
+import requests
+
+# KONFIGURATION FÜR DODIS
 BASE_CLASSES = [
-    "Q5",        # Human (PER)
-    "Q6256",     # Country (LOC)
-    "Q515",      # City (LOC)
-    "Q43229",    # Organization (ORG)
-    "Q7278",     # Political Party (ORG)
+    "Q5",  # Human (PER)
+    "Q6256",  # Country (LOC)
+    "Q515",  # City (LOC)
+    "Q43229",  # Organization (ORG)
+    "Q7278",  # Political Party (ORG)
     "Q4830453",  # Business Enterprise (ORG)
-    "Q82794",    # Geographic Region (LOC)
-    "Q486972"    # Human Settlement (LOC)
+    "Q82794",  # Geographic Region (LOC)
+    "Q486972",  # Human Settlement (LOC)
 ]
 
 DB_NAME = "dodis_wikidata.db"
-INPUT_FILE = "wikidata_sample.json.gz" # Download-Sample
-LIMIT = None # Optional: Limit setzen für Anzahl gefundener Einträge (z.B. 10000 zum Testen)
+INPUT_FILE = "wikidata_sample.json.gz"  # Download-Sample
+LIMIT = None  # Optional: Limit setzen für Anzahl gefundener Einträge (z.B. 10000 zum Testen)
 
 # Zeitraum-Filter für Dodis
 YEAR_MIN = 1848  # Anfang des relevanten Zeitraums
 YEAR_MAX = 2000  # Ende des relevanten Zeitraums
- 
+
 # Q-IDs der Personen-Klasse – für diese wird P569 (Geburtsdatum) geprüft
 PERSON_CLASSES = {"Q5"}
 
 # Multiprocessing-Konfiguration für bessere Performance
 NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
 CHUNK_SIZE = 5000  # Zeilen pro Paket
+
 
 def fetch_hierarchy_tree():
     """
@@ -53,33 +54,34 @@ def fetch_hierarchy_tree():
     # Metadaten für die API-Abfrage
     url = "https://query.wikidata.org/sparql"
     headers = {
-        'User-Agent': 'Dodis_PSE_Bot/1.0 (UniBern)',
-        'Accept': 'application/json'
+        "User-Agent": "Dodis_PSE_Bot/1.0 (UniBern)",
+        "Accept": "application/json",
     }
 
-    response = requests.get(url, params={'query': query}, headers=headers)
-    assert response is not None, "SPARQL-Response ist None!" 
+    response = requests.get(url, params={"query": query}, headers=headers, timeout=30)
+    assert response is not None, "SPARQL-Response ist None!"
     response.raise_for_status()
 
     data = response.json()
-    assert data is not None, "SPARQL-Antwort (JSON) ist None!" 
+    assert data is not None, "SPARQL-Antwort (JSON) ist None!"
     valid_classes = set()
 
-    for item in data['results']['bindings']:
-        assert item is not None, "SPARQL-Ergebnis-Item ist None!" 
+    for item in data["results"]["bindings"]:
+        assert item is not None, "SPARQL-Ergebnis-Item ist None!"
 
         # Extrahiert die Q-ID aus der URL (z.B. http://www.wikidata.org/entity/Q123 -> Q123)
-        q_id = item['class']['value'].split('/')[-1]
-        assert q_id is not None, "q_id ist None!" 
+        q_id = item["class"]["value"].split("/")[-1]
+        assert q_id is not None, "q_id ist None!"
         valid_classes.add(q_id)
 
     print(f"-> Erfolgreich {len(valid_classes)} relevante Unterklassen gefunden.")
     return valid_classes
 
+
 # Funktion zum Extrahieren nur der relevanten Felder für NER
 def extract_relevant_fields(item):
     """Nur das Nötigste für NER"""
-    assert item is not None, "item ist None!" 
+    assert item is not None, "item ist None!"
     assert item.get("id") is not None, "item hat keine ID!"
 
     return {
@@ -100,8 +102,9 @@ def extract_relevant_fields(item):
                 for claim in item.get("claims", {}).get("P31", [])
                 if "datavalue" in claim.get("mainsnak", {})
             ]
-        }
+        },
     }
+
 
 def extract_year(claims, prop):
     """
@@ -120,12 +123,12 @@ def extract_year(claims, prop):
         except (KeyError, ValueError, TypeError):
             continue
     return None
- 
+
 
 def is_in_time_range(item, matched_class_ids):
     """
     Prüft ob eine Entität zeitlich in den Dodis-Zeitraum (YEAR_MIN–YEAR_MAX) fällt.
- 
+
     Logik:
     - Personen (P31 enthält Q5):     Geburtsjahr (P569) muss in [YEAR_MIN, YEAR_MAX] liegen.
     - Alle anderen Entitäten:        Gründungsjahr (P571) muss in [YEAR_MIN, YEAR_MAX] liegen,
@@ -133,7 +136,7 @@ def is_in_time_range(item, matched_class_ids):
     """
     claims = item.get("claims", {})
     is_person = bool(PERSON_CLASSES & matched_class_ids)
- 
+
     if is_person:
         year = extract_year(claims, "P569")  # Geburtsdatum
         if year is None:
@@ -142,13 +145,25 @@ def is_in_time_range(item, matched_class_ids):
     else:
         year = extract_year(claims, "P571")  # Gründungsdatum (inception)
         if year is None:
-            return True   # Orte/Orgs ohne Datum behalten (z.B. antike Städte, Staaten)
+            return True  # Orte/Orgs ohne Datum behalten (z.B. antike Städte, Staaten)
         return YEAR_MIN <= year <= YEAR_MAX
- 
+
+
+def _match_classes(claims, valid_classes):
+    matched = set()
+    for claim in claims.get("P31", []):
+        try:
+            target_id = claim["mainsnak"]["datavalue"]["value"]["id"]
+            if target_id in valid_classes:
+                matched.add(target_id)
+        except KeyError:
+            continue
+    return matched
+
 
 def process_chunk(args):
     """Wird von jedem Worker-Prozess aufgerufen. Verarbeitet ein Paket Zeilen."""
-    assert args is not None, "args ist None!" 
+    assert args is not None, "args ist None!"
     chunk, valid_classes = args
     assert chunk is not None, "chunk ist None!"
     assert valid_classes is not None, "valid_classes ist None!"
@@ -164,44 +179,41 @@ def process_chunk(args):
             item = json.loads(line)
             claims = item.get("claims", {})
             if "P31" in claims:
-                matched_class_ids = set()
-                for claim in claims["P31"]:
-                    try:
-                        target_id = claim["mainsnak"]["datavalue"]["value"]["id"]
-                        if target_id in valid_classes:
-                            matched_class_ids.add(target_id)
-                    except KeyError:
-                        continue
+                matched_class_ids = _match_classes(claims, valid_classes)
                 if matched_class_ids and is_in_time_range(item, matched_class_ids):
                     small_item = extract_relevant_fields(item)
-                    results.append((item['id'], json.dumps(small_item)))
+                    results.append((item["id"], json.dumps(small_item)))
         except json.JSONDecodeError:
             continue
     return results
 
+
 def setup_database():
-    #Erstellt die SQLite-Datenbank und die Tabelle.
+    # Erstellt die SQLite-Datenbank und die Tabelle.
     conn = sqlite3.connect(DB_NAME)
-    assert conn is not None, "Datenbankverbindung ist None!" 
+    assert conn is not None, "Datenbankverbindung ist None!"
 
     cursor = conn.cursor()
     assert cursor is not None, "Cursor ist None!"
 
     # Performance-Optimierungen für grosse Datenmengen
-    cursor.execute("PRAGMA journal_mode = WAL")       # Schnelleres Schreiben
-    cursor.execute("PRAGMA synchronous = NORMAL")     # Weniger Disk-Flushes
-    cursor.execute("PRAGMA cache_size = -64000")      # 64 MB Cache
-    cursor.execute("PRAGMA temp_store = MEMORY")      # Temp-Daten im RAM
-    
+    cursor.execute("PRAGMA journal_mode = WAL")  # Schnelleres Schreiben
+    cursor.execute("PRAGMA synchronous = NORMAL")  # Weniger Disk-Flushes
+    cursor.execute("PRAGMA cache_size = -64000")  # 64 MB Cache
+    cursor.execute("PRAGMA temp_store = MEMORY")  # Temp-Daten im RAM
+
     # Wir speichern die ID (z.B. Q123) als Primary Key und die rohen JSON-Daten
-    cursor.execute('''
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS entities (
             id TEXT PRIMARY KEY,
             data JSON
         )
-    ''')
+    """
+    )
     conn.commit()
     return conn
+
 
 def process_dump_parallel(valid_classes):
     print(f"\nStarte parallele Verarbeitung mit {NUM_WORKERS} Worker-Prozessen...")
@@ -220,7 +232,7 @@ def process_dump_parallel(valid_classes):
 
     with opener(INPUT_FILE, "rt", encoding="utf-8") as f_in:
         with Pool(processes=NUM_WORKERS) as pool:
-            
+
             # Zeilen in Pakete aufteilen
             def generate_chunks():
                 chunk = []
@@ -234,26 +246,32 @@ def process_dump_parallel(valid_classes):
 
             try:
                 # Pakete parallel verarbeiten
-                for batch_results in pool.imap_unordered(process_chunk, generate_chunks(), chunksize=4):
+                for batch_results in pool.imap_unordered(
+                    process_chunk, generate_chunks(), chunksize=4
+                ):
                     count_processed += CHUNK_SIZE
 
                     if batch_results:
                         cursor.executemany(
-                            'INSERT OR IGNORE INTO entities (id, data) VALUES (?, ?)',
-                            batch_results
+                            "INSERT OR IGNORE INTO entities (id, data) VALUES (?, ?)",
+                            batch_results,
                         )
                         count_found += len(batch_results)
 
                     # Fortschritt
                     if count_processed % 1_000_000 == 0:
                         conn.commit()
-                        print(f"Verarbeitet: {count_processed:,} | Gefunden: {count_found:,}")
+                        print(
+                            f"Verarbeitet: {count_processed:,} | Gefunden: {count_found:,}"
+                        )
 
                     if LIMIT is not None and count_found >= LIMIT:
-                        print(f"Limit erreicht. Stoppe.")
+                        print("Limit erreicht. Stoppe.")
                         break
             except EOFError:
-                print("Ende der (unvollständigen) Testdatei erreicht – das ist beim Testen normal.")
+                print(
+                    "Ende der (unvollständigen) Testdatei erreicht – das ist beim Testen normal."
+                )
 
     conn.commit()
     conn.close()
@@ -265,7 +283,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--inputfile")
     parser.add_argument("-o", "--outputPath")
-    parser.add_argument("-l", "--limitEntries", nargs='?', const=1,type=int, default=None)
+    parser.add_argument(
+        "-l", "--limitEntries", nargs="?", const=1, type=int, default=None
+    )
     args, leftovers = parser.parse_known_args()
 
     if args.outputPath is not None:
@@ -279,9 +299,6 @@ if __name__ == "__main__":
     NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
     CHUNK_SIZE = 5000  # Zeilen pro Paket
 
-
-    
-    
     if not Path(INPUT_FILE).exists():
         print(f"FEHLER: Eingabedatei '{INPUT_FILE}' nicht gefunden.")
     else:

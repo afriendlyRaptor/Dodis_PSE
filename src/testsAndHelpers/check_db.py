@@ -1,6 +1,6 @@
+import json
 import os
 import sqlite3
-import json
 
 # Build path relative to this script file, not the working directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -8,7 +8,7 @@ DB_PATH = os.path.join(BASE_DIR, "dodis_wikidata.db")
 
 # Mit Datenbank verbinden
 conn = sqlite3.connect(DB_PATH)
-assert conn is not None, "Datenbankverbindung ist None!" 
+assert conn is not None, "Datenbankverbindung ist None!"
 cursor = conn.cursor()
 assert cursor is not None, "Cursor ist None!"
 

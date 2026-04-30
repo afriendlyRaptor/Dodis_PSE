@@ -79,7 +79,9 @@ if __name__ == "__main__":
     DB_PATH = DATA_PATH / "dodis_entities.db"
     KB_OUTPUT = DATA_PATH / "dodis_entities.kb"
 
-    assert DB_PATH.exists(), f"Datenbank nicht gefunden: {DB_PATH} — zuerst tei_to_db.py ausführen"
+    assert (
+        DB_PATH.exists()
+    ), f"Datenbank nicht gefunden: {DB_PATH} — zuerst tei_to_db.py ausführen"
 
     print(f"Lade Modell {args.model}...")
     nlp = spacy.load(args.model)
@@ -93,7 +95,9 @@ if __name__ == "__main__":
             vector_size = test_doc._.trf_data.last_hidden_layer_state.data.shape[-1]
         else:
             vector_size = len(test_doc.vector)
-    print(f"Vektordimension: {vector_size} ({'Transformer' if is_transformer else 'statisch'})")
+    print(
+        f"Vektordimension: {vector_size} ({'Transformer' if is_transformer else 'statisch'})"
+    )
 
     conn = sqlite3.connect(DB_PATH)
     cur_outer = conn.cursor()
@@ -131,7 +135,9 @@ if __name__ == "__main__":
         registered_entities.add(entity_id)
 
     assert kb.get_size_entities() > 0, "Keine Entities in KB registriert"
-    print(f"{kb.get_size_entities()} Entities registriert, {skipped} übersprungen (kein Vektor/kein Alias)")
+    print(
+        f"{kb.get_size_entities()} Entities registriert, {skipped} übersprungen (kein Vektor/kein Alias)"
+    )
 
     # Aliase mit frequenzbasierten Wahrscheinlichkeiten registrieren
     print("Registriere Aliases...")
@@ -157,7 +163,9 @@ if __name__ == "__main__":
         kb.add_alias(alias=alias, entities=entity_ids, probabilities=probs)
 
     assert kb.get_size_aliases() > 0, "Keine Aliases in KB registriert"
-    print(f"{kb.get_size_aliases()} Aliases registriert, {skipped_aliases} übersprungen (keine registrierte Entity)")
+    print(
+        f"{kb.get_size_aliases()} Aliases registriert, {skipped_aliases} übersprungen (keine registrierte Entity)"
+    )
 
     conn.close()
 

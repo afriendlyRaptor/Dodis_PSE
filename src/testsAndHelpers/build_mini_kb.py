@@ -1,13 +1,14 @@
+from pathlib import Path
+
 import spacy
 from spacy.kb import InMemoryLookupKB
 from spacy.tokens import DocBin
-from pathlib import Path
-import numpy as np
+
 
 def create_mini_kb():
-    BASE_PATH = Path(__file__).parent.parent.parent.absolute()
-    train_data = BASE_PATH / "data" / "wiki_train_s.spacy"
-    output_kb = BASE_PATH / "data" / "mini_entities.kb"
+    base_path = Path(__file__).parent.parent.parent.absolute()
+    train_data = base_path / "data" / "wiki_train_s.spacy"
+    output_kb = base_path / "data" / "mini_entities.kb"
 
     nlp = spacy.load("de_core_news_sm")
     doc_bin = DocBin(store_user_data=True).from_disk(train_data)
@@ -30,6 +31,7 @@ def create_mini_kb():
 
     kb.to_disk(output_kb)
     print(f"kb erfolgreich unter {output_kb} gespeichert.")
+
 
 if __name__ == "__main__":
     create_mini_kb()

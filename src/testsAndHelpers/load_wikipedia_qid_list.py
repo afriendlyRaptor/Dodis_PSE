@@ -1,8 +1,9 @@
-import requests
-import load_wikipedia_title as load_wiki
 import argparse
 import time
-from sampleKB import sample_qid_list
+
+import load_wikipedia_title as load_wiki
+import requests
+from sample_KB import sample_qid_list
 
 WIKIDATA_API = "https://www.wikidata.org/w/api.php"
 
@@ -10,12 +11,13 @@ HEADERS = {
     "User-Agent": "WikipediaDodisProject/1.0 (contact: dodis_warden@bluewin.com)"
 }
 
+
 def qid_to_title(qid, lang="de"):
     params = {
         "action": "wbgetentities",
         "ids": qid,
         "props": "sitelinks",
-        "format": "json"
+        "format": "json",
     }
 
     for _ in range(5):  # retry loop
@@ -38,8 +40,7 @@ def qid_to_title(qid, lang="de"):
             sitelinks = data["entities"][qid].get("sitelinks", {})
             wiki_key = f"{lang}wiki"
 
-
-            if wiki_key in sitelinks: 
+            if wiki_key in sitelinks:
                 return sitelinks[wiki_key]["title"]
 
         except Exception as e:
@@ -49,7 +50,7 @@ def qid_to_title(qid, lang="de"):
     return None
 
 
-def run_all(qids,output_folder, lang="de"):
+def run_all(qids, output_folder, lang="de"):
     for qid in qids:
         title = qid_to_title(qid, lang)
 
@@ -65,8 +66,8 @@ def run_all(qids,output_folder, lang="de"):
 
 
 if __name__ == "__main__":
-    # example: 
-    #  python load_wikipedia_qid_list.py -i ../data/kb_folder/qid_list.txt \ 
+    # example:
+    #  python load_wikipedia_qid_list.py -i ../data/kb_folder/qid_list.txt \
     # -s 1000 -o ../data/qid_pages/ -l en
     parser = argparse.ArgumentParser()
 
@@ -75,9 +76,8 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--outputfolder")
     parser.add_argument("-l", "--language")
     args = parser.parse_args()
-   
-    print("sampel List")
-    qid_sample = sample_qid_list(args.qidlist,args.samplesize)
-    print("loading Pages")
-    run_all(qid_sample,args.outputfolder,args.language)
 
+    print("sampel List")
+    qid_sample = sample_qid_list(args.qidlist, args.samplesize)
+    print("loading Pages")
+    run_all(qid_sample, args.outputfolder, args.language)

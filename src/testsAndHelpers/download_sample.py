@@ -1,6 +1,7 @@
-import requests
 import os
 import time
+
+import requests
 
 # URL des großen Wikidata-Dumps
 URL = "https://dumps.wikimedia.org/wikidatawiki/entities/latest-all.json.gz"
@@ -9,8 +10,9 @@ OUTPUT_FILE = "wikidata_sample.json.gz"
 # Wie viele MB laden (144000 = alles)
 DOWNLOAD_SIZE_MB = 144000
 
-MAX_RETRIES = 10        # Wie oft bei Fehler neu versuchen
-RETRY_WAIT  = 30        # Sekunden warten zwischen Versuchen
+MAX_RETRIES = 10  # Wie oft bei Fehler neu versuchen
+RETRY_WAIT = 30  # Sekunden warten zwischen Versuchen
+
 
 def download_with_resume():
     for attempt in range(1, MAX_RETRIES + 1):
@@ -25,7 +27,9 @@ def download_with_resume():
         headers = {}
         if resume_byte > 0:
             headers["Range"] = f"bytes={resume_byte}-"
-            print(f"Versuch {attempt}: Setze fort ab {downloaded_mb} MB ({resume_byte} Bytes)...")
+            print(
+                f"Versuch {attempt}: Setze fort ab {downloaded_mb} MB ({resume_byte} Bytes)..."
+            )
         else:
             print(f"Versuch {attempt}: Starte Download von {URL}")
             print(f"Ziel: erste {DOWNLOAD_SIZE_MB} MB herunterladen...")
@@ -42,7 +46,7 @@ def download_with_resume():
                     resume_byte = 0
                     downloaded_mb = 0
 
-                mode = 'ab' if resume_byte > 0 else 'wb'
+                mode = "ab" if resume_byte > 0 else "wb"
                 with open(OUTPUT_FILE, mode) as f:
                     chunk_size = 1024 * 1024  # 1 MB
 
@@ -50,10 +54,15 @@ def download_with_resume():
                         if chunk:
                             f.write(chunk)
                             downloaded_mb += 1
-                            print(f"Geladen: {downloaded_mb} MB / {DOWNLOAD_SIZE_MB} MB", end='\r')
+                            print(
+                                f"Geladen: {downloaded_mb} MB / {DOWNLOAD_SIZE_MB} MB",
+                                end="\r",
+                            )
 
                         if downloaded_mb >= DOWNLOAD_SIZE_MB:
-                            print(f"\nDownload-Ziel von {DOWNLOAD_SIZE_MB} MB erreicht.")
+                            print(
+                                f"\nDownload-Ziel von {DOWNLOAD_SIZE_MB} MB erreicht."
+                            )
                             print(f"Datei '{OUTPUT_FILE}' erfolgreich erstellt.")
                             return
 
@@ -67,6 +76,7 @@ def download_with_resume():
                 time.sleep(RETRY_WAIT)
             else:
                 print("Maximale Anzahl Versuche erreicht. Abbruch.")
+
 
 if __name__ == "__main__":
     download_with_resume()

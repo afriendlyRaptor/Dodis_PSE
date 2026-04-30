@@ -96,4 +96,6 @@ if __name__ == "__main__":
     assert alias_count > 0, "Keine Aliases in der Datenbank"
 
     conn.close()
-    print(f"{entity_count} Entities und {alias_count} Aliases gespeichert unter {DB_PATH}")
+    print(
+        f"{entity_count} Entities und {alias_count} Aliases gespeichert unter {DB_PATH}"
+    )

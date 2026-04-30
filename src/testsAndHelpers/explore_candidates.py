@@ -1,6 +1,7 @@
+from pathlib import Path
+
 import spacy
 from spacy.kb import InMemoryLookupKB
-from pathlib import Path
 
 # Pfade
 BASE_PATH = Path(__file__).parent.parent
@@ -15,7 +16,7 @@ def explore():
 
     while True:
         name = input("\ngib einen namen zum testen ein (oder 'exit'): ")
-        if name.lower() == 'exit':
+        if name.lower() == "exit":
             break
 
         candidates = kb.get_alias_candidates(name)
@@ -30,7 +31,9 @@ def explore():
             if i > 10:
                 print("     ...")
                 break
-            print(f"     [{i + 1}] ID: {c.entity_} | wahrscheinlichkeit: {c.prior_prob:.2f}")
+            print(
+                f"     [{i + 1}] ID: {c.entity_} | wahrscheinlichkeit: {c.prior_prob:.2f}"
+            )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
-import random
 import argparse
+import random
+
 import spacy
 from spacy.tokens import DocBin
 

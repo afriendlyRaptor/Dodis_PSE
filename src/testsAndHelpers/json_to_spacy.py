@@ -1,8 +1,9 @@
-import json
 import argparse
-import spacy
+import json
 from pathlib import Path
-from spacy.tokens import DocBin, Doc
+
+import spacy
+from spacy.tokens import Doc, DocBin
 
 
 def json_to_spacy(json_path, nlp, doc_bin):
@@ -19,11 +20,7 @@ def json_to_spacy(json_path, nlp, doc_bin):
         links = {}
 
         for ann in item["annotations"]:
-            span = doc.char_span(
-                ann["start"],
-                ann["end"],
-                alignment_mode="contract"
-            )
+            span = doc.char_span(ann["start"], ann["end"], alignment_mode="contract")
 
             if span is None:
                 continue
@@ -38,7 +35,7 @@ def json_to_spacy(json_path, nlp, doc_bin):
 
 
 if __name__ == "__main__":
-    # example: 
+    # example:
     parser = argparse.ArgumentParser(
         description="Convert multiple JSON files into one spaCy .spacy file"
     )
