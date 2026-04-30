@@ -9,6 +9,9 @@ venv/
 # IDE
 .idea/
 
+Visual Studio Code
+.vscode/
+
 # Python cache
 __pycache__/
 *.pyc

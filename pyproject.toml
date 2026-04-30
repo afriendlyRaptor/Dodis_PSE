@@ -1,0 +1,22 @@
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+
+[tool.isort]
+profile = "black"          # verhindert Konflikte zwischen isort und Black
+line_length = 88
+src_paths = ["src"]
+
+[tool.pylint.main]
+source-roots = ["src"]
+
+[tool.pylint.format]
+max-line-length = 88       # gleiche Grenze wie Black
+
+[tool.pylint."messages control"]
+disable = [
+    "C0114",  # missing-module-docstring
+    "C0115",  # missing-class-docstring
+    "C0116",  # missing-function-docstring
+    "W0511",  # fixme / TODO-Kommentare
+]
