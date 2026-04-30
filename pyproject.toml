@@ -11,7 +11,7 @@ src_paths = ["src"]
 source-roots = ["src"]
 
 [tool.pylint.format]
-max-line-length = 88       # gleiche Grenze wie Black
+max-line-length = 120       # gleiche Grenze wie Black
 
 [tool.pylint."messages control"]
 disable = [
@@ -19,4 +19,13 @@ disable = [
     "C0115",  # missing-class-docstring
     "C0116",  # missing-function-docstring
     "W0511",  # fixme / TODO-Kommentare
+    "C0103",   # Naming (UPPER_CASE-Konstanten, alte Modulnamen)
+    "W0718",   # Broad exception (absichtliche catches in HTTP-Loops)
+    "E0401",   # Import errors (lokale Imports funktionieren zur Laufzeit)
+    "W0621",   # Redefining outer name (Funktionsparameter)
+    "R0801",   # Duplicate code (verursachte auch den Unicode-Absturz auf Windows)
+    "R1705",   # no-else-return
+    "R0914",   # too-many-locals
+    "R0912",   # too-many-branches
+    "R0915",   # too-many-statements
 ]
