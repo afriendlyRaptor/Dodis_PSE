@@ -203,14 +203,12 @@ def setup_database():
     cursor.execute("PRAGMA temp_store = MEMORY")  # Temp-Daten im RAM
 
     # Wir speichern die ID (z.B. Q123) als Primary Key und die rohen JSON-Daten
-    cursor.execute(
-        """
+    cursor.execute("""
         CREATE TABLE IF NOT EXISTS entities (
             id TEXT PRIMARY KEY,
             data JSON
         )
-    """
-    )
+    """)
     conn.commit()
     return conn
 

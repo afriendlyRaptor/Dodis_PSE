@@ -43,16 +43,14 @@ if __name__ == "__main__":
     cur.execute("DROP TABLE IF EXISTS aliases")
     cur.execute("DROP TABLE IF EXISTS entities")
     cur.execute("CREATE TABLE entities (id TEXT PRIMARY KEY, type TEXT)")
-    cur.execute(
-        """
+    cur.execute("""
         CREATE TABLE aliases (
             alias     TEXT,
             entity_id TEXT,
             freq      INTEGER DEFAULT 0,
             PRIMARY KEY (alias, entity_id)
         )
-        """
-    )
+        """)
     conn.commit()
 
     xml_files = sorted(dataset_path.glob("**/*.xml"))
