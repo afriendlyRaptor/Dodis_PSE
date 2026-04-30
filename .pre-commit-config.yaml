@@ -11,7 +11,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: .venv/Scripts/pylint
         language: system
         types: [python]
         args: ["--rcfile=pyproject.toml"]
