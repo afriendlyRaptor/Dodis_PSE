@@ -15,4 +15,11 @@ Im Terminal kommt dann was fehlgeschlagen ist und wieso.
 
 Am besten vor jedem Commit einmal pre-commit ausführen.
 
-Beim Commit wird von Github black und isort einmal geprüft und schlagen fehl wenn was falsch ist (Allerdings wird nichts geändert. Das muss Lokal gemacht werden mit den commands oben).
+Beim Commit wird von Github black, isort und pylint einmal geprüft und schlagen fehl wenn was falsch ist (Allerdings wird nichts geändert. Das muss Lokal gemacht werden mit den commands oben).
+
+Zum black oder isort seperat ausführen:
+
+"isort ."
+"isort . --check" (nur zum überprüfen, es wird nichts geändert)
+"black ."
+"black . --check" (nur zum überprüfen, es wird nichts geändert)
