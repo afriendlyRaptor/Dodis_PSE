@@ -62,7 +62,7 @@ else
 fi
 
 echo "Starte Training..."
-python -m spacy train train_el.cfg \
+python -m spacy train train_el_wiki.cfg \
     --output output/wikipedia \
     --gpu-id 0
 
