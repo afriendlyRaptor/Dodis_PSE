@@ -44,3 +44,6 @@ __pycache__/
 # Virtual Environment
 venv/
 .env
+
+# claude
+.claude/
