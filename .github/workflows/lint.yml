@@ -22,9 +22,9 @@ jobs:
         
     - name: Abhängigkeiten installieren
       run: |
+        pip install black isort pylint
         pip install -r src/dodis/requirements.txt
         pip install -r src/wikidata/requirements.txt
-        pip install -r requirements-dev.txt
 
     - name: Black prüfen
       run: black --check src/
