@@ -24,7 +24,6 @@ jobs:
       run: |
         pip install -r src/dodis/requirements.txt
         pip install -r src/wikidata/requirements.txt
-        pip install black isort pylint
         pip install -r requirements-dev.txt
 
     - name: Black prüfen
