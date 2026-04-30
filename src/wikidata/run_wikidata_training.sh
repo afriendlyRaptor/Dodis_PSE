@@ -39,7 +39,7 @@ if [ ! -d "venv" ]; then
     pip install torch==2.5.1+cu121 --index-url https://download.pytorch.org/whl/cu121
     pip install "cupy-cuda12x<13"
     pip install spacy spacy-transformers
-    pip install -r src/requirements.txt
+    pip install -r src/wikidata/requirements.txt
 
     python -m spacy download de_dep_news_trf
     python -m spacy download de_core_news_sm
