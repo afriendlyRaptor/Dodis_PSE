@@ -17,17 +17,27 @@ from pathlib import Path
 import spacy
 from spacy.tokens import DocBin, Span
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="output/dodis/model-best",
-                        help="Pfad zum trainierten Modell (default: output/dodis/model-best)")
-    parser.add_argument("--test", default="data/dodis_test.spacy",
-                        help="Pfad zum Evaluations-Set (default: data/dodis_test.spacy)")
-    parser.add_argument("--gpu", type=int, default=-1,
-                        help="GPU-ID, -1 für CPU (default: -1)")
-    parser.add_argument("--examples", type=int, default=10,
-                        help="Anzahl anzuzeigender Fehlerbeispiele (default: 10)")
+    parser.add_argument(
+        "--model",
+        default="output/dodis/model-best",
+        help="Pfad zum trainierten Modell (default: output/dodis/model-best)",
+    )
+    parser.add_argument(
+        "--test",
+        default="data/dodis_test.spacy",
+        help="Pfad zum Evaluations-Set (default: data/dodis_test.spacy)",
+    )
+    parser.add_argument(
+        "--gpu", type=int, default=-1, help="GPU-ID, -1 für CPU (default: -1)"
+    )
+    parser.add_argument(
+        "--examples",
+        type=int,
+        default=10,
+        help="Anzahl anzuzeigender Fehlerbeispiele (default: 10)",
+    )
     args = parser.parse_args()
 
     BASE_PATH = Path(__file__).parent.parent.parent
@@ -68,8 +78,7 @@ if __name__ == "__main__":
             if name == "ner":
                 # Gold-Spans einsetzen (entspricht use_gold_ents=True im Training)
                 pred_doc.ents = [
-                    Span(pred_doc, e.start, e.end, label=e.label)
-                    for e in gold_doc.ents
+                    Span(pred_doc, e.start, e.end, label=e.label) for e in gold_doc.ents
                 ]
 
         gold_by_pos = {(e.start, e.end): e.kb_id_ for e in gold_doc.ents if e.kb_id_}
@@ -88,13 +97,17 @@ if __name__ == "__main__":
                 if len(error_examples) < args.examples:
                     ctx_start = max(0, pred_ent.start_char - 60)
                     ctx_end = min(len(gold_doc.text), pred_ent.end_char + 60)
-                    error_examples.append({
-                        "text": pred_ent.text,
-                        "type": pred_ent.label_,
-                        "gold": gold_id,
-                        "pred": pred_ent.kb_id_ or "NIL",
-                        "context": gold_doc.text[ctx_start:ctx_end].replace("\n", " "),
-                    })
+                    error_examples.append(
+                        {
+                            "text": pred_ent.text,
+                            "type": pred_ent.label_,
+                            "gold": gold_id,
+                            "pred": pred_ent.kb_id_ or "NIL",
+                            "context": gold_doc.text[ctx_start:ctx_end].replace(
+                                "\n", " "
+                            ),
+                        }
+                    )
 
     acc = correct / total if total else 0.0
 
@@ -113,7 +126,9 @@ if __name__ == "__main__":
             print(f"  {label}: {count}")
 
     if error_examples:
-        print(f"\nBeispiele falscher Verlinkungen ({len(error_examples)} von {total - correct}):")
+        print(
+            f"\nBeispiele falscher Verlinkungen ({len(error_examples)} von {total - correct}):"
+        )
         for i, ex in enumerate(error_examples, 1):
             print(f"\n  [{i}] \"{ex['text']}\" ({ex['type']})")
             print(f"       Gold:    {ex['gold']}")
