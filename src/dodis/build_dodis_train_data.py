@@ -129,7 +129,7 @@ if __name__ == "__main__":
                             span_end,
                             label=span_label,
                             kb_id=span_ref,
-                            alignment_mode="contract",
+                            alignment_mode="strict",
                         )
                         if span is not None:
                             ents.append(span)

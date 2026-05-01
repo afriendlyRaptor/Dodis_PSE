@@ -62,7 +62,7 @@ if [ ! -d data/dodis_entities.kb ]; then
         echo "Datenbank existiert bereits, überspringe build_dodis_db.py"
     fi
     echo "Generiere Dodis KB..."
-    python src/dodis/build_dodis_kb.py --model de_dep_news_trf
+    python src/dodis/build_dodis_kb.py --model de_dep_news_trf --use-wikidata
 else
     echo "KB existiert bereits, überspringe build_dodis_kb.py und build_dodis_db.py"
 fi

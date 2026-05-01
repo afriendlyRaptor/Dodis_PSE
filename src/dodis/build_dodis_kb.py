@@ -24,11 +24,37 @@ Usage:
 
 import argparse
 import sqlite3
+import time
 from pathlib import Path
 
 import numpy as np
+import requests
 import spacy
 from spacy.kb import InMemoryLookupKB
+
+
+def get_wikidata_description(name: str, lang: str = "de") -> str:
+    """Sucht den Namen auf Wikidata und gibt die erste Beschreibung zurück."""
+    try:
+        resp = requests.get(
+            "https://www.wikidata.org/w/api.php",
+            params={
+                "action": "wbsearchentities",
+                "search": name,
+                "language": lang,
+                "uselang": lang,
+                "limit": 1,
+                "format": "json",
+            },
+            timeout=5,
+        )
+        results = resp.json().get("search", [])
+        if results:
+            return results[0].get("description", "")
+    except Exception:
+        pass
+    return ""
+
 
 # Bekannte Vektordimensionen pro Modell
 MODEL_VECTOR_SIZE = {
@@ -72,6 +98,11 @@ if __name__ == "__main__":
         default="de_core_news_lg",
         help="spaCy-Modell (z.B. de_dep_news_trf oder de_core_news_lg)",
     )
+    parser.add_argument(
+        "--use-wikidata",
+        action="store_true",
+        help="Wikidata-Beschreibungen für Entity-Vektoren verwenden",
+    )
     args = parser.parse_args()
 
     BASE_PATH = Path(__file__).parent.parent.parent
@@ -105,8 +136,11 @@ if __name__ == "__main__":
 
     kb = InMemoryLookupKB(vocab=nlp.vocab, entity_vector_length=vector_size)
 
-    # Entities registrieren: Vektor aus dem häufigsten Alias
-    print("Registriere Entities...")
+    # Entities registrieren: Vektor aus Wikidata-Beschreibung oder häufigstem Alias
+    wikidata_hits = 0
+    print(
+        f"Registriere Entities{' (mit Wikidata-Beschreibungen)' if args.use_wikidata else ''}..."
+    )
     skipped = 0
     registered_entities = set()
 
@@ -124,7 +158,17 @@ if __name__ == "__main__":
             "SELECT SUM(freq) FROM aliases WHERE entity_id = ?", (entity_id,)
         ).fetchone()[0]
 
-        doc = nlp(row[0])
+        alias = row[0]
+        if args.use_wikidata:
+            description = get_wikidata_description(alias)
+            text = f"{alias} {description}".strip() if description else alias
+            if description:
+                wikidata_hits += 1
+            time.sleep(0.05)  # Rate-Limiting: max. 20 Anfragen/Sekunde
+        else:
+            text = alias
+
+        doc = nlp(text)
         vector = get_vector(doc, is_transformer)
 
         if vector is None:
@@ -135,9 +179,10 @@ if __name__ == "__main__":
         registered_entities.add(entity_id)
 
     assert kb.get_size_entities() > 0, "Keine Entities in KB registriert"
-    print(
-        f"{kb.get_size_entities()} Entities registriert, {skipped} übersprungen (kein Vektor/kein Alias)"
-    )
+    msg = f"{kb.get_size_entities()} Entities registriert, {skipped} übersprungen (kein Vektor/kein Alias)"
+    if args.use_wikidata:
+        msg += f", {wikidata_hits} Wikidata-Beschreibungen gefunden"
+    print(msg)
 
     # Aliase mit frequenzbasierten Wahrscheinlichkeiten registrieren
     print("Registriere Aliases...")
