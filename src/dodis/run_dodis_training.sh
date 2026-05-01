@@ -16,7 +16,7 @@
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10GB
 ##SBATCH --time=0-23:55:00
-#SBATCH --time=0-06:00:00
+#SBATCH --time=0-12:00:00
 
 #SBATCH --output=job_logs/output_%j.out
 #SBATCH --error=job_logs/output_%j.err
