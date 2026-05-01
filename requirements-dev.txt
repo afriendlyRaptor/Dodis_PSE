@@ -1,3 +1,4 @@
 black>=24.0
 isort>=5.13
 pylint>=3.0
+lxml
