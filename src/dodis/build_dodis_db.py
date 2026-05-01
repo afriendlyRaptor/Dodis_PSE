@@ -3,7 +3,7 @@ Erstellt eine SQLite-Datenbank mit allen Entities (Personen, Orte, Organisatione
 und ihren Alias-Häufigkeiten aus den lokal vorhandenen Dodis TEI-XML Dateien.
 
 Erwartet die XML-Dateien unter data/dodis_transcription_xml/.
-Falls diese nicht vorhanden sind: src/testsAndHelpers/download_dodis_xml.py ausführen.
+Falls diese nicht vorhanden sind: src/helpers/download_dodis_xml.py ausführen.
 
 Output: data/dodis_entities.db
 
