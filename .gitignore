@@ -22,7 +22,12 @@ data/dodis_entities.kb/**
 data/mini_entities.kb/
 data/mini_entities.kb/**
 
-output/
+output/**
+!output/dodis/
+!output/dodis/model-best/
+!output/dodis/model-best/**
+output/dodis/model-best/transformer/
+output/dodis/model-best/transformer/**
 
 #dodis_transcription_xml
 data/dodis_transcription_xml/
