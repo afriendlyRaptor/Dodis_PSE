@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-from lxml import etree
 import html
+
+from lxml import etree
 
 NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 
