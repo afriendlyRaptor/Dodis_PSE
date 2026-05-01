@@ -7,11 +7,8 @@ from lxml import etree
 
 NS = {"tei": "http://www.tei-c.org/ns/1.0"}
 
-ENTITY_TAGS = {
-    "persName": "PER",
-    "orgName": "ORG",
-    "placeName": "LOC"
-}
+ENTITY_TAGS = {"persName": "PER", "orgName": "ORG", "placeName": "LOC"}
+
 
 def parse_tei(file_path):
     tree = etree.parse(file_path)
@@ -35,13 +32,15 @@ def parse_tei(file_path):
             end = offset
 
             if is_entity:
-                entities.append({
-                    "start": start,
-                    "end": end,
-                    "type": ENTITY_TAGS[tag],
-                    "ref": el.get("ref"),
-                    "text": el.text
-                })
+                entities.append(
+                    {
+                        "start": start,
+                        "end": end,
+                        "type": ENTITY_TAGS[tag],
+                        "ref": el.get("ref"),
+                        "text": el.text,
+                    }
+                )
 
         # recurse into children
         for child in el:
@@ -55,6 +54,7 @@ def parse_tei(file_path):
     process_element(body)
 
     return "".join(text_parts), entities
+
 
 def render_html(text, entities, show_ids=False, highlight_missing=False):
     # sort entities by start offset
@@ -87,19 +87,19 @@ def render_html(text, entities, show_ids=False, highlight_missing=False):
 
         # clickable entity
         if ref:
-            span = f'''
+            span = f"""
             <a href="{ref}" target="_blank" class="{css_class}" title="{ref}">
                 {ent_text}
                 <span class="label">{label}</span>
             </a>
-            '''
+            """
         else:
-            span = f'''
+            span = f"""
             <span class="{css_class}">
                 {ent_text}
                 <span class="label">{label}</span>
             </span>
-            '''
+            """
 
         html_parts.append(span)
         cursor = end
@@ -157,7 +157,9 @@ a.ent:hover {{
 
 
 def main():
-    parser = argparse.ArgumentParser(description="TEI NEL Viewer with clickable entities")
+    parser = argparse.ArgumentParser(
+        description="TEI NEL Viewer with clickable entities"
+    )
     parser.add_argument("input", help="Input TEI XML")
     parser.add_argument("output", help="Output HTML")
     parser.add_argument("--show-ids", action="store_true")
@@ -167,10 +169,7 @@ def main():
 
     text, entities = parse_tei(args.input)
     html_output = render_html(
-        text,
-        entities,
-        show_ids=args.show_ids,
-        highlight_missing=args.highlight_missing
+        text, entities, show_ids=args.show_ids, highlight_missing=args.highlight_missing
     )
 
     with open(args.output, "w", encoding="utf-8") as f:
