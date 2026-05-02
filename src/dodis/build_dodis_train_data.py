@@ -51,10 +51,14 @@ def extract_text_and_spans(elem):
         if tag in ENTITY_TAGS:
             ref = child.get("ref", "").replace("http://dodis.ch/", "https://dodis.ch/")
             mention = "".join(child.itertext())
-            if ref and mention:
+            if ref and mention.strip():
                 start = len(text)
                 text += mention
-                spans.append((start, start + len(mention), ENTITY_TAGS[tag], ref))
+                # Span-Grenzen ohne führende/abschliessende Leerzeichen
+                leading = len(mention) - len(mention.lstrip())
+                trailing = len(mention) - len(mention.rstrip())
+                span_end = start + len(mention) - trailing
+                spans.append((start + leading, span_end, ENTITY_TAGS[tag], ref))
         else:
             # Kein Entity-Tag: rekursiv den Text und eventuelle Spans holen
             child_text, child_spans = extract_text_and_spans(child)
