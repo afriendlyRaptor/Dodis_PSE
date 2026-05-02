@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>
+<TEI
+    xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>dodis.ch/10342</title>
+                <author>
+                    <orgName>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</orgName>
+                </author>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</publisher>
+                <date when="2022-03-04">2022</date>
+                <availability>
+                    <licence target="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 Unported (CC BY 4.0)</licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Cf. note 1</p>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <projectDesc>
+                <p>Automatically transformed from the printed volumes. If you find any mistake, please send us an e-mail: dodis@dodis.ch</p>
+            </projectDesc>
+            <editorialDecl>
+                <p>https://www.dodis.ch/editorialDecl</p>
+            </editorialDecl>
+        </encodingDesc>
+        <revisionDesc>
+            <change when="2022-03-04">Last change</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="doc">
+                <head>
+                    <ref target="https://dodis.ch/10342">dodis.ch/10342</ref>
+                    <title type="main">Das Finanz- und Zolldepartement an den 
+                        <orgName ref="https://dodis.ch/R6">Bundesrat</orgName>
+                        <note>
+                            <add>(Kopie): </add>
+                            <idno type="CH-BAR">E 2001(E)1969/121/181</idno>.
+                        </note>
+                    </title>
+                    <title type="sub">HILFELEISTUNG AN DIE KRIEGSGESCHÄDIGTEN AUSLANDSCHWEIZER. MITBERICHT DES FINANZ- UND ZOLLDEPARTEMENTS ZUM ANTRAG DES JUSTIZ- UND POLIZEIDEPARTEMENTS VOM 24. JULI 1954</title>
+                    <unclear reason="Entity type: Organization not found in section with ID:">11216</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">27201</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">27</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">43</unclear>
+                </head>
+                <opener>
+                    <dateline>
+                        <placeName>Bern,</placeName>
+                        <date when="1954-08-23">23. August 1954</date>
+                    </dateline>
+                </opener>
+                <p>Gemäss dem Antrag des Justiz- und Polizeidepartements
+                    <note>Vgl. den Antrag des 
+                        <orgName ref="https://dodis.ch/R180">EJPD</orgName> vom 24. Juli 1954. Nicht abgedruckt. Neben dem Finanz- und Zolldepartement hat am 24. August 1954 auch das Politische Departement einen Mitbericht verfasst. Nicht abgedruckt 
+                        <orig>(
+                            <ref target="https://dodis.ch/10667">dodis.ch/10667</ref>).
+                        </orig> Vgl. auch 
+                        <idno>E 4001(D)1973/125/36</idno>.
+                    </note> stellt sich nach dem negativen Ausgang der Volksabstimmung vom 20. Juni 1954
+                    <note>Zur Interpretation des Abstimmungsergebnisses durch das Politische Departement vgl. den Bericht von 
+                        <persName ref="https://dodis.ch/P4611">M. Jaccard</persName>
+                        <orig>Comment juger la situation créée par le rejet de l’arrêté fédéral du 23 décembre 1953 sur une aide extraordinaire aux Suisses victimes de la guerre</orig> vom 13. August 1954. Nicht abgedruckt 
+                        <orig>(
+                            <ref target="https://dodis.ch/10666">dodis.ch/10666</ref>).
+                        </orig>
+                    </note> in erster Linie die Frage, ob damit das Projekt einer weitern Hilfe an die kriegsgeschädigten Auslandschweizer unter Verwendung der Summe von 121,5 Millionen Franken als endgültig erledigt zu gelten habe
+                    <note>Vgl. DDS, Bd. 17, Dok. 117, 
+                        <ref target="https://dodis.ch/5440">dodis.ch/5440</ref>
+                        <orig>(
+                            <ref target="https://dodis.ch/5440">dodis.ch/5440</ref>).
+                        </orig>
+                    </note>.
+                </p>
+                <p>Mit dieser Fragestellung werden zwei verschiedene Probleme vermengt, die nach Auffassung des Finanzdepartements getrennt zu betrachten sind. Nach seiner Ansicht stellt sich zunächst die grundsätzliche Frage, ob die Auslandschweizerhilfe weitergeführt werden soll; davon zu unterscheiden ist die Frage nach dem Ausmass einer allfälligen weitern Hilfsaktion.</p>
+                <p>
+                    <emph>I) Frage der Weiterführung der Hilfe </emph>
+                </p>
+                <p>Es dürfte unbestritten sein, dass ein Teil der durch den zweiten Weltkrieg geschädigten Auslandschweizer auch nach Ablauf dieses Jahres der öffentlichen Hilfe bedarf. Da der Bund von jeher anerkannt hat, dass diese Hilfe nicht allein den 
+                    <orgName ref="https://dodis.ch/R9008">Kantone</orgName>n obliegen kann, dass vielmehr auch er moralisch zu einer Hilfeleistung im Bedürfnisfall verpflichtet sei, wäre der 
+                    <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> nur dann von der Ausarbeitung einer neuen Vorlage entbunden, wenn der Abstimmung vom 20. Juni 1954 die Bedeutung einer grundsätzlichen Ablehnung jeder weitern Hilfeleistung zukäme. Diese Auffassung wäre indessen – darin gehen wir mit dem Justiz- und Polizeidepartement einig – kaum begründet.
+                </p>
+                <p>Da dem Volk die Vorlagen lediglich zur Annahme oder Verwerfung vorgelegt werden, ohne dass es die Möglichkeit hat, Abänderungsanträge zu stellen oder Weisungen für das künftige Vorgehen zu erteilen, lässt sich nie mit Sicherheit feststellen, aus welchem Grunde eine Vorlage verworfen worden ist
+                    <note>Vgl. Anm. 2.</note>. So wird die Abstimmung auch im vorliegenden Falle verschieden gedeutet. Während die Kreise, die das Referendum ergriffen haben, behaupten, das Volk habe die 
+                    <emph>Art </emph>der vorgesehenen Hilfe abgelehnt, sind andere der Auffassung, der Souverän habe sich 
+                    <emph>gegen die Hilfe an sich </emph>oder zum mindesten gegen das vorgesehene 
+                    <emph>Ausmass </emph>ausgesprochen. Wenn wir auch überzeugt sind, dass sich bei der zur Zeit gegenüber der Ausgabenpolitik der öffentlichen Hand herrschenden Stimmung ein grosser Teil der Opposition gegen die Höhe der Hilfe gewendet hat, so kann doch nicht ganz so weit gegangen werden, den Entscheid als völlige Ablehnung der Auslandschweizerhilfe zu interpretieren. Dagegen wird dieses Moment, wie wir weiter unten ausführen werden, bei der Frage des Ausmasses zu berücksichtigen sein.
+                </p>
+                <p>Es ist somit davon auszugehen, dass eine neue Vorlage für die Weiterführung der Auslandschweizerhilfe auszuarbeiten ist
+                    <note>Vgl. die 
+                        <orig>Botschaft zum Entwurf eines Bundesbeschlusses über die Fortführung der ausserordentlichen Leistung an Auslandschweizer (vom 2. November 1954),</orig> BBl, 1954, Bd. 106, II, S. 836–841 und AS, 1955, S. 431 f.
+                    </note>. Dabei dürfte schon heute feststehen, dass es für den 
+                    <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> nach wie vor nicht in Frage kommen kann, ein Projekt, das auf der Idee des Kriegsschadenersatzes beruht, zu unterbreiten. Er wird demnach neuerdings eine Fürsorgeaktion ins Auge fassen und die von den Kreisen um Herrn Nationalrat 
+                    <persName ref="https://dodis.ch/P401">Duttweiler</persName> vertretenen Ideen ablehnen müssen.
+                </p>
+                <p>Wenn die Art dieser Hilfe im einzelnen geregelt und dem kriegsgeschädigten Auslandschweizer unter bestimmten Voraussetzungen ein Anspruch auf Hilfe eingeräumt werden soll, so bedarf es hiezu eines 
+                    <emph>allgemein verbindlichen </emph>Bundesbeschlusses. Der Bundesbeschluss vom 17. Oktober 1947
+                    <note>Der Bundesbeschluss datiert nicht von 1947, sondern vom 17. Oktober 1946, AS, 1946, Bd. 62, S. 888–891.</note> ist seinerzeit – wie das Finanz- und Zolldepartement schon damals ausgeführt hat – zu Unrecht dem Referendum entzogen worden
+                    <note>Die neue Vorlage (vgl. Anm. 5) wurde schliesslich dem fakultativen Referendum unterstellt. Vgl. das Schreiben von 
+                        <persName ref="https://dodis.ch/P2802">M. Feldmann</persName> an 
+                        <persName ref="https://dodis.ch/P5">M. Petitpierre</persName> vom 19. Oktober 1954. Nicht abgedruckt.
+                    </note>. Wir könnten uns auch heute nicht damit einverstanden erklären, die Weiterführung der Hilfe durch einen einfachen Bundesbeschluss, und wäre es auch nur in der Form einer Verlängerung des zur Zeit noch laufenden Beschlusses, regeln zu lassen. Wenn sich die Bundesbehörden auf diesem Gebiete nicht streng an die unserem Staate wesentlichen demokratischen Grundsätze halten, wird es ihnen kaum gelingen, das Vertrauen des Volkes wieder zu gewinnen.
+                </p>
+                <p>
+                    <emph>II) Frage des Ausmasses der Hilfe </emph>
+                </p>
+                <p>Nachdem feststeht, dass die Hilfe grundsätzlich weitergeführt werden soll, stellt sich die Frage, welches Ausmass hierfür in Aussicht zu nehmen ist. Das Justiz- und Polizeidepartement möchte zwar vorerst eine Übergangsperiode einschalten und die Frage, wie die neue Vorlage auszugestalten ist, erst später entscheiden. Mit Bezug auf den Rahmen dieser Aktion will es indessen schon jetzt feststellen lassen, dass dieser gleich wie bei der letzten Vorlage
+                    <note>Vgl. die 
+                        <orig>Botschaft des 
+                            <orgName ref="https://dodis.ch/R6">Bundesrat</orgName>es an die 
+                            <orgName ref="https://dodis.ch/R944">Bundesversammlung</orgName> über ausserordentliche Zuwendungen an kriegsgeschädigte Auslandschweizer (vom 27. März 1953),
+                        </orig> BBl, 1953, Bd. 105, I, S. 721–745.
+                    </note> wieder auf 121,5 Millionen Franken festzusetzen sei. Es geht daher offenbar von der Voraussetzung aus, dass dieser Betrag für die Auslandschweizerhilfe zu reservieren ist, gleichgültig wie diese Hilfe auch immer ausgestaltet werden mag.
+                </p>
+                <p>Das Finanz- und Zolldepartement bedauert, dass es dieser Auffassung nicht beipflichten kann. Es kann sich nicht damit einverstanden erklären, dass das Problem einer Fortsetzung der Auslandschweizerhilfe auch heute noch in erster Linie unter dem Gesichtspunkt einer Verwendung dieser 121,5 Millionen Franken betrachtet wird.</p>
+                <p>Wir sind uns dabei des Zusammenhanges zwischen dieser Summe und dem 
+                    <placeName ref="https://dodis.ch/G16">Washington</placeName>er Abkommen bzw. der Clearingmilliarde durchaus bewusst
+                    <note>Zum 
+                        <placeName ref="https://dodis.ch/G16">Washington</placeName>er Abkommen vgl. DDS, Bd. 19, Dok. 28, 
+                        <ref target="https://dodis.ch/10297">dodis.ch/10297</ref>. Vgl. die 
+                        <orig>Botschaft des 
+                            <orgName ref="https://dodis.ch/R6">Bundesrat</orgName>es an die 
+                            <orgName ref="https://dodis.ch/R944">Bundesversammlung</orgName> betreffend die deutschen Vermögenswerte in der Schweiz (vom 29. August 1952),
+                        </orig> BBl, 1952, Bd. 104, III, S. 1–32. Das 
+                        <orig>Abkommen über die Regelung der Forderungen der Schweizerischen Eidgenossenschaft gegenüber dem ehemaligen Deutschen Reich vom 29. August 1952</orig> zur «Clearingmilliarde» wurde den Eidgenössischen Räten nicht vorgelegt. Zu den Auseinandersetzungen dieses Entscheids vgl. DDS, Bd. 19, Dok. 26, 
+                        <ref target="https://dodis.ch/9302">dodis.ch/9302</ref>.
+                    </note>. Einmal mehr muss aber darauf hingewiesen werden, dass dieser Betrag dem Bund nicht in den Schoss gefallen ist, sondern die Rückzahlung einer Schuld darstellt. Es handelt sich somit nicht um eine Zuwendung von dritter Seite, über deren Verwendung Beschluss zu fassen ist, sondern um Bundesgeld, das in Wirklichkeit vom schweizerischen Steuerzahler aufgebracht werden muss, wenn es wieder ausgegeben wird. Nach dem 
+                    <placeName ref="https://dodis.ch/G16">Washington</placeName>er Abkommen war der Bund weder den 
+                    <orgName ref="https://dodis.ch/R11067">Alliierte</orgName>n, noch den Auslandschweizern gegenüber rechtlich verpflichtet, den auf die Schweiz entfallenden Anteil aus der Liquidation der deutschen Guthaben für einen bestimmten Zweck zu verwenden. An dieser Rechtslage ist durch den viel zitierten Passus über die Durchführung dieses Abkommens und die andern bundesrätlichen Erklärungen nichts geändert worden. Abgesehen davon, dass solche Erklärungen keine rechtlichen Ansprüche zu begründen vermögen, wäre der 
+                    <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> auch nicht ermächtigt gewesen, Verpflichtungen in diesem Umfange einzugehen. Nachdem den Auslandschweizern schon auf diesen Liquidationsanteil kein Rechtsanspruch zustand, kann ein solcher noch viel weniger auf die 121,5 Millionen Franken, die später an dessen Stelle getreten sind, geltend gemacht werden. Auch die 121,5 Millionen Franken stellen somit keine zweckgebundene Zuwendung dar, über die nicht anders als zugunsten der Auslandschweizer verfügt werden kann.
+                </p>
+                <p>Wenn bei der Ausarbeitung der letzten Vorlage noch gesagt werden konnte, der 
+                    <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> habe sich, wenn nicht rechtlich, so doch politisch verpflichtet, einen Antrag auf Verwendung dieser 121,5 Millionen zu stellen, so hat sich dies seit der Volksabstimmung vom 20. Juni verändert. Bei der heutigen Betrachtung des Problems kann nicht übersehen werden, dass ein beträchtlicher Teil der Opposition sich, wie wir bereits ausgeführt haben, nicht gegen die vorgesehene Verwendung der 121,5 Millionen, sondern gegen die Höhe des genannten Betrages gerichtet hat. Der 
+                    <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> darf sich deshalb als von den früher eingegangenen Engagements entbunden betrachten und muss die ganze Angelegenheit im Lichte der neuen Situation betrachten. Dabei gilt es in erster Linie, eine Vorlage auszuarbeiten, die eine Chance hat, in einer neuen Volksabstimmung angenommen zu werden. Es kann deshalb nicht nur auf die Begehren der Auslandschweizer abgestellt werden, weil diese ja – selbst wenn sie eine in sich geschlossene Gruppe darstellen würden – nie in der Lage sein werden, eine Vorlage allein durchzubringen. So wie wir die Lage beurteilen, hat bei der gegenwärtigen ablehnenden Einstellung der Öffentlichkeit ein neues Hilfsprojekt in der Höhe von über 100 Millionen Franken kaum eine Chance, angenommen zu werden. Nach unserer Auffassung muss deshalb in Zukunft die Verbindung mit den 121,5 Millionen Franken aufgegeben werden.
+                </p>
+                <p>
+                    <emph>III) Einzuschlagendes Vorgehen </emph>
+                </p>
+                <p>Da für die Weiterführung der Hilfe nur die Form eines allgemein verbindlichen Erlasses in Frage kommt, erachten wir es als richtiger, an Stelle einer Übergangsordnung schon jetzt die definitive Vorlage auszuarbeiten. Dürfte doch mit weiterem Zeitablauf die Aussicht, eine solche Vorlage durchzubringen, eher geringer werden. Ausserdem ist der Sache vermutlich mehr gedient, wenn die angefangene Auseinandersetzung heute zu Ende geführt wird und nicht in verhältnismässig kurzer Zeit neu aufgegriffen werden muss.</p>
+                <p>Was das Ausmass der neuen Aktion anbelangt, so sind zwei Möglichkeiten denkbar. Entweder wird zur Durchführung der im Erlass näher zu umschreibenden Hilfe, wie in der Vorlage von 1946
+                    <note>Vgl. Anm. 7.</note>, ein Rahmenkredit festgesetzt, der entsprechend den heute noch vorhandenen Bedürfnissen zu bemessen ist. Eine andere Lösung, die wir vorziehen würden, bestünde darin, im neuen Beschluss nur Art und Höhe der einzelnen Leistungen festzusetzen, den erforderlichen Kredit jedoch von Jahr zu Jahr mit dem Voranschlag zur Verfügung zu stellen.
+                </p>
+                <p>Um zu verhindern, dass nach der Beschlussfassung in den eidg. Räten, die zweifellos erst in der Dezembersession möglich sein wird, wegen der Referendumsfrist ein Unterbruch in der Fortführung der Hilfe eintritt, müsste der neue Erlass dringlich erklärt werden. Dadurch wäre die sofortige Inkraftsetzung gewährleistet, ohne dass dem Volk die Möglichkeit der Ergreifung des Referendums genommen würde
+                    <note>Der bis Ende 1957 befristete Bundesbeschluss passierte am 22. Dezember 1954 die Eidgenössischen Räte und ist am 1. Januar 1955 in Kraft getreten.</note>.
+                </p>
+                <p>Gegen die beantragte Unterstellung der Zentralstelle für Auslandschweizerfragen unter das Eidg. Politische Departement haben wir nichts einzuwenden
+                    <note>Zur Frage der Unterstellung der Eidgenössischen Zentralstelle für Auslandschweizerfragen vgl. die Notiz von 
+                        <persName ref="https://dodis.ch/P4611">M. Jaccard</persName> vom 5. August 1954. Nicht abgedruckt 
+                        <orig>(
+                            <ref target="https://dodis.ch/10668">dodis.ch/10668</ref>).
+                        </orig> Im März 1955 schuf der 
+                        <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> den Dienst für Auslandschweizerfragen und unterstellte ihn dem Politischen Departement. Vgl. BR-Prot. Nr. 544 vom 25. März 1955, 
+                        <orig>
+                            <idno>E 1004.1(-)-/1/575</idno> (
+                            <ref target="https://dodis.ch/10669">dodis.ch/10669</ref>).
+                        </orig>
+                    </note>.
+                </p>
+                <p>Demgemäss beehren wir uns, Ihnen zu</p>
+            </div>
+        </body>
+    </text>
+</TEI>
