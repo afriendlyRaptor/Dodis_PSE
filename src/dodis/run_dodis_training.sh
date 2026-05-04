@@ -23,6 +23,8 @@
 
 set -e
 
+mkdir -p job_logs
+
 module purge
 module load Workspace_Home
 module load Python/3.12.3-GCCcore-13.3.0
