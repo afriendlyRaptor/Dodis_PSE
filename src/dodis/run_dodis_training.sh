@@ -23,6 +23,8 @@
 
 set -e
 
+mkdir -p job_logs
+
 module purge
 module load Workspace_Home
 module load Python/3.12.3-GCCcore-13.3.0
@@ -75,7 +77,7 @@ else
 fi
 
 echo "Starte Training..."
-python -m spacy train train_el_dodis.cfg \
+python -m spacy train src/dodis/train_el_dodis.cfg \
     --output output/dodis \
     --gpu-id 0
 

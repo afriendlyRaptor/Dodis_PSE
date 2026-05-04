@@ -52,3 +52,6 @@ venv/
 
 # claude
 .claude/
+job_logs/
+data/*.spacy
+run_test.sh
