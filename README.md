@@ -39,7 +39,7 @@ Das Training braucht eine GPU und läuft auf dem [UBELIX HPC-Cluster](https://ww
 
 ```bash
 ssh <username>@submit.hpc.unibe.ch
-git clone https://github.com/DigitalHumanitiesUniBern/PSE_Dodis.git
+git clone https://github.com/afriendlyRaptor/Dodis_PSE.git
 cd PSE_Dodis
 ```
 
