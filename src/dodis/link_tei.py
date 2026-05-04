@@ -110,7 +110,7 @@ if __name__ == "__main__":
     assert model_path.exists(), f"Modell nicht gefunden: {model_path}"
 
     print(f"Lade Modell aus {model_path}...")
-    nlp = spacy.load(str(model_path), exclude=["transformer"])
+    nlp = spacy.load(str(model_path))
 
     print(f"Verarbeite {args.input}...")
     tree = etree.parse(args.input)

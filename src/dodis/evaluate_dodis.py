@@ -54,9 +54,7 @@ if __name__ == "__main__":
         print("Verwende CPU (--gpu 0 für GPU-Beschleunigung)")
 
     print(f"Lade Modell aus {model_path}...")
-    # Transformer-Gewichte werden aus dem HuggingFace-Cache geladen (bert-base-german-cased),
-    # da der Transformer während des Trainings eingefroren war (grad_factor=0.0).
-    nlp = spacy.load(model_path, exclude=["transformer"])
+    nlp = spacy.load(model_path)
 
     print(f"Lade Evaluationsdaten aus {test_path}...")
     gold_docs = list(DocBin().from_disk(test_path).get_docs(nlp.vocab))
