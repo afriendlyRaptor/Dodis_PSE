@@ -12,6 +12,7 @@ repos:
       - id: pylint
         name: pylint
         entry: pylint
-        language: system
+        language: python
+        additional_dependencies: ["pylint>=3.0"]
         types: [python]
         args: ["--rcfile=pyproject.toml"]

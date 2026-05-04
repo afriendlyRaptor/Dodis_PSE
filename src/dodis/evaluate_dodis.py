@@ -17,6 +17,29 @@ from pathlib import Path
 import spacy
 from spacy.tokens import DocBin, Span
 
+
+def compute_accuracy(correct: int, total: int) -> float:
+    """Gibt die Genauigkeit zurück, oder 0.0 bei total == 0."""
+    return correct / total if total else 0.0
+
+
+def normalize_dodis_id(kb_id: str) -> str:
+    """Normalisiert eine Dodis-KB-ID auf https."""
+    return kb_id.replace("http://dodis.ch/", "https://dodis.ch/")
+
+
+def build_gold_index(gold_doc) -> dict:
+    """
+    Erstellt einen Index {(token_start, token_end): kb_id} aus den Gold-Entities eines Dokuments.
+    Entities ohne kb_id werden übersprungen.
+    """
+    return {
+        (e.start, e.end): normalize_dodis_id(e.kb_id_)
+        for e in gold_doc.ents
+        if e.kb_id_
+    }
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -81,18 +104,14 @@ if __name__ == "__main__":
                     Span(pred_doc, e.start, e.end, label=e.label) for e in gold_doc.ents
                 ]
 
-        gold_by_pos = {
-            (e.start, e.end): e.kb_id_.replace("http://dodis.ch/", "https://dodis.ch/")
-            for e in gold_doc.ents
-            if e.kb_id_
-        }
+        gold_by_pos = build_gold_index(gold_doc)
 
         for pred_ent in pred_doc.ents:
             gold_id = gold_by_pos.get((pred_ent.start, pred_ent.end))
             if not gold_id:
                 continue
             total += 1
-            pred_id = pred_ent.kb_id_.replace("http://dodis.ch/", "https://dodis.ch/")
+            pred_id = normalize_dodis_id(pred_ent.kb_id_)
             if pred_id == gold_id:
                 correct += 1
             else:
@@ -114,7 +133,7 @@ if __name__ == "__main__":
                         }
                     )
 
-    acc = correct / total if total else 0.0
+    acc = compute_accuracy(correct, total)
 
     print("=" * 55)
     print(f"Evaluierungsergebnisse — {test_path.name}")

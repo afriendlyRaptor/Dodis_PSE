@@ -23,6 +23,27 @@ ENTITY_TAGS = {
     "orgName": "ORG",
 }
 
+
+def normalize_ref(ref: str) -> str:
+    """Normalisiert eine Dodis-URL auf https."""
+    return ref.strip().replace("http://dodis.ch/", "https://dodis.ch/")
+
+
+def extract_entity_mentions(root: ET.Element) -> list[tuple[str, str, str]]:
+    """
+    Extrahiert alle Entity-Erwähnungen aus einem XML-Root-Element.
+    Gibt eine Liste von (ref, label, mention) zurück.
+    """
+    results = []
+    for tag, label in ENTITY_TAGS.items():
+        for elem in root.findall(f".//{{{TEI_NS}}}{tag}"):
+            ref = normalize_ref(elem.get("ref", ""))
+            mention = "".join(elem.itertext()).strip()
+            if ref and mention:
+                results.append((ref, label, mention))
+    return results
+
+
 if __name__ == "__main__":
     BASE_PATH = Path(__file__).parent.parent.parent
     DATA_PATH = BASE_PATH / "data"
@@ -66,29 +87,18 @@ if __name__ == "__main__":
 
         root = tree.getroot()
 
-        for tag, label in ENTITY_TAGS.items():
-            for elem in root.findall(f".//{{{TEI_NS}}}{tag}"):
-                ref = (
-                    elem.get("ref", "")
-                    .strip()
-                    .replace("http://dodis.ch/", "https://dodis.ch/")
-                )
-                mention = "".join(elem.itertext()).strip()
-
-                if not ref or not mention:
-                    continue
-
-                cur.execute(
-                    "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
-                    (ref, label),
-                )
-                cur.execute(
-                    """
+        for ref, label, mention in extract_entity_mentions(root):
+            cur.execute(
+                "INSERT OR IGNORE INTO entities (id, type) VALUES (?, ?)",
+                (ref, label),
+            )
+            cur.execute(
+                """
                     INSERT INTO aliases (alias, entity_id, freq) VALUES (?, ?, 1)
                         ON CONFLICT (alias, entity_id) DO UPDATE SET freq = freq + 1
                     """,
-                    (mention, ref),
-                )
+                (mention, ref),
+            )
 
     conn.commit()
 

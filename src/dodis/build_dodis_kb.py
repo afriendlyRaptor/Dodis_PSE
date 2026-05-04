@@ -65,6 +65,15 @@ MODEL_VECTOR_SIZE = {
 }
 
 
+def compute_alias_probabilities(freqs: list[int]) -> list[float]:
+    """
+    Berechnet frequenzbasierte Wahrscheinlichkeiten für eine Liste von Häufigkeiten.
+    P(entity | alias) = freq(entity, alias) / sum(alle freqs dieses alias)
+    """
+    total = sum(freqs)
+    return [f / total for f in freqs]
+
+
 def get_vector(doc, is_transformer: bool) -> np.ndarray | None:
     """
     Extrahiert einen Vektor aus einem spaCy-Doc.
@@ -202,8 +211,7 @@ if __name__ == "__main__":
 
         entity_ids = [r[0] for r in filtered]
         freqs = [r[1] for r in filtered]
-        total = sum(freqs)
-        probs = [f / total for f in freqs]
+        probs = compute_alias_probabilities(freqs)
 
         kb.add_alias(alias=alias, entities=entity_ids, probabilities=probs)
 
