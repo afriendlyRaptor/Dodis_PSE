@@ -46,6 +46,9 @@ def get_wikidata_description(name: str, lang: str = "de") -> str:
                 "limit": 1,
                 "format": "json",
             },
+            headers={
+                "User-Agent": "DodisNEL/1.0 (https://github.com/DigitalHumanitiesUniBern/PSE_Dodis)"
+            },
             timeout=5,
         )
         results = resp.json().get("search", [])
