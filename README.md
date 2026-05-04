@@ -133,9 +133,9 @@ PSE_Dodis/
 │   ├── link_tei.py               # Entitäten in einer TEI-XML Datei verlinken
 │   ├── test_pipeline.py          # Pipeline testen, HTML-Visualisierungen erstellen
 │   ├── evaluate_dodis.py         # Modellgenauigkeit auf dem Testset messen
+│   ├── train_el_dodis.cfg        # spaCy Trainingskonfiguration
 │   ├── run_dodis_training.sh     # SLURM Job-Skript für das Training
 │   └── run_dodis_evaluation.sh   # SLURM Job-Skript für die Evaluation
-├── train_el_dodis.cfg            # spaCy Trainingskonfiguration
 ├── data/
 │   ├── dodis_transcription_xml/  # TEI-XML Quelldokumente (train/dev/test)
 │   ├── dodis_entities.db         # Entitäten-Datenbank (wird generiert)

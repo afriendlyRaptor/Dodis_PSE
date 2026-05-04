@@ -54,18 +54,17 @@ fi
 python3 -c "import torch; print('CUDA Available:', torch.cuda.is_available()); print('CUDA Device Count:', torch.cuda.device_count()); print('CUDA Version:', torch.version.cuda)"
 nvidia-smi
 
-if [ ! -f data/dodis_entities.db ]; then
-    echo "Erstelle Datenbank..."
-    python src/dodis/build_dodis_db.py
-else
-    echo "Datenbank existiert bereits, überspringe build_dodis_db.py"
-fi
-
 if [ ! -d data/dodis_entities.kb ]; then
+    if [ ! -f data/dodis_entities.db ]; then
+        echo "Erstelle Datenbank..."
+        python src/dodis/build_dodis_db.py
+    else
+        echo "Datenbank existiert bereits, überspringe build_dodis_db.py"
+    fi
     echo "Generiere Dodis KB..."
     python src/dodis/build_dodis_kb.py --model de_dep_news_trf --use-wikidata
 else
-    echo "KB existiert bereits, überspringe build_dodis_kb.py"
+    echo "KB existiert bereits, überspringe build_dodis_kb.py und build_dodis_db.py"
 fi
 
 if [ ! -f data/dodis_train.spacy ] || [ ! -f data/dodis_dev.spacy ]; then
@@ -76,7 +75,7 @@ else
 fi
 
 echo "Starte Training..."
-python -m spacy train train_el_dodis.cfg \
+python -m spacy train src/dodis/train_el_dodis.cfg \
     --output output/dodis \
     --gpu-id 0
 
