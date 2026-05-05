@@ -82,6 +82,7 @@ def test_get_vector_statisch_ein_token_gibt_denselben_vektor():
     tok = make_mock_token([1.0, 2.0, 3.0])
     doc = make_mock_doc([tok])
     result = get_vector(doc, is_transformer=False)
+    assert result is not None
     np.testing.assert_array_almost_equal(result, [1.0, 2.0, 3.0])
 
 
@@ -90,6 +91,7 @@ def test_get_vector_statisch_mittelt_mehrere_token():
     tok2 = make_mock_token([3.0, 4.0, 5.0])
     doc = make_mock_doc([tok1, tok2])
     result = get_vector(doc, is_transformer=False)
+    assert result is not None
     np.testing.assert_array_almost_equal(result, [2.0, 3.0, 4.0])
 
 
@@ -99,6 +101,7 @@ def test_get_vector_statisch_null_token_werden_ignoriert_beim_mitteln():
     tok_null = make_mock_token([0.0, 0.0])
     doc = make_mock_doc([tok_real, tok_null])
     result = get_vector(doc, is_transformer=False)
+    assert result is not None
     # Nur tok_real trägt bei → Ergebnis ist sein Vektor
     np.testing.assert_array_almost_equal(result, [4.0, 6.0])
 
@@ -148,6 +151,7 @@ def test_get_vector_transformer_mittelt_token_vektoren():
     hidden = [[1.0, 2.0, 3.0], [3.0, 4.0, 5.0]]
     doc = make_transformer_doc(last_hidden_data=hidden)
     result = get_vector(doc, is_transformer=True)
+    assert result is not None
     np.testing.assert_array_almost_equal(result, [2.0, 3.0, 4.0])
 
 
@@ -155,6 +159,7 @@ def test_get_vector_transformer_ein_token():
     hidden = [[5.0, 6.0, 7.0]]
     doc = make_transformer_doc(last_hidden_data=hidden)
     result = get_vector(doc, is_transformer=True)
+    assert result is not None
     np.testing.assert_array_almost_equal(result, [5.0, 6.0, 7.0])
 
 
