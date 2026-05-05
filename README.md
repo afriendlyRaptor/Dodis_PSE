@@ -1,6 +1,6 @@
 # Dodis_PSE
 
-## 👥 Obligatorische Rollen
+## Obligatorische Rollen
 
 * **Key Account Manager Robin van den Hoek/Naomi Weilenmann** *Ansprechperson für Kunden* – Koordiniert die Kommunikation zwischen Team und Stakeholdern.
     
@@ -81,22 +81,32 @@ sbatch src/dodis/run_dodis_evaluation.sh
 
 ## Modell verwenden
 
-Die trainierten Gewichte liegen in `output/dodis/model-best/`. Die BERT-Gewichte werden beim ersten Start automatisch von HuggingFace heruntergeladen.
+Das trainierte Modell erreicht **96.3% Accuracy** auf dem Test-Set (NEL_MICRO_F). Es wird beim ersten Ausführen automatisch von GitHub heruntergeladen — kein manuelles Kopieren nötig.
 
 ### Pakete installieren
 
 ```bash
 pip install -r src/dodis/requirements.txt
-python -m spacy download de_dep_news_trf
 ```
 
-### Eine TEI-XML Datei verlinken
+### TEI-XML Dateien verlinken und visualisieren
+
+`run_nel.py` ist der einfachste Einstiegspunkt: Es verlinkt die Entitäten und erstellt direkt HTML-Visualisierungen. Das Modell wird beim ersten Aufruf automatisch heruntergeladen.
 
 ```bash
-python src/dodis/link_tei.py input.xml output.xml
+# Ganzer Ordner
+python src/dodis/run_nel.py data/meine_tei_dateien/
+
+# Einzelne Dateien
+python src/dodis/run_nel.py doc1.xml doc2.xml
+
+# Mit eigenem Ausgabeverzeichnis
+python src/dodis/run_nel.py data/meine_tei_dateien/ --output results/
 ```
 
-Das Skript liest eine TEI-XML Datei und fügt bei jeder Entität das passende `ref`-Attribut ein:
+Die HTML-Dateien landen im Ausgabeverzeichnis (default: `output/nel_results/`). Entitäten werden farbig und klickbar dargestellt: gelb = Person, grün = Organisation, blau = Ort, rot = nicht verlinkt (NIL).
+
+Das Skript fügt bei jeder Entität das passende `ref`-Attribut in die TEI-XML Datei ein:
 
 ```xml
 <!-- Vorher -->
@@ -106,19 +116,23 @@ Das Skript liest eine TEI-XML Datei und fügt bei jeder Entität das passende `r
 <persName ref="https://dodis.ch/P12870">Max Petitpierre</persName>
 ```
 
-Mit einem eigenen Modellpfad:
+### Nur eine TEI-XML Datei verlinken (ohne HTML)
 
 ```bash
-python src/dodis/link_tei.py input.xml output.xml --model pfad/zum/model-best
+python src/dodis/link_tei.py input.xml output.xml
 ```
 
-### Pipeline auf mehreren Dateien testen
+### Modellgenauigkeit messen
 
 ```bash
-python src/dodis/test_pipeline.py --n 5
+sbatch src/dodis/run_dodis_evaluation.sh  # auf UBELIX
+# oder lokal:
+python src/dodis/evaluate_dodis.py
 ```
 
-Verarbeitet 5 Testdateien aus `data/dodis_transcription_xml/test/` und speichert HTML-Visualisierungen in `output/test_pipeline/`. Entitäten werden farbig hervorgehoben: gelb = Person, grün = Organisation, blau = Ort.
+### Beispiele
+
+`examples/nel_output/` enthält fertige HTML-Visualisierungen aus dem Test-Set: drei französische (10175, 10187, 10673) und drei deutsche Dokumente (10267, 10299, 10342).
 
 ---
 
@@ -127,11 +141,12 @@ Verarbeitet 5 Testdateien aus `data/dodis_transcription_xml/test/` und speichert
 ```
 PSE_Dodis/
 ├── src/dodis/
+│   ├── run_nel.py                # NEL Pipeline: verlinken + HTML-Visualisierung
 │   ├── build_dodis_db.py         # Entitäten-Datenbank aus TEI-XML aufbauen
 │   ├── build_dodis_kb.py         # spaCy Knowledge Base mit Vektoren aufbauen
 │   ├── build_dodis_train_data.py # TEI-XML in spaCy Trainingsformat umwandeln
 │   ├── link_tei.py               # Entitäten in einer TEI-XML Datei verlinken
-│   ├── test_pipeline.py          # Pipeline testen, HTML-Visualisierungen erstellen
+│   ├── TEI-xml_Visualizer.py     # HTML-Visualisierung aus verlinktem TEI-XML
 │   ├── evaluate_dodis.py         # Modellgenauigkeit auf dem Testset messen
 │   ├── train_el_dodis.cfg        # spaCy Trainingskonfiguration
 │   ├── run_dodis_training.sh     # SLURM Job-Skript für das Training
