@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+    <teiHeader>
+        <fileDesc>
+            <titleStmt>
+                <title>dodis.ch/10299</title>
+                <author>
+                    <orgName>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</orgName>
+                </author>
+            </titleStmt>
+            <publicationStmt>
+                <publisher>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</publisher>
+                <date when="2022-09-16">2022</date>
+                <availability>
+                    <licence target="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 Unported (CC BY 4.0)</licence>
+                </availability>
+            </publicationStmt>
+            <sourceDesc>
+                <p>Cf. note 1</p>
+            </sourceDesc>
+        </fileDesc>
+        <encodingDesc>
+            <projectDesc>
+                <p>Automatically transformed from the printed volumes. If you find any mistake, please send us an e-mail: dodis@dodis.ch</p>
+            </projectDesc>
+            <editorialDecl>
+                <p>https://www.dodis.ch/editorialDecl</p>
+            </editorialDecl>
+        </encodingDesc>
+        <revisionDesc>
+            <change when="2022-09-16">Last change</change>
+        </revisionDesc>
+    </teiHeader>
+    <text>
+        <body>
+            <div type="doc">
+                <head>
+                    <ref target="https://dodis.ch/10299">dodis.ch/10299</ref>
+                    <title type="main">Der Delegierte des <orgName>Bundesrat</orgName>es für Spezialmissionen, <persName ref="https://dodis.ch/P35">W. Stucki</persName>, an den schweizerischen Gesandten in <placeName ref="https://dodis.ch/G780">Köln</placeName>, A. <persName>Huber</persName><note>Schreiben (Kopie): <idno type="CH-BAR">E 2801(-)1968/84/5</idno>. Paraphe: OC. Das Schreiben ging als Kopie an <persName ref="https://dodis.ch/P5">M. Petitpierre</persName>, <persName ref="https://dodis.ch/P1054">M. Weber</persName>, <persName ref="https://dodis.ch/P2787">J. Escher</persName>.</note></title><title type="sub">INVESTITIONEN IN WESTDEUTSCHLAND</title>
+                    <unclear reason="Entity type: Person not found in section with ID:">13512</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">9535</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">9711</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">446</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">27</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">61</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">537</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">777</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">607</unclear>
+                    <unclear reason="Entity type: Organization not found in section with ID:">1208</unclear>
+                </head>
+                <opener>
+                    <dateline>
+                        <placeName><add type="edition">[Bern, ]</add></placeName> <date when="1953-04-24">24. April 1953</date>
+                    </dateline>
+                </opener>
+                <p>Es dürfte Sie interessieren, zu vernehmen, was in den letzten hier geführten Verhandlungen über schweizerische Investitionen in <placeName ref="https://dodis.ch/G806">Westdeutschland</placeName> gegangen ist<note>Die Verhandlungen zwischen den beiden Regierungsdelegationen über die Ausführung des <orig>Abkommen <add type="edition">[s]</add>zwischen der Schweizerischen Eidgenossenschaft und der Bundesrepublik <placeName ref="https://dodis.ch/G5">Deutschland</placeName> über die Regelung der Forderungen der Schweizerischen Eidgenossenschaft gegen das ehemalige Deutsche Reich vom 26. August 1952</orig> fanden am 8. und 9. Dezember 1952 in Bern statt und wurden am 26. und 27. Januar 1953 in <placeName ref="https://dodis.ch/G2101">Bonn</placeName> fortgesetzt. Vgl. DDS, Bd. 19, Dok. 28, <ref target="https://dodis.ch/10297">dodis.ch/10297</ref>.</note>. Ich beehre mich deshalb, Ihnen darüber folgende Mitteilungen zu machen:</p>
+                <p>Die deutsche Delegation war geführt von Ministerialdirektor <persName ref="https://dodis.ch/P4404">Wolff</persName>, wobei aber die dominierende Rolle bei Ministerialdirektor Professor <persName ref="https://dodis.ch/P16197">Müller-Armack</persName> lag. Die beiden Herren waren durch verschiedene Mitarbeiter aus den beiden Ministerien und durch den Handelsattaché der hiesigen Gesandtschaft, <persName ref="https://dodis.ch/P26622">Haas</persName>, begleitet. Auf schweizerischer Seite nahmen an den Verhandlungen teil ausser mir Herr Direktor Dr. <persName ref="https://dodis.ch/P2605">Iklé</persName>, ein Vertreter der <orgName ref="https://dodis.ch/R88">Handelsabteilung</orgName> sowie Nationalrat Dr. <persName ref="https://dodis.ch/R273">Bühler</persName> als Chef der Sektion Eisen und Metalle, sowie sein erster Mitarbeiter.</p>
+                <p>Wir gingen von der Annahme aus, dass der <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> aus den bekannten Fr. 200 Mio. einen Betrag von Fr. 140 Mio. für die Elektrifizierung der Linie <placeName>Karlsruhe</placeName>–<placeName>Basel</placeName> zur Verfügung stellen werde, wie dies in Besprechungen, die wir noch kürzlich hier mit Professor <persName ref="https://dodis.ch/P16212">Frohne</persName> und andern Mitgliedern der Leitung der deutschen Bundesbahnen hatten, als absolutes Minimum dargestellt worden ist. Dabei müssten erst noch zusätzlich Fr. 30 Mio. durch ein Industrie- und Bankensyndikat in der Schweiz an neuem Geld aufgebracht werden.</p>
+                <p>Da sich das Programm für die Investierungen in der Montanindustrie gestützt auf die restlichen Fr. 60 Mio. kaum befriedigend durchführen liesse, so nahmen wir im weitern an, dass der <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> bereit sein wird, die Gesamthöhe des Investitionskredits von Fr. 200 Mio. auf Fr. 240 Mio. zu erhöhen, was, nebenbei gesagt, für uns auch finanziell vorteilhafter ist, als wenn der Differenzbetrag von Fr. 40 Mio. in den grossen Topf der Amortisationssumme fällt.</p>
+                <p>Mit Bezug auf die von uns geforderten Garantien betreffend Lieferung in Mangelzeiten und Ausschluss von Doppelpreisen<note>Zur Problematik der Lieferung und der Festlegung der Preise von Kohle- und Stahlerzeugnissen durch die EGKS und die schweizerischen Reaktionen vgl. Thematisches Verzeichnis in diesem Band: <orig>Die Schweiz und die Europäische Gemeinschaft für Kohle und Stahl.</orig></note> wurde deutscherseits, wie zu erwarten war, ein Vorschlag gemacht, der uns in keiner Weise befriedigen konnte. Entgegen einer in schweizerischen Industriekreisen mit Nachdruck vertretenen Forderung, dass solche Garantien in absolutester Form gegeben werden müssten einmal von den Lieferwerken, sodann von der Bundesregierung und endlich auch ausdrücklich von der hohen Behörde der Montan-Union, ging die schweizerische Delegation, unter ausdrücklichem Vorbehalt der Stellungnahme des <orgName>Bundesrat</orgName>es, davon aus, dass diese Forderungen zu weit gehen, und dass man sich mit dem praktisch Erreichbaren begnügen müsse. Nach längeren Diskussionen haben wir deshalb den nachfolgenden unverbindlichen Gegenvorschlag gemacht:</p>
+                <p>«In Berücksichtigung der schweizerischen Kredite, die zum Ausbau der Eisen- und Stahlindustrie in <placeName ref="https://dodis.ch/G806">Westdeutschland</placeName> gegeben worden sind, wird die Deutsche Bundesregierung das ihr mögliche tun, um den schweizerischen Einfuhrbedürfnissen auf dem Sektor von Eisen und Stahl auch in Zeiten einer Mangellage auf der Basis der Liefermengen und -sorten der jeweils letzten drei Jahre Rechnung zu tragen. Sie wird in diesem Rahmen eingegangene privatwirtschaftliche Verpflichtungen deutscher Werke mit Bezug auf Mengen, Sorten und Preise in keiner Weise hindern.»</p>
+                <p>Wir gingen dabei von der deutschen Erklärung aus, dass die Lieferwerke mit Bezug auf die von uns geforderte Preisklausel (nicht höhere Preise als Unionspreise) frei seien, eine solche Klausel angesichts der offerierten Kredite annehmen werden und in deren Innehaltung durch die deutschen Behörden weder direkt noch indirekt gehindert werden dürfen. Die deutsche Delegation hat unserem Vorschlag zugestimmt mit Ausnahme der Bestimmung über die Preise. Wir haben aber gerade darauf mit grösstem Nachdruck beharrt und sind überzeugt davon, dass man schlussendlich in <placeName ref="https://dodis.ch/G2101">Bonn</placeName> zustimmen wird. Allerdings dürfte man dort versuchen, die Werke dahin zu beeinflussen, eine solche Preisklausel abzulehnen. Wir liessen aber keinen Zweifel darüber, dass in einem solchen Falle das ganze Investitionsprogramm für die Industrie für uns undurchführbar würde und wir es dann vorziehen müssten, den Gesamtbetrag den Eisenbahnen zur Verfügung zu stellen.</p>
+                <p>Viel zu reden gab noch die etatmässige Aufbringung der Summen durch das deutsche Finanzministerium. Die Aufzeichnung vom 27. Januar 1953<note>Nicht abgedruckt.</note> sieht bekanntlich hiefür 6 Haushaltsjahre mit je DM 35 Mio. vor. Es würde dies bedeuten, dass die Lieferwerke die Mittel nicht sofort, sondern erst im Verlaufe einiger Jahre zur Verfügung erhielten, was die ganze Operation für sie viel weniger attraktiv macht. Wir haben nun vereinbart, dass einerseits die deutsche Regierung versuchen wird, die Aufbringung zu konzentrieren auf 3, höchstens 4 Jahre – was angesichts der Milliardenbeträge, die der deutsche Voranschlag für Investitionen vorsieht, nicht schwierig sein sollte – und dass wir anderseits die Frage einer kurzfristigen schweizerischen Vorfinanzierung prüfen werden.</p>
+                <p>Der zweite Teil der Verhandlungen bezog sich auf die Auswahl der deutschen Lieferwerke. Von deutscher Seite waren uns schon vor einiger Zeit zwei Listen direkt übermittelt worden mit 13 Werken der eisenschaffenden Industrie mit 8 Werken, die Koks liefern. Wir haben zunächst darauf hingewiesen, dass die volle Berücksichtigung zu einer viel zu grossen Zersplitterung der Aktion führen würde und wollten uns auf 4 bis 5 Stahl-Lieferanten und einen Koks-Lieferanten beschränken. Nach langen Erörterungen haben wir schliesslich in Aussicht genommen 6 Stahlwerke und 2 Kokereien und es ist auch, aber ganz provisorisch und unverbindlich, mit den deutschen Herren eine ungefähre Verteilung der Gesamtsumme auf diese Werke besprochen worden. Dem deutschen Wunsch, die ehemaligen Reichswerke Hermann Göring sowie die Finanzminister Schäfer nahestehende <persName>Max</persName>-Hütte in <placeName ref="https://dodis.ch/G553">Bayern</placeName> mitzuberücksichtigen und die Gesamthöhe der Industrie-Investitionen auf Fr. 110 Mio. zu beziffern, konnten wir, wenigstens vorläufig, nicht entsprechen.</p>
+                <p>Das weitere Vorgehen ist nun so in Aussicht genommen, dass sich unser Finanzdepartement zunächst noch, wenn nötig unter deutscher Mithilfe, über die Bonität der in Aussicht genommenen Lieferwerke möglichst genau erkundigen wird, um dann, unter Beizug schweizerischer Experten, in direkte Verhandlungen mit diesen Werken zu treten. Das weitere wird davon abhängen, ob letztere bereit sind, die schweizerischen Bedingungen betreffend Mengen, Sorten und Preise zu akzeptieren.</p>
+                <p>Was die Eisenbahnfrage anbelangt, so besteht zwischen den beteiligten hiesigen Departementen Übereinstimmung, dass Fr. 140 Mio. zugesagt werden müssen. Da die deutschen Bundesbahnen begreiflicherweise grossen Wert darauf legen, in dieser Hinsicht möglichst bald eine verbindliche schweizerische Erklärung zu bekommen, so wird dem <orgName ref="https://dodis.ch/R6">Bundesrat</orgName> beantragt werden, diese Erklärung schon jetzt abzugeben, d. h. nicht die Verhandlungen mit den deutschen Werken der Industrie abzuwarten<note>Vgl. BR-Prot. Nr. 793 vom 5. Mai 1953, <orig><idno type="CH-BAR">E 1004.1(-)-/1/553</idno> (<ref target="https://dodis.ch/9109">dodis.ch/9109</ref></orig> und <orig><ref target="https://dodis.ch/9110">dodis.ch/9110</ref>).</orig> Am 2. September schloss die Schweiz mit der <placeName ref="https://dodis.ch/G806">BRD</placeName> zwei nichtpublizierte Abkommen ab, das eine zur Investition zur Elektrifizierung der Strecke <placeName>Basel</placeName>–<placeName>Karlsruhe</placeName> mit 140 Millionen Schweizer Franken und das andere zur Investition in die deutsche Stahlindustrie mit 110 Millionen Schweizer Franken.</note>.</p>
+            </div>
+        </body>
+    </text>
+</TEI>

@@ -137,5 +137,5 @@ if __name__ == "__main__":
 
     tree.write(args.output, encoding="utf-8", xml_declaration=True, pretty_print=True)
     print(
-        f"Fertig: {linked} Entities verlinkt, {skipped} nicht verlinkt → {args.output}"
+        f"Fertig: {linked} Entities verlinkt, {skipped} nicht verlinkt -> {args.output}"
     )

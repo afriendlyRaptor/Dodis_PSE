@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<TEI xmlns="http://www.tei-c.org/ns/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.tei-c.org/ns/1.0 http://www.dodis.ch/schemas/xsd/tei_dodis-v1.xsd">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>dodis.ch/10673</title>
+        <author>
+          <orgName>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</orgName>
+        </author>
+      </titleStmt>
+      <publicationStmt>
+        <publisher>Diplomatische Dokumente der Schweiz | Documents Diplomatiques Suisses | Documenti Diplomatici Svizzeri | Diplomatic Documents of Switzerland | Dodis</publisher>
+        <date when="2023-01-01">2023</date>
+        <availability>
+          <licence target="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 Unported (CC BY 4.0)</licence>
+        </availability>
+      </publicationStmt>
+      <sourceDesc>
+        <p>Cf. note 1</p>
+      </sourceDesc>
+    </fileDesc>
+    <encodingDesc>
+      <projectDesc>
+        <p>https://www.dodis.ch/aktenedition</p>
+      </projectDesc>
+      <editorialDecl>
+        <p>https://www.dodis.ch/editorialDecl</p>
+      </editorialDecl>
+    </encodingDesc>
+    <revisionDesc>
+      <change when="2023-09-05">Last change</change>
+    </revisionDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <div type="doc">
+        <head>
+          <ref target="http://dodis.ch/10673">dodis.ch/10673</ref>
+          <title type="main">Aide-mémoire du DPF au Département d’État des USA et au Ministère des affaires étrangères chinois<note xml:id="e569"><idno type="CH-BAR">CH-BAR#E2001E-01#1988/16#2723* (B.73.0.1)</idno>. L’aide-mémoire est remis par le Ministre de Suisse à Washington, Karl Bruggmann, à Robert Daniel Murphy, Sous-secrétaire adjoint aux affaires politiques du Département d’État, à Washington le 14 avril 1954. Le 15 avril 1954, il est remis par le Ministre de Suisse à Beijing, Clemente Rezzonico, à Chang Han Fu, Vice-ministre des affaires étrangères de la République populaire de Chine, à Beijing. Pour les réactions des deux pays, cf. <ref target="https://dodis.ch/66697">dodis.ch/66697</ref> et <ref target="https://dodis.ch/66698">dodis.ch/66698</ref>. Le gouvernement suédois entreprend des démarches analogues mais indépendantes à Washington et à Beijing. Différents projets d’aide-mémoire sont rédigés depuis début mars 1954 sous la direction du Conseiller de légation Felix Schnyder du DPF, cf. le dossier <idno type="CH-BAR">CH-BAR#E2001E-01#1988/16#2723* (B.73.0.1)</idno>. Le Chef du DPF, le Conseiller fédéral Max Petitpierre, présente un projet définitif d’aide-mémoire au Conseil fédéral le 9 avril 1954 et est autorisé à procéder aux démarches. Toutefois, le ton de l’aide-mémoire devrait être quelque peu adouci, cf. le procès-verbal de discussion de la 25<hi>ème</hi> séance du Conseil fédéral du 9 avril 1954, <idno type="CH-BAR">CH-BAR#E1003#1970/344#1* (4.31)</idno>.</note></title>
+          <title type="sub">[Conférence asiatique de Genève]</title>
+        </head>
+        <opener>
+          <dateline> [<add type="edition"><placeName>Berne</placeName></add>,]<date when="1954-04-14"> 14 avril 1954</date></dateline>
+        </opener>
+        <p>En 1953, à la demande des parties au conflit en <placeName ref="https://dodis.ch/G33">Corée</placeName>, la <placeName ref="https://dodis.ch/G4">Suisse</placeName> a accepté d’être représentée dans la Commission neutre de surveillance de l’armistice afin d’apporter sa contribution au rétablissement de la paix en Extrême-Orient.<note xml:id="e702">Cf. QdD 21, doc. 10, <ref target="https://dodis.ch/49708">dodis.ch/49708</ref>.</note> La convention d’armistice prévoyait que dans le délai de 90 jours après l’entrée en vigueur de l’armistice une conférence politique se réunirait pour régler le problème <placeName ref="https://dodis.ch/G1423">coréen</placeName>. La conclusion d’un traité de paix devait mettre automatiquement fin à l’activité de la <orgName ref="https://dodis.ch/R9203">Commission</orgName> neutre de surveillance. Mais la conférence convenue n’a pas eu lieu.</p>
+        <p>Le 26 avril prochain doit se tenir à <placeName ref="https://dodis.ch/G28">Genève</placeName> une conférence dont une des tâches principales sera de chercher à résoudre le problème de la <placeName ref="https://dodis.ch/G33">Corée</placeName>. Suivant les résultats de la conférence, le mandat de la Commission neutre pourrait être prolongé pour une période indéterminée.<note xml:id="e840">Concernant la <orig>Conférence asiatique de Genève</orig> qui a lieu du 26 avril au 20 juillet 1954 au cours de laquelle la Corée fait l’objet de négociations, cf. la compilation thématique <ref target="https://dodis.ch/T2551">dodis.ch/T2551</ref>. Sur la question de la participation de la Suisse à la conférence, cf. QdD 21, doc. 17, <ref target="https://dodis.ch/66048">dodis.ch/66048</ref>. Sur l’impact de la tenue de la conférence sur les activités de la NNSC, cf. QdD 21, doc. 21, <ref target="https://dodis.ch/9675">dodis.ch/9675</ref>.</note> La <placeName ref="https://dodis.ch/G4">Suisse</placeName> n’ayant envisagé ce mandat que pour une durée limitée, le <orgName ref="https://dodis.ch/R6">Conseil</orgName> fédéral se trouverait devant une situation nouvelle, qui l’obligerait à soumettre à un nouvel examen le maintien de la participation d’un délégué <placeName ref="https://dodis.ch/G4">suisse</placeName> à la Commission neutre.</p>
+        <p>Dès le début, on pouvait se demander si les dispositions de la convention d’armistice sur l’activité de la Commission neutre permettraient à celle-ci d’exercer une action efficace. Les doutes qu’on avait alors se sont révélés fondés. Le <orgName ref="https://dodis.ch/R6">Conseil fédéral</orgName> ne pourrait admettre que l’on puisse reprocher un jour à la délégation <placeName ref="https://dodis.ch/G4">suisse</placeName> de ne pas avoir exercé un contrôle suffisant, bien qu’elle se soit conformée strictement aux termes du mandat qu’elle avait reçu. Jusqu’à présent cette situation peu satisfaisante a été admise dans l’idée que la paix serait rapidement rétablie en <placeName ref="https://dodis.ch/G33">Corée</placeName>. Mais à la longue, elle ne serait plus guère supportable.</p>
+        <p>Ces circonstances engagent le <orgName ref="https://dodis.ch/R6">Conseil fédéral</orgName> à prier les deux parties au conflit en <placeName ref="https://dodis.ch/G33">Corée</placeName> d’examiner s’il ne devrait pas être mis fin à l’activité de la <orgName ref="https://dodis.ch/R9203">Commission</orgName> neutre. Le <orgName ref="https://dodis.ch/R6">Conseil fédéral</orgName> leur laisse le soin de juger de quelle manière ce but pourrait être atteint. Il se demande si la Conférence de <placeName ref="https://dodis.ch/G28">Genève</placeName> ne fournirait pas l’occasion d’examiner et de résoudre la question qui le préoccupe.</p>
+      </div>
+    </body>
+  </text>
+</TEI>
