@@ -106,7 +106,7 @@ def link_paragraph(nlp, text, entity_refs):
     gold_spans = []
     char_to_el = {}
     for start, end, label, el in entity_refs:
-        span = doc.char_span(start, end, label=label, alignment_mode="expand")
+        span = doc.char_span(start, end, label=label, alignment_mode="strict")
         if span is not None:
             gold_spans.append(span)
             char_to_el[(span.start_char, span.end_char)] = el
