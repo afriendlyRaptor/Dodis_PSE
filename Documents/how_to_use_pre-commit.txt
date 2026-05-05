@@ -1,6 +1,6 @@
 Zuerst muss black, isort und pylint installiert werden. Dazu folgenen Befehl ausführen:
 
-"pip install -r requirements-dev.txt"
+"pip install -r requirements.txt"
 
 Danach pre-commit installieren:
 
