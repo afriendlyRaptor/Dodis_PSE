@@ -41,7 +41,7 @@ ENTITY_TAG_NAMES = {"persName": "PER", "orgName": "ORG", "placeName": "LOC"}
 def download_model(model_path: Path):
     print("Modell nicht gefunden. Lade herunter von GitHub...")
     zip_path = model_path.parent / "dodis-nel-model.zip"
-    response = requests.get(MODEL_URL, stream=True)
+    response = requests.get(MODEL_URL, stream=True, timeout=300)
     response.raise_for_status()
     total = int(response.headers.get("content-length", 0))
     downloaded = 0
