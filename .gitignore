@@ -57,3 +57,4 @@ CLAUDE.md
 job_logs/
 data/*.spacy
 run_test.sh
+!output/eval.json
