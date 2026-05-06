@@ -33,8 +33,8 @@ if [ ! -d "output/dodis/model-best" ]; then
 fi
 
 echo "Evaluiere auf Test-Set..."
-python src/dodis/evaluate_dodis.py --gpu 0
+python -m spacy evaluate output/dodis/model-best/ data/dodis_test.spacy \
+    --gpu-id 0 \
+    --output output/eval.json
 
-echo ""
-echo "Evaluiere auf Dev-Set (Vergleich mit Trainings-Score)..."
-python src/dodis/evaluate_dodis.py --gpu 0 --test data/dodis_dev.spacy
+echo "Ergebnisse gespeichert unter output/eval.json"
