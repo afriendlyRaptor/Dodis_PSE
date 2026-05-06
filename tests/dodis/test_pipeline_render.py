@@ -8,13 +8,13 @@ from lxml import etree
 
 # src/dodis/ muss im Suchpfad sein, da test_pipeline.py
 # 'from link_tei import ...' ohne Paketpräfix importiert
-_dodis_path = str(Path(__file__).parent.parent / "src" / "dodis")
+_dodis_path = str(Path(__file__).parent.parent.parent / "src" / "dodis")
 if _dodis_path not in sys.path:
     sys.path.insert(0, _dodis_path)
 
 _spec = importlib.util.spec_from_file_location(
     "test_pipeline_module",
-    Path(__file__).parent.parent / "src" / "dodis" / "test_pipeline.py",
+    Path(__file__).parent.parent.parent / "src" / "dodis" / "test_pipeline.py",
 )
 assert _spec is not None and _spec.loader is not None
 _mod = importlib.util.module_from_spec(_spec)

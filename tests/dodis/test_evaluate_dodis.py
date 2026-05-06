@@ -1,13 +1,8 @@
 """Tests für src/dodis/evaluate_dodis.py"""
 
-import sys
-from pathlib import Path
-
 import spacy
 
 from dodis.evaluate_dodis import build_gold_index, compute_accuracy, normalize_dodis_id
-
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 # Blank-Modell für spaCy-Docs ohne ML-Abhängigkeit
 nlp = spacy.blank("de")

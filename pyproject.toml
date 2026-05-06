@@ -1,5 +1,5 @@
 [tool.pytest.ini_options]
-testpaths = ["dodis_tests"]
+testpaths = ["tests"]
 
 [tool.black]
 line-length = 88

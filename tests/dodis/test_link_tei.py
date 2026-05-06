@@ -5,10 +5,10 @@ Führe alle Tests aus mit:
     pytest tests/
 
 Nur diese Datei testen:
-    pytest tests/test_link_tei.py
+    pytest tests/dodis/test_link_tei.py
 
 Mit ausführlicher Ausgabe:
-    pytest tests/test_link_tei.py -v
+    pytest tests/dodis/test_link_tei.py -v
 """
 
 from lxml import etree

@@ -6,7 +6,7 @@ from pathlib import Path
 # Dateiname hat Bindestrich → kein normaler import möglich, importlib nutzen
 _spec = importlib.util.spec_from_file_location(
     "tei_visualizer",
-    Path(__file__).parent.parent / "src" / "dodis" / "TEI-xml_Visualizer.py",
+    Path(__file__).parent.parent.parent / "src" / "dodis" / "TEI-xml_Visualizer.py",
 )
 assert _spec is not None and _spec.loader is not None
 _mod = importlib.util.module_from_spec(_spec)
