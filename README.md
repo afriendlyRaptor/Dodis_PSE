@@ -86,7 +86,7 @@ Das trainierte Modell erreicht **96.3% Accuracy** auf dem Test-Set (NEL_MICRO_F)
 ### Pakete installieren
 
 ```bash
-pip install -r src/dodis/requirements.txt
+pip install -r requirements.txt
 ```
 
 ### TEI-XML Dateien verlinken und visualisieren
