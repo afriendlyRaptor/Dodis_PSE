@@ -108,7 +108,7 @@ fi
 # 4. Wikipedia-Seiten herunterladen und verarbeiten
 # -------------------------------------------------------
 PAGE_COUNT=$(find data/qid_pages -name "*.json" 2>/dev/null | wc -l)
-if [ "$PAGE_COUNT" -lt 10 ]; then
+if [ "$PAGE_COUNT" -lt "$WIKIPEDIA_SAMPLE" ]; then
     echo ""
     echo "=== Schritt 3/5: Wikipedia-Seiten herunterladen ($WIKIPEDIA_SAMPLE QIDs) ==="
     python src/wikidata/scrape_wikipedia.py \
