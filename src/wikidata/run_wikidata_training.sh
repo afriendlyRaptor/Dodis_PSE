@@ -4,18 +4,23 @@
 
 #SBATCH --account=gratis
 #SBATCH --partition=gpu
-#SBATCH --qos=job_gpu
+##SBATCH --qos=job_gratis
+#SBATCH --qos=job_gpu_preemptable
+##SBATCH --qos=job_debug
 
 #SBATCH --gres=gpu:rtx4090:1
-#SBATCH --job-name=WikiNEL
+##SBATCH --gres=gpu:rtx3090:1
+#SBATCH --job-name=DodisNEL
 
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=10GB
-#SBATCH --time=0-23:55:00
+##SBATCH --time=0-23:55:00
+#SBATCH --time=0-06:00:00
 
 #SBATCH --output=job_logs/output_%j.out
 #SBATCH --error=job_logs/output_%j.err
+
 
 set -e
 
