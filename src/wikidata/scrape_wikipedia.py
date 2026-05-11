@@ -271,7 +271,8 @@ def run_all(qids: list, output_folder: str, lang: str = "de"):
         result = process_page(title, lang)
 
         if result is not None:
-            write_page_result(result, output_folder + f"{title}_{qid}.json")
+            safe_title = title.replace("/", "_").replace("\\", "_")
+            write_page_result(result, output_folder + f"{safe_title}_{qid}.json")
 
 
 if __name__ == "__main__":
