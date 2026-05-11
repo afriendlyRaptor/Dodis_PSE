@@ -1,6 +1,29 @@
 import argparse
-import gzip
 import json
+
+try:
+    from isal import igzip as gzip
+except ImportError:
+    pass
+
+try:
+    import orjson
+
+    def _loads(s):
+        return orjson.loads(s)
+
+    def _dumps(obj):
+        return orjson.dumps(obj).decode()
+
+except ImportError:
+
+    def _loads(s):
+        return json.loads(s)
+
+    def _dumps(obj):
+        return json.dumps(obj)
+
+
 import sqlite3
 from multiprocessing import Pool, cpu_count
 from pathlib import Path
@@ -35,11 +58,22 @@ NUM_WORKERS = max(1, cpu_count() - 2)  # Alle Kerne minus Reader + Writer
 CHUNK_SIZE = 5000  # Zeilen pro Paket
 
 
+HIERARCHY_CACHE = "data/valid_classes_cache.json"
+
+
 def fetch_hierarchy_tree():
     """
     Fragt Wikidata (via SPARQL) nach allen Unterklassen (P279) unserer Basisklassen.
     Dadurch erfassen wir den gesamten Baum (z.B. alle Arten von Städten/Organisationen).
+    Ergebnis wird in HIERARCHY_CACHE gecacht, damit bei Neustart nicht neu abgefragt wird.
     """
+    cache_path = Path(HIERARCHY_CACHE)
+    if cache_path.exists():
+        with open(cache_path, encoding="utf-8") as f:
+            valid_classes = set(json.load(f))
+        print(f"-> Hierarchie aus Cache geladen: {len(valid_classes)} Klassen")
+        return valid_classes
+
     print("Lade Hierarchie-Baum von Wikidata herunter")
 
     # Baut den SPARQL Query auf (wdt:P279* bedeutet "Unterklasse von", 0 bis unendlich mal)
@@ -58,7 +92,7 @@ def fetch_hierarchy_tree():
         "Accept": "application/json",
     }
 
-    response = requests.get(url, params={"query": query}, headers=headers, timeout=30)
+    response = requests.get(url, params={"query": query}, headers=headers, timeout=60)
     assert response is not None, "SPARQL-Response ist None!"
     response.raise_for_status()
 
@@ -73,6 +107,11 @@ def fetch_hierarchy_tree():
         q_id = item["class"]["value"].split("/")[-1]
         assert q_id is not None, "q_id ist None!"
         valid_classes.add(q_id)
+
+    # Cache speichern
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(cache_path, "w", encoding="utf-8") as f:
+        json.dump(list(valid_classes), f)
 
     print(f"-> Erfolgreich {len(valid_classes)} relevante Unterklassen gefunden.")
     return valid_classes
@@ -176,13 +215,13 @@ def process_chunk(args):
         if line.endswith(","):
             line = line[:-1]
         try:
-            item = json.loads(line)
+            item = _loads(line)
             claims = item.get("claims", {})
             if "P31" in claims:
                 matched_class_ids = _match_classes(claims, valid_classes)
                 if matched_class_ids and is_in_time_range(item, matched_class_ids):
                     small_item = extract_relevant_fields(item)
-                    results.append((item["id"], json.dumps(small_item)))
+                    results.append((item["id"], _dumps(small_item)))
         except json.JSONDecodeError:
             continue
     return results

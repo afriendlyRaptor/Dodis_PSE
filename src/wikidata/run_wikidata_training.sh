@@ -4,7 +4,7 @@
 
 #SBATCH --account=gratis
 #SBATCH --partition=gpu
-#SBATCH --qos=job_gpu_preemptable
+#SBATCH --qos=job_gpu
 
 #SBATCH --gres=gpu:rtx4090:1
 #SBATCH --job-name=WikiNEL
