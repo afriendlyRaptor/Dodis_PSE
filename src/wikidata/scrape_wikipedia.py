@@ -12,9 +12,11 @@ Usage:
 
 import argparse
 import json
+import os
 import random
 import re
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 import requests
 from bs4 import BeautifulSoup
@@ -43,6 +45,41 @@ def sample_qid_list(filepath: str, samplesize: int) -> list:
 # ---------------------------
 # 2. QID → Wikipedia-Titel
 # ---------------------------
+def batch_qids_to_titles(qids: list, lang: str = "de") -> dict:
+    """Lädt Wikipedia-Titel für bis zu 50 QIDs pro API-Request (statt 1 QID pro Request)."""
+    mapping = {}
+    wiki_key = f"{lang}wiki"
+    for i in range(0, len(qids), 50):
+        chunk = qids[i : i + 50]
+        params = {
+            "action": "wbgetentities",
+            "ids": "|".join(chunk),
+            "props": "sitelinks",
+            "format": "json",
+        }
+        for _ in range(3):
+            try:
+                time.sleep(0.5)
+                r = requests.get(
+                    WIKIDATA_API, params=params, headers=HEADERS, timeout=15
+                )
+                if r.status_code == 429:
+                    print("429 hit, warte...")
+                    time.sleep(10)
+                    continue
+                if r.status_code != 200:
+                    break
+                for qid, entity in r.json().get("entities", {}).items():
+                    title = entity.get("sitelinks", {}).get(wiki_key, {}).get("title")
+                    if title:
+                        mapping[qid] = title
+                break
+            except Exception as e:
+                print(f"Batch-Fehler: {e}")
+                time.sleep(2)
+    return mapping
+
+
 def qid_to_title(qid: str, lang: str = "de") -> str | None:
     params = {
         "action": "wbgetentities",
@@ -259,20 +296,37 @@ def write_page_result(data: dict, output_file: str):
 # ---------------------------
 # 5. Batch-Download (QID-Liste)
 # ---------------------------
-def run_all(qids: list, output_folder: str, lang: str = "de"):
-    for qid in qids:
-        title = qid_to_title(qid, lang)
+def run_all(qids: list, output_folder: str, lang: str = "de", workers: int = 4):
+    print(f"Batch-Lookup für {len(qids)} QIDs (50 pro API-Request)...")
+    qid_title_map = batch_qids_to_titles(qids, lang)
 
-        if not title:
-            print(f"Überspringe {qid} (keine Wikipedia-Seite)")
-            continue
+    to_process = {}
+    for qid, title in qid_title_map.items():
+        safe_title = title.replace("/", "_").replace("\\", "_")
+        if not os.path.exists(os.path.join(output_folder, f"{safe_title}_{qid}.json")):
+            to_process[qid] = title
 
-        print(f"Verarbeite {qid} → {title}")
+    skipped = len(qid_title_map) - len(to_process)
+    if skipped:
+        print(f"{skipped} Seiten bereits vorhanden, überspringe.")
+    print(f"{len(to_process)} neue Seiten herunterladen mit {workers} Threads...")
+
+    def _process(item):
+        qid, title = item
         result = process_page(title, lang)
-
         if result is not None:
             safe_title = title.replace("/", "_").replace("\\", "_")
-            write_page_result(result, output_folder + f"{safe_title}_{qid}.json")
+            write_page_result(
+                result, os.path.join(output_folder, f"{safe_title}_{qid}.json")
+            )
+
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = {executor.submit(_process, item): item for item in to_process.items()}
+        for future in as_completed(futures):
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Fehler beim Verarbeiten: {e}")
 
 
 if __name__ == "__main__":
