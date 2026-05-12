@@ -252,7 +252,17 @@ def build_kb(database, outputPath, allowed_ids=None):
 
 
 PERSON_CLASSES = {"Q5"}
-LOC_CLASSES = {"Q6256", "Q515", "Q82794", "Q486972"}
+LOC_CLASSES = {
+    "Q6256",
+    "Q515",
+    "Q82794",
+    "Q486972",
+    "Q3624078",
+    "Q35657",
+    "Q1549591",
+    "Q532",
+    "Q5119",
+}
 ORG_CLASSES = {"Q43229", "Q7278", "Q4830453"}
 
 
