@@ -130,7 +130,7 @@ if [ ! -f "data/dodis_wikidata.kb" ]; then
     python src/wikidata/build_wikidata_kb.py \
         -d data/dodis_wikidata.db \
         -o data/dodis_wikidata.kb \
-        --limit 15000
+        --pages data/qid_pages
     echo "KB erstellt: data/dodis_wikidata.kb"
 else
     echo "=== Schritt 4/5: KB existiert bereits, überspringe ==="

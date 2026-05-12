@@ -1,10 +1,27 @@
 import argparse
+import glob
 import json
 import os
 import sqlite3
 
 import spacy
 from spacy.kb import InMemoryLookupKB
+
+
+def get_qids_from_pages(pages_folder: str) -> set:
+    """Liest alle QIDs aus den Annotationen der Wikipedia-JSON-Dateien."""
+    qids = set()
+    for filepath in glob.glob(os.path.join(pages_folder, "*.json")):
+        try:
+            with open(filepath, encoding="utf-8") as f:
+                data = json.load(f)
+            for ann in data.get("annotations", []):
+                qid = ann.get("qid")
+                if qid:
+                    qids.add(qid)
+        except Exception:
+            continue
+    return qids
 
 
 def build_kb(database, outputPath, allowed_ids=None):
@@ -273,6 +290,11 @@ if __name__ == "__main__":
         default=None,
         help="Optionales Limit: sampelt limit/3 Entitäten pro Typ (PER/LOC/ORG)",
     )
+    parser.add_argument(
+        "--pages",
+        default=None,
+        help="Ordner mit Wikipedia-JSON-Dateien: KB wird nur mit QIDs aus deren Annotationen gebaut",
+    )
     args = parser.parse_args()
 
     assert (
@@ -283,7 +305,12 @@ if __name__ == "__main__":
     ), "Kein Ausgabepfad angegeben! Bitte -o verwenden."
 
     if os.path.isfile(args.database):
-        if args.limit is not None:
+        if args.pages is not None:
+            print(f"Extrahiere QIDs aus Seiten in: {args.pages}")
+            allowed_ids = get_qids_from_pages(args.pages)
+            print(f"{len(allowed_ids)} eindeutige QIDs aus Annotationen gefunden.")
+            build_kb(args.database, args.outputPath, allowed_ids=allowed_ids)
+        elif args.limit is not None:
             print(f"Sampling-Modus: ~{args.limit // 3} Entitäten pro Typ...")
             allowed_ids = set(sample_ids(args.database, args.limit))
             print(f"Gesamt gesampelt: {len(allowed_ids)} Entitäten")
