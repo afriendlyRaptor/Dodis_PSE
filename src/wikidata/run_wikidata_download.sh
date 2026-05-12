@@ -3,13 +3,14 @@
 #SBATCH --mail-type=end,fail
 
 #SBATCH --account=gratis
-#SBATCH --partition=epyc2
+#SBATCH --partition=cpu-invest
 #SBATCH --qos=job_cpu_preemptable
 
 #SBATCH --job-name=WikiDownload
+#SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=8G
+#SBATCH --mem-per-cpu=2G
 #SBATCH --time=1-00:00:00
 
 #SBATCH --output=job_logs/download_%j.out
