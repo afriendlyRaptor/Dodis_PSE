@@ -28,7 +28,7 @@ set -e
 # Konfiguration — hier anpassen
 # -------------------------------------------------------
 WIKIDATA_DUMP="data/wikidata_dump.json.gz"   # Pfad zum lokalen Wikidata-Dump
-WIKIPEDIA_SAMPLE=10000                        # Anzahl QIDs für Wikipedia-Download
+WIKIPEDIA_SAMPLE=500                          # Anzahl QIDs für Wikipedia-Download
 WIKIPEDIA_LANG="de"                           # Wikipedia-Sprache
 
 mkdir -p job_logs output/wikipedia data/qid_pages data/wikidata
