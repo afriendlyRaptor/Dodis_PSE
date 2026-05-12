@@ -129,7 +129,8 @@ if [ ! -f "data/dodis_wikidata.kb" ]; then
     echo "=== Schritt 4/5: Knowledge Base aufbauen ==="
     python src/wikidata/build_wikidata_kb.py \
         -d data/dodis_wikidata.db \
-        -o data/dodis_wikidata.kb
+        -o data/dodis_wikidata.kb \
+        --limit 15000
     echo "KB erstellt: data/dodis_wikidata.kb"
 else
     echo "=== Schritt 4/5: KB existiert bereits, überspringe ==="
