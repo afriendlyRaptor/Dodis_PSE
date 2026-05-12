@@ -4,7 +4,7 @@
 
 #SBATCH --account=gratis
 #SBATCH --partition=epyc2
-#SBATCH --qos=job_cpu
+#SBATCH --qos=job_cpu_preemptable
 
 #SBATCH --job-name=WikiDownload
 #SBATCH --ntasks=1
