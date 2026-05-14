@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     assert LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")), (
         f"Keine XML-Dateien gefunden unter {LOCAL_DATASET}. "
-        "Zuerst src/testsAndHelpers/download_dodis_xml.py ausführen."
+        "Zuerst src/helpers/download_dodis_xml.py ausführen."
     )
     dataset_path = LOCAL_DATASET
 

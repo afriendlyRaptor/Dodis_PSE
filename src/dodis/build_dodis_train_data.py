@@ -6,7 +6,7 @@ für das Entity Linking Training.
 werden zu Entity Spans mit dem Dodis-ref als kb_id.
 
 Erwartet die XML-Dateien unter data/dodis_transcription_xml/.
-Falls diese nicht vorhanden sind: src/testsAndHelpers/download_dodis_xml.py ausführen.
+Falls diese nicht vorhanden sind: src/helpers/download_dodis_xml.py ausführen.
 
 Output: data/dodis_train.spacy, data/dodis_dev.spacy, data/dodis_test.spacy
 
@@ -85,7 +85,7 @@ if __name__ == "__main__":
 
     assert LOCAL_DATASET.exists() and any(LOCAL_DATASET.glob("**/*.xml")), (
         f"Keine XML-Dateien gefunden unter {LOCAL_DATASET}. "
-        "Zuerst src/testsAndHelpers/download_dodis_xml.py ausführen."
+        "Zuerst src/helpers/download_dodis_xml.py ausführen."
     )
     dataset_path = LOCAL_DATASET
 

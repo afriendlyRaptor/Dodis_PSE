@@ -8,7 +8,7 @@ direkt build_dodis_db.py ausführen (erwartet data/dodis_transcription_xml/).
 Output: data/dodis_transcription_xml/
 
 Usage:
-    python src/testsAndHelpers/download_dodis_xml.py
+    python src/helpers/download_dodis_xml.py
 """
 
 from pathlib import Path
